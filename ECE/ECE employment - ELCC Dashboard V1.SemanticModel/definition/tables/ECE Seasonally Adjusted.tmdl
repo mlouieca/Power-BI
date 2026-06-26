@@ -3,7 +3,13 @@ table 'ECE Seasonally Adjusted'
 
 	measure 'NSA Employment' = ```
 			
-			SUM ( 'ECE Seasonally Adjusted'[Estimate] )
+			VAR _ContextDate =
+			    MAX ( DateTable[Date] )
+			RETURN
+			    CALCULATE (
+			        SUM ( 'ECE Seasonally Adjusted'[Estimate] ),
+			        DateTable[Date] = _ContextDate
+			    )
 			
 			```
 		lineageTag: cb176fc0-c2a4-4b4e-a5c1-6d645a545b51
@@ -12,7 +18,13 @@ table 'ECE Seasonally Adjusted'
 
 	measure 'Seasonally Adjusted Employment' = ```
 			
-			SUM ( 'ECE Seasonally Adjusted'[Seasonally Adjusted Estimate] )
+			VAR _ContextDate =
+			    MAX ( DateTable[Date] )
+			RETURN
+			    CALCULATE (
+			        SUM ( 'ECE Seasonally Adjusted'[Seasonally Adjusted Estimate] ),
+			        DateTable[Date] = _ContextDate
+			    )
 			
 			```
 		lineageTag: e679ae54-73c8-420d-8e56-ee511bca9136
@@ -21,7 +33,13 @@ table 'ECE Seasonally Adjusted'
 
 	measure 'Seasonal Trend' = ```
 			
-			SUM ( 'ECE Seasonally Adjusted'[Trend] )
+			VAR _ContextDate =
+			    MAX ( DateTable[Date] )
+			RETURN
+			    CALCULATE (
+			        SUM ( 'ECE Seasonally Adjusted'[Trend] ),
+			        DateTable[Date] = _ContextDate
+			    )
 			
 			```
 		lineageTag: b64c6e6e-368e-42be-8ee3-f1958dbdd314
@@ -30,7 +48,13 @@ table 'ECE Seasonally Adjusted'
 
 	measure 'Seasonal Factor' = ```
 			
-			SUM ( 'ECE Seasonally Adjusted'[Seasonal Factor Value] )
+			VAR _ContextDate =
+			    MAX ( DateTable[Date] )
+			RETURN
+			    CALCULATE (
+			        SUM ( 'ECE Seasonally Adjusted'[Seasonal Factor Value] ),
+			        DateTable[Date] = _ContextDate
+			    )
 			
 			```
 		lineageTag: 0ca0170f-8e7c-4017-8904-0ea83b29cf57
