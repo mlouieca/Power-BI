@@ -1,4 +1,4 @@
-expression Unzip = ```
+expression Unzip =
 		(ZipFile as binary) as table =>
 		let
 		    ZipFileBuffer = Binary.Buffer(ZipFile),
@@ -612,7 +612,6 @@ expression Unzip = ```
 		        )
 		in
 		    Cleanup
-		```
 	lineageTag: a1c64294-eee0-4094-a74c-e9be4fba430a
 
 	annotation PBI_NavigationStepName = Navigation

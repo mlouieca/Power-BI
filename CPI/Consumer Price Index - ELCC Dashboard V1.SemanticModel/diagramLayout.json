@@ -11,7 +11,7 @@
         {
           "location": {
             "x": 568,
-            "y": 121.5
+            "y": 182.25
           },
           "nodeIndex": "CPI",
           "nodeLineageTag": "c02d0ce5-fd2f-4ab5-a127-1b394ca9056e",
@@ -24,7 +24,7 @@
         {
           "location": {
             "x": 852,
-            "y": 121.5
+            "y": 182.25
           },
           "nodeIndex": "CPI Annual",
           "nodeLineageTag": "08467b70-3518-4b8d-a5f1-ca9d1cf295f7",
@@ -37,7 +37,7 @@
         {
           "location": {
             "x": 714,
-            "y": 472.5
+            "y": 533.25
           },
           "nodeIndex": "Annual Dates",
           "nodeLineageTag": "169bcfd5-bb99-4376-8242-de5340a2e631",
@@ -50,10 +50,23 @@
         {
           "location": {
             "x": 568,
-            "y": 166
+            "y": 226.75
           },
           "nodeIndex": "CPI Weights",
           "nodeLineageTag": "3a4f2e6c-9e2b-4c96-9f5e-45e2d055e116",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 568,
+            "y": 186.25
+          },
+          "nodeIndex": "BCPI",
+          "nodeLineageTag": "5c4f6d0d-21d0-4dc3-9c02-d2f4326cf9d3",
           "size": {
             "height": 300,
             "width": 234

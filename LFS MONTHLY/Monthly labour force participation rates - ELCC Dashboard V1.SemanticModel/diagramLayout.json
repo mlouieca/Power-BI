@@ -11,7 +11,7 @@
         {
           "location": {
             "x": 0,
-            "y": 0
+            "y": 26
           },
           "nodeIndex": "LFS_FamilyStructure_14100397",
           "nodeLineageTag": "13457261-f798-47c8-9144-122a56375a50",
@@ -24,7 +24,7 @@
         {
           "location": {
             "x": 284,
-            "y": 24
+            "y": 50
           },
           "nodeIndex": "DateTable",
           "size": {
@@ -36,12 +36,25 @@
         {
           "location": {
             "x": 568,
-            "y": 48
+            "y": 74
           },
           "nodeIndex": "Metric Selector",
           "nodeLineageTag": "64acb95d-7713-4e2c-a043-a10bcf90fb89",
           "size": {
             "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 852,
+            "y": 0
+          },
+          "nodeIndex": "LFS_Headline_14100287",
+          "nodeLineageTag": "6b8dfcf2-7d57-4ef8-bf86-f9b8dbd8ef61",
+          "size": {
+            "height": 300,
             "width": 234
           },
           "zIndex": 0
