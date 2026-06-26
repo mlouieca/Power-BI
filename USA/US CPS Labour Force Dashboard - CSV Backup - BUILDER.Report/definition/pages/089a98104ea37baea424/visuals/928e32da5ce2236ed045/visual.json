@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "928e32da5ce2236ed045",
   "position": {
-    "x": 0,
-    "y": 394,
+    "x": 950,
+    "y": 20,
     "z": 1000,
-    "height": 326,
-    "width": 768,
+    "height": 160,
+    "width": 300,
     "tabOrder": 1000
   },
   "visual": {
@@ -20,14 +20,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Labour Force Indicator"
+                      "Entity": "Labour Force Comparison"
                     }
                   },
-                  "Property": "Labour Force Indicator"
+                  "Property": "Indicator"
                 }
               },
-              "queryRef": "Labour Force Indicator.Labour Force Indicator",
-              "nativeQueryRef": "Labour Force Indicator",
+              "queryRef": "Labour Force Comparison.Indicator",
+              "nativeQueryRef": "Indicator",
               "active": true
             }
           ]

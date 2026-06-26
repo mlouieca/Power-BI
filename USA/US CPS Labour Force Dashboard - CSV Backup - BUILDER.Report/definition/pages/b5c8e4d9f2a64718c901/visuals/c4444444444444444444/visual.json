@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
-  "name": "852af19d523672b50b57",
+  "name": "c4444444444444444444",
   "position": {
-    "x": 950,
-    "y": 20,
-    "z": 1000,
-    "height": 150,
+    "x": 350,
+    "y": 545,
+    "z": 1001,
+    "height": 155,
     "width": 300,
-    "tabOrder": 1000
+    "tabOrder": 1001
   },
   "visual": {
     "visualType": "slicer",
@@ -20,14 +20,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Labour Force Indicator"
+                      "Entity": "Inflation Comparison"
                     }
                   },
-                  "Property": "Labour Force Indicator"
+                  "Property": "Country"
                 }
               },
-              "queryRef": "Labour Force Indicator.Labour Force Indicator",
-              "nativeQueryRef": "Labour Force Indicator",
+              "queryRef": "Inflation Comparison.Country",
+              "nativeQueryRef": "Country",
               "active": true
             }
           ]

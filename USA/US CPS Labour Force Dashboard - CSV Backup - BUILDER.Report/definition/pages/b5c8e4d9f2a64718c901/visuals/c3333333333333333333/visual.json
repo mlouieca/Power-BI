@@ -1,11 +1,11 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
-  "name": "852af19d523672b50b57",
+  "name": "c3333333333333333333",
   "position": {
-    "x": 950,
-    "y": 20,
+    "x": 20,
+    "y": 545,
     "z": 1000,
-    "height": 150,
+    "height": 155,
     "width": 300,
     "tabOrder": 1000
   },
@@ -20,14 +20,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Labour Force Indicator"
+                      "Entity": "Inflation Comparison"
                     }
                   },
-                  "Property": "Labour Force Indicator"
+                  "Property": "Series"
                 }
               },
-              "queryRef": "Labour Force Indicator.Labour Force Indicator",
-              "nativeQueryRef": "Labour Force Indicator",
+              "queryRef": "Inflation Comparison.Series",
+              "nativeQueryRef": "Series",
               "active": true
             }
           ]

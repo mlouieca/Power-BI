@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
-  "name": "7f4d1d9a017709978bac",
+  "name": "c2222222222222222222",
   "position": {
-    "x": 20,
+    "x": 650,
     "y": 20,
-    "z": 0,
-    "height": 520,
-    "width": 900,
-    "tabOrder": 0
+    "z": 1,
+    "height": 500,
+    "width": 600,
+    "tabOrder": 1
   },
   "visual": {
     "visualType": "lineChart",
@@ -39,14 +39,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "CPS Monthly Labour Summary"
+                      "Entity": "Inflation Comparison"
                     }
                   },
-                  "Property": "GroupLabel"
+                  "Property": "Country"
                 }
               },
-              "queryRef": "CPS Monthly Labour Summary.GroupLabel",
-              "nativeQueryRef": "GroupLabel"
+              "queryRef": "Inflation Comparison.Country",
+              "nativeQueryRef": "Country"
             }
           ]
         },
@@ -57,30 +57,14 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "CPS Monthly Labour Summary"
+                      "Entity": "Inflation Comparison"
                     }
                   },
-                  "Property": "Participation Rate (Calculated)"
+                  "Property": "CPI Index"
                 }
               },
-              "queryRef": "CPS Monthly Labour Summary.Participation Rate (Calculated)",
-              "nativeQueryRef": "Participation Rate (Calculated)"
-            }
-          ],
-          "fieldParameters": [
-            {
-              "parameterExpr": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "Labour Force Indicator"
-                    }
-                  },
-                  "Property": "Labour Force Indicator"
-                }
-              },
-              "index": 0,
-              "length": 1
+              "queryRef": "Inflation Comparison.CPI Index",
+              "nativeQueryRef": "CPI Index"
             }
           ]
         }

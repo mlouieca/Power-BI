@@ -1,38 +1,19 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
-  "name": "c44ac9c3b8123970d45c",
+  "name": "b3333333333333333333",
   "position": {
     "x": 20,
-    "y": 20,
-    "z": 0,
-    "height": 500,
+    "y": 545,
+    "z": 1003,
+    "height": 155,
     "width": 900,
-    "tabOrder": 0
+    "tabOrder": 1003
   },
   "visual": {
-    "visualType": "lineChart",
+    "visualType": "tableEx",
     "query": {
       "queryState": {
-        "Category": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "Date"
-                    }
-                  },
-                  "Property": "Date"
-                }
-              },
-              "queryRef": "Date.Date",
-              "nativeQueryRef": "Date",
-              "active": true
-            }
-          ]
-        },
-        "Series": {
+        "Values": {
           "projections": [
             {
               "field": {
@@ -47,11 +28,21 @@
               },
               "queryRef": "Labour Force Comparison.Country",
               "nativeQueryRef": "Country"
-            }
-          ]
-        },
-        "Y": {
-          "projections": [
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Labour Force Comparison"
+                    }
+                  },
+                  "Property": "SeriesLabel"
+                }
+              },
+              "queryRef": "Labour Force Comparison.SeriesLabel",
+              "nativeQueryRef": "SeriesLabel"
+            },
             {
               "field": {
                 "Measure": {
@@ -65,27 +56,23 @@
               },
               "queryRef": "Labour Force Comparison.Comparison Value",
               "nativeQueryRef": "Comparison Value"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Labour Force Comparison"
+                    }
+                  },
+                  "Property": "Comparison YoY Change (pp)"
+                }
+              },
+              "queryRef": "Labour Force Comparison.Comparison YoY Change (pp)",
+              "nativeQueryRef": "Comparison YoY Change (pp)"
             }
           ]
         }
-      },
-      "sortDefinition": {
-        "sort": [
-          {
-            "field": {
-              "Column": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "Date"
-                  }
-                },
-                "Property": "Date"
-              }
-            },
-            "direction": "Ascending"
-          }
-        ],
-        "isDefaultSort": true
       }
     },
     "drillFilterOtherVisuals": true
