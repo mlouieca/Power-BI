@@ -1,0 +1,25 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "7081920a1b2c3d4e5f6a",
+  "position": { "x": 1040, "y": 0, "z": 0, "height": 120, "width": 208, "tabOrder": 0 },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": { "Measure": { "Expression": { "SourceRef": { "Entity": "CPI Weights" } }, "Property": "Child Care CPI YoY % (Latest)" } },
+              "queryRef": "CPI Weights.Child Care CPI YoY % (Latest)",
+              "nativeQueryRef": "Child Care CPI YoY % (Latest)"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [ { "properties": { "show": { "expr": { "Literal": { "Value": "true" } } }, "text": { "expr": { "Literal": { "Value": "'Latest child care inflation'" } } } } } ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

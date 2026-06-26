@@ -1,0 +1,39 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "6f7081920a1b2c3d4e5f",
+  "position": { "x": 632, "y": 176, "z": 0, "height": 456, "width": 616, "tabOrder": 0 },
+  "visual": {
+    "visualType": "lineChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": { "Column": { "Expression": { "SourceRef": { "Entity": "CPI" } }, "Property": "REF_DATE" } },
+              "queryRef": "CPI.REF_DATE",
+              "nativeQueryRef": "REF_DATE",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": { "Measure": { "Expression": { "SourceRef": { "Entity": "CPI Weights" } }, "Property": "Child Care CPI Index" } },
+              "queryRef": "CPI Weights.Child Care CPI Index",
+              "nativeQueryRef": "Child Care CPI Index"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "valueAxis": [ { "properties": { "showAxisTitle": { "expr": { "Literal": { "Value": "false" } } }, "gridlineShow": { "expr": { "Literal": { "Value": "true" } } } } } ],
+      "categoryAxis": [ { "properties": { "showAxisTitle": { "expr": { "Literal": { "Value": "false" } } } } } ]
+    },
+    "visualContainerObjects": {
+      "title": [ { "properties": { "show": { "expr": { "Literal": { "Value": "true" } } }, "text": { "expr": { "Literal": { "Value": "'Child care services: monthly CPI index'" } } } } } ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

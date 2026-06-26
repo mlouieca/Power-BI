@@ -1,0 +1,62 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "2b3c4d5e6f7081920a1b",
+  "position": { "x": 0, "y": 176, "z": 0, "height": 456, "width": 616, "tabOrder": 0 },
+  "visual": {
+    "visualType": "lineChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": { "Column": { "Expression": { "SourceRef": { "Entity": "CPI Weights" } }, "Property": "REF_DATE" } },
+              "queryRef": "CPI Weights.REF_DATE",
+              "nativeQueryRef": "REF_DATE",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": { "Measure": { "Expression": { "SourceRef": { "Entity": "CPI Weights" } }, "Property": "CPI Weight %" } },
+              "queryRef": "CPI Weights.CPI Weight %",
+              "nativeQueryRef": "CPI Weight %"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "valueAxis": [ { "properties": { "showAxisTitle": { "expr": { "Literal": { "Value": "false" } } }, "gridlineShow": { "expr": { "Literal": { "Value": "true" } } } } } ],
+      "categoryAxis": [ { "properties": { "showAxisTitle": { "expr": { "Literal": { "Value": "false" } } } } } ]
+    },
+    "visualContainerObjects": {
+      "title": [ { "properties": { "show": { "expr": { "Literal": { "Value": "true" } } }, "text": { "expr": { "Literal": { "Value": "'Child care services: CPI basket weight'" } } } } } ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "bcf14d09e1fa4c1eb584",
+        "field": { "Column": { "Expression": { "SourceRef": { "Entity": "CPI Weights" } }, "Property": "Products and product groups" } },
+        "type": "Categorical",
+        "filter": {
+          "Version": 2,
+          "From": [ { "Name": "w", "Entity": "CPI Weights", "Type": 0 } ],
+          "Where": [
+            {
+              "Condition": {
+                "In": {
+                  "Expressions": [ { "Column": { "Expression": { "SourceRef": { "Source": "w" } }, "Property": "Products and product groups" } } ],
+                  "Values": [ [ { "Literal": { "Value": "'Child care services'" } } ] ]
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
