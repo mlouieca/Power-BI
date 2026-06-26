@@ -1,0 +1,8 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "f2a8c9d1b4e67305ab9c",
+  "displayName": "Annual Population YoY",
+  "displayOption": "FitToPage",
+  "height": 720,
+  "width": 1280
+}
