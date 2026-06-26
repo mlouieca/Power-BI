@@ -8,16 +8,16 @@ model Model
 
 annotation __PBI_TimeIntelligenceEnabled = 1
 
-annotation PBI_QueryOrder = ["Unzip","CPI","CPI Annual"]
+annotation PBI_QueryOrder = ["Unzip","CPI","CPI Annual","CPI Weights"]
 
 annotation PBI_ProTooling = ["DevMode"]
 
 ref table DateTableTemplate_82503772-46a4-4341-bc84-0fa6eb8bc87d
 ref table CPI
+ref table 'CPI Weights'
 ref table LocalDateTable_7929a108-81d3-4c08-ac72-a7bb42b0221a
 ref table 'CPI Annual'
 ref table 'Annual Dates'
 ref table LocalDateTable_5960ad3e-b7ae-47e0-8ad2-c5e29e76ac9d
 
 ref cultureInfo en-CA
-

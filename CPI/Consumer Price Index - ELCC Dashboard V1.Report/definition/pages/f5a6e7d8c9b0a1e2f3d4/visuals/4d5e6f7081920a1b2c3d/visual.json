@@ -1,0 +1,25 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "4d5e6f7081920a1b2c3d",
+  "position": { "x": 624, "y": 0, "z": 0, "height": 120, "width": 200, "tabOrder": 0 },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": { "Measure": { "Expression": { "SourceRef": { "Entity": "CPI Weights" } }, "Property": "Child Care CPI Weight Change (pp)" } },
+              "queryRef": "CPI Weights.Child Care CPI Weight Change (pp)",
+              "nativeQueryRef": "Child Care CPI Weight Change (pp)"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [ { "properties": { "show": { "expr": { "Literal": { "Value": "true" } } }, "text": { "expr": { "Literal": { "Value": "'Change from prior basket'" } } } } } ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

@@ -4,7 +4,7 @@ table CPI
 	measure 'CPI 12M MA' = ```
 			
 			AVERAGEX (
-			    DATESINPERIOD ( 'CPI'[REF_DATE], MAX ( 'CPI Weights'[REF_DATE] ), -12, MONTH ),
+			    DATESINPERIOD ( 'CPI'[REF_DATE], MAX ( 'CPI'[REF_DATE] ), -12, MONTH ),
 			    [CPI Index]
 			)
 			
@@ -318,4 +318,3 @@ table CPI
 	annotation PBI_NavigationStepName = Navigation
 
 	annotation PBI_ResultType = Table
-
