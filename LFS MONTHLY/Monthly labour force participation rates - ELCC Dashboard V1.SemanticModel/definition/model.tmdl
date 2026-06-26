@@ -8,11 +8,12 @@ model Model
 
 annotation __PBI_TimeIntelligenceEnabled = 1
 
-annotation PBI_QueryOrder = ["LFS_FamilyStructure_14100397","Unzip"]
+annotation PBI_QueryOrder = ["LFS_FamilyStructure_14100397","LFS_Headline_14100287","Unzip"]
 
 annotation PBI_ProTooling = ["DevMode"]
 
 ref table LFS_FamilyStructure_14100397
+ref table LFS_Headline_14100287
 ref table DateTable
 ref table 'Metric Selector'
 ref table DateTableTemplate_d6c4ea08-7bfa-4118-b441-1a5aff2feceb

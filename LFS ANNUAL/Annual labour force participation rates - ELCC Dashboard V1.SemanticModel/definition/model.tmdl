@@ -8,11 +8,12 @@ model Model
 
 annotation __PBI_TimeIntelligenceEnabled = 1
 
-annotation PBI_QueryOrder = ["Unzip","LFS_FamilyStructure_14100396_Annual","Work Absence"]
+annotation PBI_QueryOrder = ["Unzip","LFS_FamilyStructure_14100396_Annual","LFS_Headline_14100327_Annual","Work Absence"]
 
 annotation PBI_ProTooling = ["DevMode"]
 
 ref table LFS_FamilyStructure_14100396_Annual
+ref table LFS_Headline_14100327_Annual
 ref table YearTable
 ref table 'Annual Metric Selector'
 ref table 'Work Absence'

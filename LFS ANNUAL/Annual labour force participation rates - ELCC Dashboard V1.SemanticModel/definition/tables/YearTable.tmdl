@@ -6,7 +6,7 @@ table YearTable
 		lineageTag: 499b19eb-eb5e-41ba-aa5a-f2d68d9f941d
 		summarizeBy: none
 		isNameInferred
-		sourceColumn: LFS_FamilyStructure_14100396_Annual[REF_DATE]
+		sourceColumn: [REF_DATE]
 
 		annotation SummarizationSetBy = Automatic
 
@@ -31,10 +31,16 @@ table YearTable
 		mode: import
 		source = ```
 				
+				VAR Years =
+				    UNION(
+				        SELECTCOLUMNS('LFS_FamilyStructure_14100396_Annual', "REF_DATE", 'LFS_FamilyStructure_14100396_Annual'[REF_DATE]),
+				        SELECTCOLUMNS(LFS_Headline_14100327_Annual, "REF_DATE", LFS_Headline_14100327_Annual[REF_DATE])
+				    )
+				RETURN
 				ADDCOLUMNS(
-				    DISTINCT('LFS_FamilyStructure_14100396_Annual'[REF_DATE]),
-				    "Year", 'LFS_FamilyStructure_14100396_Annual'[REF_DATE],
-				    "YearLabel", FORMAT(DATE('LFS_FamilyStructure_14100396_Annual'[REF_DATE], 1, 1), "YYYY")
+				    DISTINCT(Years),
+				    "Year", [REF_DATE],
+				    "YearLabel", FORMAT(DATE([REF_DATE], 1, 1), "YYYY")
 				)
 				
 				```

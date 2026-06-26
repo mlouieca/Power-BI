@@ -27,8 +27,16 @@ table DateTable
 		mode: import
 		source = ```
 				
-				CALENDAR ( MIN('LFS_FamilyStructure_14100397'[REF_DATE]),
-				           MAX('LFS_FamilyStructure_14100397'[REF_DATE]) )
+				VAR Dates =
+				    UNION(
+				        SELECTCOLUMNS('LFS_FamilyStructure_14100397', "Date", 'LFS_FamilyStructure_14100397'[REF_DATE]),
+				        SELECTCOLUMNS(LFS_Headline_14100287, "Date", LFS_Headline_14100287[REF_DATE])
+				    )
+				RETURN
+				CALENDAR(
+				    MINX(Dates, [Date]),
+				    MAXX(Dates, [Date])
+				)
 				
 				```
 

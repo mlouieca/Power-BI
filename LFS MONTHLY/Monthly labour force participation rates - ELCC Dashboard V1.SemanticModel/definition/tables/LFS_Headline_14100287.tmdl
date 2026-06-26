@@ -1,0 +1,369 @@
+table LFS_Headline_14100287
+	lineageTag: 6b8dfcf2-7d57-4ef8-bf86-f9b8dbd8ef61
+
+	measure 'Headline Value (Monthly)' =
+			
+			MAX ( LFS_Headline_14100287[VALUE] )
+		formatString: 0.0
+		lineageTag: 5d1dbe9d-516d-4ca1-a4a4-35386a767f14
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Latest Headline Date (Monthly)' = ```
+			
+			CALCULATE (
+			    MAX ( LFS_Headline_14100287[REF_DATE] ),
+			    REMOVEFILTERS ( DateTable )
+			)
+			
+			```
+		formatString: General Date
+		lineageTag: 6c6c5028-0b6b-4c06-8976-b607b2d3e2a4
+
+	measure 'Selected Headline Value (Monthly)' = ```
+			
+			CALCULATE (
+			    [Headline Value (Monthly)],
+			    LFS_Headline_14100287[Labour force characteristics] = SELECTEDVALUE ( LFS_Headline_14100287[Labour force characteristics], "Unemployment rate" ),
+			    LFS_Headline_14100287[Age group] = SELECTEDVALUE ( LFS_Headline_14100287[Age group], "15 years and over" ),
+			    LFS_Headline_14100287[Statistics] = SELECTEDVALUE ( LFS_Headline_14100287[Statistics], "Estimate" ),
+			    LFS_Headline_14100287[Data type] = SELECTEDVALUE ( LFS_Headline_14100287[Data type], "Seasonally adjusted" ),
+			    LFS_Headline_14100287[GEO] = SELECTEDVALUE ( LFS_Headline_14100287[GEO], "Canada" ),
+			    LFS_Headline_14100287[Gender] = SELECTEDVALUE ( LFS_Headline_14100287[Gender], "Total - Gender" )
+			)
+			
+			```
+		formatString: 0.0
+		lineageTag: 7f5c50e5-803f-43cc-b880-70a4d1773cfb
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Selected Headline YoY Change (Monthly)' = ```
+			
+			VAR CurrentValue =
+			    [Selected Headline Value (Monthly)]
+			VAR PreviousYearValue =
+			    CALCULATE (
+			        [Selected Headline Value (Monthly)],
+			        DATEADD ( DateTable[Date], -1, YEAR )
+			    )
+			RETURN
+			IF (
+			    ISBLANK ( CurrentValue ) || ISBLANK ( PreviousYearValue ),
+			    BLANK (),
+			    CurrentValue - PreviousYearValue
+			)
+			
+			```
+		formatString: 0.0
+		lineageTag: 3d94a11a-03f7-4500-b9e4-927c55322a5f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Overall Unemployment Rate (Monthly Latest)' = ```
+			
+			VAR d = [Latest Headline Date (Monthly)]
+			RETURN
+			CALCULATE (
+			    [Headline Value (Monthly)],
+			    DateTable[Date] = d,
+			    LFS_Headline_14100287[Labour force characteristics] = "Unemployment rate",
+			    LFS_Headline_14100287[Age group] = "15 years and over",
+			    LFS_Headline_14100287[Statistics] = "Estimate",
+			    LFS_Headline_14100287[Data type] = "Seasonally adjusted",
+			    LFS_Headline_14100287[GEO] = SELECTEDVALUE ( LFS_Headline_14100287[GEO], "Canada" ),
+			    LFS_Headline_14100287[Gender] = SELECTEDVALUE ( LFS_Headline_14100287[Gender], "Total - Gender" )
+			)
+			
+			```
+		formatString: 0.0
+		lineageTag: 4ff71f6e-56b0-448c-a55c-355e4f34300a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Overall Unemployment Rate YoY (Monthly pp)' = ```
+			
+			VAR d = [Latest Headline Date (Monthly)]
+			VAR CurrentValue =
+			    CALCULATE (
+			        [Headline Value (Monthly)],
+			        DateTable[Date] = d,
+			        LFS_Headline_14100287[Labour force characteristics] = "Unemployment rate",
+			        LFS_Headline_14100287[Age group] = "15 years and over",
+			        LFS_Headline_14100287[Statistics] = "Estimate",
+			        LFS_Headline_14100287[Data type] = "Seasonally adjusted",
+			        LFS_Headline_14100287[GEO] = SELECTEDVALUE ( LFS_Headline_14100287[GEO], "Canada" ),
+			        LFS_Headline_14100287[Gender] = SELECTEDVALUE ( LFS_Headline_14100287[Gender], "Total - Gender" )
+			    )
+			VAR PreviousYearValue =
+			    CALCULATE (
+			        [Headline Value (Monthly)],
+			        DateTable[Date] = EDATE ( d, -12 ),
+			        LFS_Headline_14100287[Labour force characteristics] = "Unemployment rate",
+			        LFS_Headline_14100287[Age group] = "15 years and over",
+			        LFS_Headline_14100287[Statistics] = "Estimate",
+			        LFS_Headline_14100287[Data type] = "Seasonally adjusted",
+			        LFS_Headline_14100287[GEO] = SELECTEDVALUE ( LFS_Headline_14100287[GEO], "Canada" ),
+			        LFS_Headline_14100287[Gender] = SELECTEDVALUE ( LFS_Headline_14100287[Gender], "Total - Gender" )
+			    )
+			RETURN
+			CurrentValue - PreviousYearValue
+			
+			```
+		formatString: 0.0
+		lineageTag: 5f3dfc09-214f-42db-8d0f-2f333f60b609
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Youth Unemployment Rate (Monthly Latest)' = ```
+			
+			VAR d = [Latest Headline Date (Monthly)]
+			RETURN
+			CALCULATE (
+			    [Headline Value (Monthly)],
+			    DateTable[Date] = d,
+			    LFS_Headline_14100287[Labour force characteristics] = "Unemployment rate",
+			    LFS_Headline_14100287[Age group] = "15 to 24 years",
+			    LFS_Headline_14100287[Statistics] = "Estimate",
+			    LFS_Headline_14100287[Data type] = "Seasonally adjusted",
+			    LFS_Headline_14100287[GEO] = SELECTEDVALUE ( LFS_Headline_14100287[GEO], "Canada" ),
+			    LFS_Headline_14100287[Gender] = SELECTEDVALUE ( LFS_Headline_14100287[Gender], "Total - Gender" )
+			)
+			
+			```
+		formatString: 0.0
+		lineageTag: 461236c0-e512-4753-8e0c-514f0377caad
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Youth Unemployment Rate YoY (Monthly pp)' = ```
+			
+			VAR d = [Latest Headline Date (Monthly)]
+			VAR CurrentValue =
+			    CALCULATE (
+			        [Headline Value (Monthly)],
+			        DateTable[Date] = d,
+			        LFS_Headline_14100287[Labour force characteristics] = "Unemployment rate",
+			        LFS_Headline_14100287[Age group] = "15 to 24 years",
+			        LFS_Headline_14100287[Statistics] = "Estimate",
+			        LFS_Headline_14100287[Data type] = "Seasonally adjusted",
+			        LFS_Headline_14100287[GEO] = SELECTEDVALUE ( LFS_Headline_14100287[GEO], "Canada" ),
+			        LFS_Headline_14100287[Gender] = SELECTEDVALUE ( LFS_Headline_14100287[Gender], "Total - Gender" )
+			    )
+			VAR PreviousYearValue =
+			    CALCULATE (
+			        [Headline Value (Monthly)],
+			        DateTable[Date] = EDATE ( d, -12 ),
+			        LFS_Headline_14100287[Labour force characteristics] = "Unemployment rate",
+			        LFS_Headline_14100287[Age group] = "15 to 24 years",
+			        LFS_Headline_14100287[Statistics] = "Estimate",
+			        LFS_Headline_14100287[Data type] = "Seasonally adjusted",
+			        LFS_Headline_14100287[GEO] = SELECTEDVALUE ( LFS_Headline_14100287[GEO], "Canada" ),
+			        LFS_Headline_14100287[Gender] = SELECTEDVALUE ( LFS_Headline_14100287[Gender], "Total - Gender" )
+			    )
+			RETURN
+			CurrentValue - PreviousYearValue
+			
+			```
+		formatString: 0.0
+		lineageTag: e35cc3d9-5e0f-45db-8c96-61c423f282bc
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Participation Rate (Monthly Latest)' = ```
+			
+			VAR d = [Latest Headline Date (Monthly)]
+			RETURN
+			CALCULATE (
+			    [Headline Value (Monthly)],
+			    DateTable[Date] = d,
+			    LFS_Headline_14100287[Labour force characteristics] = "Participation rate",
+			    LFS_Headline_14100287[Age group] = "15 years and over",
+			    LFS_Headline_14100287[Statistics] = "Estimate",
+			    LFS_Headline_14100287[Data type] = "Seasonally adjusted",
+			    LFS_Headline_14100287[GEO] = SELECTEDVALUE ( LFS_Headline_14100287[GEO], "Canada" ),
+			    LFS_Headline_14100287[Gender] = SELECTEDVALUE ( LFS_Headline_14100287[Gender], "Total - Gender" )
+			)
+			
+			```
+		formatString: 0.0
+		lineageTag: 25db6950-0ee2-4acf-9683-25fb0b9534f7
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Participation Rate YoY (Monthly pp)' = ```
+			
+			VAR d = [Latest Headline Date (Monthly)]
+			VAR CurrentValue =
+			    CALCULATE (
+			        [Headline Value (Monthly)],
+			        DateTable[Date] = d,
+			        LFS_Headline_14100287[Labour force characteristics] = "Participation rate",
+			        LFS_Headline_14100287[Age group] = "15 years and over",
+			        LFS_Headline_14100287[Statistics] = "Estimate",
+			        LFS_Headline_14100287[Data type] = "Seasonally adjusted",
+			        LFS_Headline_14100287[GEO] = SELECTEDVALUE ( LFS_Headline_14100287[GEO], "Canada" ),
+			        LFS_Headline_14100287[Gender] = SELECTEDVALUE ( LFS_Headline_14100287[Gender], "Total - Gender" )
+			    )
+			VAR PreviousYearValue =
+			    CALCULATE (
+			        [Headline Value (Monthly)],
+			        DateTable[Date] = EDATE ( d, -12 ),
+			        LFS_Headline_14100287[Labour force characteristics] = "Participation rate",
+			        LFS_Headline_14100287[Age group] = "15 years and over",
+			        LFS_Headline_14100287[Statistics] = "Estimate",
+			        LFS_Headline_14100287[Data type] = "Seasonally adjusted",
+			        LFS_Headline_14100287[GEO] = SELECTEDVALUE ( LFS_Headline_14100287[GEO], "Canada" ),
+			        LFS_Headline_14100287[Gender] = SELECTEDVALUE ( LFS_Headline_14100287[Gender], "Total - Gender" )
+			    )
+			RETURN
+			CurrentValue - PreviousYearValue
+			
+			```
+		formatString: 0.0
+		lineageTag: 21c23f76-4e58-4443-a418-b043279f6b16
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Employment Rate (Monthly Latest)' = ```
+			
+			VAR d = [Latest Headline Date (Monthly)]
+			RETURN
+			CALCULATE (
+			    [Headline Value (Monthly)],
+			    DateTable[Date] = d,
+			    LFS_Headline_14100287[Labour force characteristics] = "Employment rate",
+			    LFS_Headline_14100287[Age group] = "15 years and over",
+			    LFS_Headline_14100287[Statistics] = "Estimate",
+			    LFS_Headline_14100287[Data type] = "Seasonally adjusted",
+			    LFS_Headline_14100287[GEO] = SELECTEDVALUE ( LFS_Headline_14100287[GEO], "Canada" ),
+			    LFS_Headline_14100287[Gender] = SELECTEDVALUE ( LFS_Headline_14100287[Gender], "Total - Gender" )
+			)
+			
+			```
+		formatString: 0.0
+		lineageTag: 929e6618-fdb0-473d-937c-ddf3f43cf64f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Employment Rate YoY (Monthly pp)' = ```
+			
+			VAR d = [Latest Headline Date (Monthly)]
+			VAR CurrentValue =
+			    CALCULATE (
+			        [Headline Value (Monthly)],
+			        DateTable[Date] = d,
+			        LFS_Headline_14100287[Labour force characteristics] = "Employment rate",
+			        LFS_Headline_14100287[Age group] = "15 years and over",
+			        LFS_Headline_14100287[Statistics] = "Estimate",
+			        LFS_Headline_14100287[Data type] = "Seasonally adjusted",
+			        LFS_Headline_14100287[GEO] = SELECTEDVALUE ( LFS_Headline_14100287[GEO], "Canada" ),
+			        LFS_Headline_14100287[Gender] = SELECTEDVALUE ( LFS_Headline_14100287[Gender], "Total - Gender" )
+			    )
+			VAR PreviousYearValue =
+			    CALCULATE (
+			        [Headline Value (Monthly)],
+			        DateTable[Date] = EDATE ( d, -12 ),
+			        LFS_Headline_14100287[Labour force characteristics] = "Employment rate",
+			        LFS_Headline_14100287[Age group] = "15 years and over",
+			        LFS_Headline_14100287[Statistics] = "Estimate",
+			        LFS_Headline_14100287[Data type] = "Seasonally adjusted",
+			        LFS_Headline_14100287[GEO] = SELECTEDVALUE ( LFS_Headline_14100287[GEO], "Canada" ),
+			        LFS_Headline_14100287[Gender] = SELECTEDVALUE ( LFS_Headline_14100287[Gender], "Total - Gender" )
+			    )
+			RETURN
+			CurrentValue - PreviousYearValue
+			
+			```
+		formatString: 0.0
+		lineageTag: 4ce6feea-ef45-4fae-b950-3976d71c7d54
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column REF_DATE
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: f59a444a-d0a0-4872-936c-46dfd4b0d949
+		summarizeBy: none
+		sourceColumn: REF_DATE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column GEO
+		dataType: string
+		lineageTag: 4e01ed73-a7c4-4d07-8024-88cf7424f3f4
+		summarizeBy: none
+		sourceColumn: GEO
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Labour force characteristics'
+		dataType: string
+		lineageTag: 55a7b886-24ff-4cb0-8434-4c673b4df35e
+		summarizeBy: none
+		sourceColumn: Labour force characteristics
+
+		annotation SummarizationSetBy = Automatic
+
+	column Gender
+		dataType: string
+		lineageTag: 16a44302-b7d7-4d24-a923-794074bc0880
+		summarizeBy: none
+		sourceColumn: Gender
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Age group'
+		dataType: string
+		lineageTag: b1b370ed-5c61-44f4-83b5-278acb58702e
+		summarizeBy: none
+		sourceColumn: Age group
+
+		annotation SummarizationSetBy = Automatic
+
+	column Statistics
+		dataType: string
+		lineageTag: 6b629e94-0d14-4036-bd37-f9f149230113
+		summarizeBy: none
+		sourceColumn: Statistics
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Data type'
+		dataType: string
+		lineageTag: ab846fed-0717-449d-8f4f-75e7b9756d4d
+		summarizeBy: none
+		sourceColumn: Data type
+
+		annotation SummarizationSetBy = Automatic
+
+	column VALUE
+		dataType: double
+		formatString: 0.0
+		lineageTag: bc7f507f-a0a5-48cc-8e93-af39d794d7f4
+		summarizeBy: sum
+		sourceColumn: VALUE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition LFS_Headline_14100287 = m
+		mode: import
+		source =
+				let
+				    Source = Web.Contents("https://www150.statcan.gc.ca/n1/tbl/csv/14100287-eng.zip"),
+				    Custom1 = Unzip(Source),
+				    Content = Custom1{0}[Content],
+				    #"Imported CSV" = Csv.Document(Content,[Delimiter=",", Columns=19, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Imported CSV", [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"REF_DATE", type date}, {"GEO", type text}, {"DGUID", type text}, {"Labour force characteristics", type text}, {"Gender", type text}, {"Age group", type text}, {"Statistics", type text}, {"Data type", type text}, {"UOM", type text}, {"UOM_ID", Int64.Type}, {"SCALAR_FACTOR", type text}, {"SCALAR_ID", Int64.Type}, {"VECTOR", type text}, {"COORDINATE", type text}, {"VALUE", type number}, {"STATUS", type text}, {"SYMBOL", type text}, {"TERMINATED", type text}, {"DECIMALS", Int64.Type}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"DGUID", "UOM", "UOM_ID", "SCALAR_FACTOR", "SCALAR_ID", "VECTOR", "COORDINATE", "STATUS", "SYMBOL", "TERMINATED", "DECIMALS"})
+				in
+				    #"Removed Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
