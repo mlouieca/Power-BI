@@ -1,0 +1,21 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-CA
+	dataAccessOptions
+		fastCombine
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["fnGetCPSMonth","CPS Download Staging","CPS Raw Web","CPS Person Records","CPS Parent Links","CPS Core-Aged Adults","CPS Monthly Labour Summary","pCensusApiKey"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table 'CPS Monthly Labour Summary'
+ref table Date
+ref table 'Labour Force Indicator'
+
+ref cultureInfo en-US
+

@@ -1,0 +1,27 @@
+table 'Annual Dates'
+	lineageTag: 169bcfd5-bb99-4376-8242-de5340a2e631
+	dataCategory: Time
+
+	column Date
+		isKey
+		formatString: General Date
+		lineageTag: c0d001a8-fbd3-4d6a-9ef3-2877d21858b9
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Annual Dates' = calculated
+		mode: import
+		source = ```
+				
+				CALENDAR (
+				    MIN ( 'CPI Annual'[REF_DATE] ),
+				    MAX ( 'CPI Annual'[REF_DATE] )
+				)
+				
+				```
+
+	annotation PBI_Id = 1c8a68129f824d42849c3cbcc9478c34
+

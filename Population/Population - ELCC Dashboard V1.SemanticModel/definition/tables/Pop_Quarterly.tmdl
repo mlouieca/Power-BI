@@ -1,0 +1,144 @@
+table Pop_Quarterly
+	lineageTag: ad319e35-3f53-4eed-8f39-4c0b295c73a4
+
+	measure 'Population (Quarterly)' = ```
+			
+			SUM ( Pop_Quarterly[VALUE] )
+			
+			```
+		formatString: 0
+		lineageTag: a6b78749-47d8-4b2c-80d3-71ba110cecc1
+
+	measure 'Population (Latest Quarter)' = ```
+			
+			VAR MaxDate =
+			    CALCULATE ( MAX ( Pop_Quarterly[Date] ), ALL ( Pop_Quarterly ) )
+			RETURN
+			    CALCULATE ( [Population (Quarterly)], Pop_Quarterly[Date] = MaxDate )
+			
+			```
+		formatString: 0
+		lineageTag: 97922d01-a617-4aba-a93d-afefbac5fde7
+
+	measure 'Population (QoQ Change)' = ```
+			
+			[Population (Quarterly)]
+			    - CALCULATE ( [Population (Quarterly)], DATEADD ( 'Date'[Date], -1, QUARTER ) )
+			
+			```
+		formatString: 0
+		lineageTag: 649124e9-afae-4d86-b63e-cd939c7d4d1e
+
+	measure 'Population (YoY Change)' = ```
+			
+			[Population (Quarterly)]
+			    - CALCULATE ( [Population (Quarterly)], DATEADD ( 'Date'[Date], -1, YEAR ) )
+			
+			```
+		formatString: 0
+		lineageTag: 541e9705-e100-4c48-90eb-eba5bb15b542
+
+	measure 'Population (Quarterly - Latest)' = ```
+			
+			VAR MaxDate =
+			    CALCULATE ( MAX ( Pop_Quarterly[Date] ), REMOVEFILTERS ( 'Date' ) )
+			RETURN
+			    CALCULATE ( [Population (Quarterly)], Pop_Quarterly[Date] = MaxDate )
+			
+			```
+		formatString: 0
+		lineageTag: 747b080a-8df8-41a6-abf8-4ff0fe260e05
+
+	measure 'Population (Quarterly - Latest YoY)' = ```
+			
+			VAR MaxDate =
+			    CALCULATE ( MAX ( Pop_Quarterly[Date] ), REMOVEFILTERS ( 'Date' ) )
+			VAR CurrentVal =
+			    CALCULATE ( [Population (Quarterly)], Pop_Quarterly[Date] = MaxDate )
+			VAR PrevVal =
+			    CALCULATE ( [Population (Quarterly)], Pop_Quarterly[Date] = EDATE ( MaxDate, -12 ) )
+			RETURN
+			    CurrentVal - PrevVal
+			
+			```
+		formatString: 0
+		lineageTag: c2536806-80ab-408f-8365-535c598d9864
+
+	measure 'Population (Quarterly - Latest YoY %)' = ```
+			
+			VAR MaxDate =
+			    CALCULATE ( MAX ( Pop_Quarterly[Date] ), REMOVEFILTERS ( 'Date' ) )
+			VAR CurrentVal =
+			    CALCULATE ( [Population (Quarterly)], Pop_Quarterly[Date] = MaxDate )
+			VAR PrevVal =
+			    CALCULATE ( [Population (Quarterly)], Pop_Quarterly[Date] = EDATE ( MaxDate, -12 ) )
+			RETURN
+			    DIVIDE ( CurrentVal - PrevVal, PrevVal )
+			
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 10c0d6a5-e859-491a-84b5-d8b422b8a5bd
+
+	measure 'Max Date - Pop Quarterly' = ```
+			
+			CALCULATE ( MAX ( Pop_Quarterly[Date] ), ALL ( Pop_Quarterly ) )
+			
+			```
+		formatString: General Date
+		lineageTag: 93fa2d16-f07b-4bec-8cb5-d6765bb7f6f0
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 9a50592f-4d02-4ad3-afaa-15dc85733e57
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column GEO
+		dataType: string
+		lineageTag: 558aa187-2b27-4080-91e7-2e42220dab5d
+		summarizeBy: none
+		sourceColumn: GEO
+
+		annotation SummarizationSetBy = Automatic
+
+	column UOM
+		dataType: string
+		lineageTag: 386c9ccc-4619-4395-b6e8-03d8fd89b3e0
+		summarizeBy: none
+		sourceColumn: UOM
+
+		annotation SummarizationSetBy = Automatic
+
+	column VALUE
+		dataType: int64
+		formatString: 0
+		lineageTag: 645e5762-4798-4f3f-acc0-c2b466e01460
+		summarizeBy: sum
+		sourceColumn: VALUE
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Pop_Quarterly = m
+		mode: import
+		source =
+				let
+				    Source = Web.Contents("https://www150.statcan.gc.ca/n1/tbl/csv/17100009-eng.zip "),
+				    Custom1 = Unzip(Source),
+				    Content = Custom1{0}[Content],
+				    #"Imported CSV" = Csv.Document(Content,[Delimiter=",", Columns=14, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Imported CSV", [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"REF_DATE", type date}, {"GEO", type text}, {"DGUID", type text}, {"UOM", type text}, {"UOM_ID", Int64.Type}, {"SCALAR_FACTOR", type text}, {"SCALAR_ID", Int64.Type}, {"VECTOR", type text}, {"COORDINATE", Int64.Type}, {"VALUE", Int64.Type}, {"STATUS", type text}, {"SYMBOL", type text}, {"TERMINATED", type text}, {"DECIMALS", Int64.Type}}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Changed Type",{{"REF_DATE", "Date"}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Renamed Columns",{"STATUS", "SYMBOL", "TERMINATED", "DECIMALS", "UOM_ID", "SCALAR_FACTOR", "SCALAR_ID", "VECTOR", "COORDINATE", "DGUID"})
+				in
+				    #"Removed Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

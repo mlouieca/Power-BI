@@ -1,0 +1,50 @@
+table Date
+	lineageTag: a38d2c21-0981-469a-b142-3099ca3e53fe
+	dataCategory: Time
+
+	column Date
+		isKey
+		formatString: General Date
+		lineageTag: e5f094c0-7f27-4750-9fc9-3c7344223f29
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year = ```
+			YEAR ( 'Date'[Date] )
+			
+			```
+		formatString: 0
+		lineageTag: 8bf72bab-b5c5-4767-a3d1-01d38d7dbd19
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Date = calculated
+		mode: import
+		source = ```
+				
+				VAR AllDates =
+				    FILTER (
+				        DISTINCT (
+				            UNION (
+				                SELECTCOLUMNS ( Pop_Quarterly,        "D", Pop_Quarterly[Date] ),
+				                SELECTCOLUMNS ( Pop_Annual_AgeGender, "D", Pop_Annual_AgeGender[Date] ),
+				                SELECTCOLUMNS ( Fertility_Annual,     "D", Fertility_Annual[Date] ),
+				                SELECTCOLUMNS ( Pop_Projected,        "D", Pop_Projected[Date] ),
+				                SELECTCOLUMNS ( Proj_Components,      "D", Proj_Components[Date] )
+				            )
+				        ),
+				        NOT ISBLANK ( [D] )
+				    )
+				VAR MinDate = MINX ( AllDates, [D] )
+				VAR MaxDate = MAXX ( AllDates, [D] )
+				RETURN
+				    CALENDAR ( MinDate, MaxDate )
+				
+				```
+
+	annotation PBI_Id = ba7bcd08e43840829e6a7e2aa11e8989
+

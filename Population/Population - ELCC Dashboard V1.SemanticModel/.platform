@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "Population - ELCC Dashboard V1"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "0c689abb-e4a0-4f4f-8422-6b3a4c69aacc"
+  }
+}

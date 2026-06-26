@@ -1,0 +1,32 @@
+cultureInfo en-CA
+
+	linguisticMetadata =
+			{
+			  "Version": "2.0.0",
+			  "Language": "en-US",
+			  "Entities": {
+			    "lfs_familystructure_14100396_annual.annual_metric__participation_rate_mothers": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "LFS_FamilyStructure_14100396_Annual",
+			          "ConceptualProperty": "Annual Metric - Participation Rate (Mothers)"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Annual Metric - Participation Rate (Mothers)": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    }
+			  }
+			}
+		contentType: json
+

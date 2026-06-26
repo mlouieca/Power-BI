@@ -1,0 +1,8 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "5ddb02931a8b43132aab",
+  "displayName": "Annual Fertility 1",
+  "displayOption": "FitToPage",
+  "height": 720,
+  "width": 1280
+}

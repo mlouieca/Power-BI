@@ -1,0 +1,43 @@
+relationship da1b487f-93a7-4af6-97b3-54a7491847c7
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DateTable.Date
+	toColumn: LocalDateTable_d9728940-8e1d-488b-9220-13893d8edc4f.Date
+
+relationship 58f82d6c-2dad-1ca3-6a7d-5d207d48193b
+	fromColumn: ECE.Date
+	toColumn: DateTable.Date
+
+relationship dac92ba1-6800-4d48-a296-b9e6b066c489
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 14100287-eng.REF_DATE
+	toColumn: LocalDateTable_b1e015a8-6fa8-4a43-871d-66a9ae3e3537.Date
+
+relationship 12fc6936-b000-4ca6-9a75-ff64cf459499
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DimYear.'Year Date'
+	toColumn: LocalDateTable_13a87db4-2be7-449e-bfbf-68d9916c0e71.Date
+
+relationship d49ffd85-cb36-1373-258b-3fb43016a19c
+	fromColumn: 'Annual ECE'.Geography
+	toColumn: DimGeography.Geography
+
+relationship a7626bdc-22de-8648-93cc-d137ffb5aaa6
+	fromColumn: 'Annual ECE'.NOC
+	toColumn: DimOccupation.NOC
+
+relationship b252c3a4-43f1-d74d-8834-86c8400c824a
+	fromColumn: 'Annual ECE'.Characteristic
+	toColumn: DimCharacteristic.Characteristic
+
+relationship cb588ef6-c2c6-46f5-9013-f8c1d703d1c0
+	fromColumn: 'Annual ECE'.Year
+	toColumn: DimYear.Year
+
+relationship 2009d6d5-9b2b-269f-2d55-314fe4cc965c
+	fromColumn: 'Annual LFS Wage'.Year
+	toColumn: DimYear.Year
+
+relationship c8f377e5-3cf4-2316-ece7-8869acdf1f74
+	fromColumn: 'Annual LFS Wage'.Geography
+	toColumn: DimGeography.Geography
+

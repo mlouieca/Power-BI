@@ -1,0 +1,4 @@
+relationship f8079560-2fbb-dd29-ebc3-ffe83b97d0f2
+	fromColumn: LFS_FamilyStructure_14100396_Annual.REF_DATE
+	toColumn: YearTable.Year
+

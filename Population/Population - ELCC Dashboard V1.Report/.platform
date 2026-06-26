@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "Population - ELCC Dashboard V1"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "6c4f3fdb-94b0-4046-a2d3-e59ee36a1cf2"
+  }
+}

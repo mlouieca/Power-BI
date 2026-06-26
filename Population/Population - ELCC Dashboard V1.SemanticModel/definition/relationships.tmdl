@@ -1,0 +1,25 @@
+relationship 88df9c58-cbbf-4bc1-b088-9af40b8bb3d2
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 17100040-eng.REF_DATE
+	toColumn: LocalDateTable_03047ece-c07b-49d5-8da1-846a819151e0.Date
+
+relationship 846cf4fb-e267-7b8e-28c0-52e015503ec1
+	fromColumn: Fertility_Annual.Date
+	toColumn: Date.Date
+
+relationship 3c6f088b-053a-7afb-d9e9-350954e1153d
+	fromColumn: Pop_Quarterly.Date
+	toColumn: Date.Date
+
+relationship 896c8e89-6633-a977-c7e1-bad45b343429
+	fromColumn: Pop_Annual_AgeGender.Date
+	toColumn: Date.Date
+
+relationship c04982dd-bf02-91d6-7bc9-3b009d4e9d4e
+	fromColumn: Pop_Projected.Date
+	toColumn: Date.Date
+
+relationship ed0be3c4-7b25-88f8-3b47-38ff58d4b203
+	fromColumn: Proj_Components.Date
+	toColumn: Date.Date
+

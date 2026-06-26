@@ -1,0 +1,154 @@
+table 17100040-eng
+	lineageTag: 5bbced41-3895-47ee-a28d-934568ff5472
+
+	column REF_DATE
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: a8811552-f9a7-46bc-9ed3-93055f4d0761
+		summarizeBy: none
+		sourceColumn: REF_DATE
+
+		variation Variation
+			isDefault
+			relationship: 88df9c58-cbbf-4bc1-b088-9af40b8bb3d2
+			defaultHierarchy: LocalDateTable_03047ece-c07b-49d5-8da1-846a819151e0.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column GEO
+		dataType: string
+		lineageTag: 8e0a90e4-978e-4ce9-b01f-b7e04afd3cea
+		summarizeBy: none
+		sourceColumn: GEO
+
+		annotation SummarizationSetBy = Automatic
+
+	column DGUID
+		dataType: string
+		lineageTag: ddaf8b34-6165-40fa-acba-8e1236b89650
+		summarizeBy: none
+		sourceColumn: DGUID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Components of population growth'
+		dataType: string
+		lineageTag: 0bab0893-5d54-432a-aa00-15a43953a6a3
+		summarizeBy: none
+		sourceColumn: Components of population growth
+
+		annotation SummarizationSetBy = Automatic
+
+	column UOM
+		dataType: string
+		lineageTag: 73a06bc2-67ac-4797-999d-704b96b78fe4
+		summarizeBy: none
+		sourceColumn: UOM
+
+		annotation SummarizationSetBy = Automatic
+
+	column UOM_ID
+		dataType: int64
+		formatString: 0
+		lineageTag: 3285baa7-ee65-4f37-82af-c48e93a79676
+		summarizeBy: count
+		sourceColumn: UOM_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column SCALAR_FACTOR
+		dataType: string
+		lineageTag: 182e96c0-81fc-43ae-a035-8f2019db0ec4
+		summarizeBy: none
+		sourceColumn: SCALAR_FACTOR
+
+		annotation SummarizationSetBy = Automatic
+
+	column SCALAR_ID
+		dataType: int64
+		formatString: 0
+		lineageTag: 72f34039-b5f8-4220-afd9-8b22d8b1950c
+		summarizeBy: count
+		sourceColumn: SCALAR_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column VECTOR
+		dataType: string
+		lineageTag: 47687985-1165-4a87-8c59-612ad916c762
+		summarizeBy: none
+		sourceColumn: VECTOR
+
+		annotation SummarizationSetBy = Automatic
+
+	column COORDINATE
+		dataType: double
+		lineageTag: 009507f7-01e3-4e02-b963-f2730d366199
+		summarizeBy: sum
+		sourceColumn: COORDINATE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column VALUE
+		dataType: int64
+		formatString: 0
+		lineageTag: c64d13ab-e43d-4a36-b79a-837ea7f98caf
+		summarizeBy: sum
+		sourceColumn: VALUE
+
+		annotation SummarizationSetBy = Automatic
+
+	column STATUS
+		dataType: string
+		lineageTag: a3322e6b-2c1e-4454-84de-db2acb0df915
+		summarizeBy: none
+		sourceColumn: STATUS
+
+		annotation SummarizationSetBy = Automatic
+
+	column SYMBOL
+		dataType: string
+		lineageTag: 08c9b8e7-718d-46ea-82d5-67158ac4046a
+		summarizeBy: none
+		sourceColumn: SYMBOL
+
+		annotation SummarizationSetBy = Automatic
+
+	column TERMINATED
+		dataType: string
+		lineageTag: e2354f16-c7a2-4d95-af62-5c9163eed5d3
+		summarizeBy: none
+		sourceColumn: TERMINATED
+
+		annotation SummarizationSetBy = Automatic
+
+	column DECIMALS
+		dataType: int64
+		formatString: 0
+		lineageTag: f9f0c312-6001-4ea0-a81d-c0276e302ac2
+		summarizeBy: sum
+		sourceColumn: DECIMALS
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 17100040-eng = m
+		mode: import
+		source =
+				let
+				    Source = Web.Contents("https://www150.statcan.gc.ca/n1/tbl/csv/17100040-eng.zip "),
+				    Custom1 = Unzip(Source),
+				    Content = Custom1{0}[Content],
+				    #"Imported CSV" = Csv.Document(Content,[Delimiter=",", Columns=15, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Imported CSV", [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"REF_DATE", type date}, {"GEO", type text}, {"DGUID", type text}, {"Components of population growth", type text}, {"UOM", type text}, {"UOM_ID", Int64.Type}, {"SCALAR_FACTOR", type text}, {"SCALAR_ID", Int64.Type}, {"VECTOR", type text}, {"COORDINATE", type number}, {"VALUE", Int64.Type}, {"STATUS", type text}, {"SYMBOL", type text}, {"TERMINATED", type text}, {"DECIMALS", Int64.Type}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

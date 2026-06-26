@@ -1,0 +1,84 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "cfa3a3d0ae0e8a1a403e",
+  "position": {
+    "x": 0,
+    "y": 576,
+    "z": 3000,
+    "height": 128,
+    "width": 768,
+    "tabOrder": 3000
+  },
+  "visual": {
+    "visualType": "cardVisual",
+    "query": {
+      "queryState": {
+        "Data": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Pop_Quarterly"
+                    }
+                  },
+                  "Property": "Population (Quarterly - Latest)"
+                }
+              },
+              "queryRef": "Pop_Quarterly.Population (Quarterly - Latest)",
+              "nativeQueryRef": "Population (Quarterly - Latest)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Pop_Quarterly"
+                    }
+                  },
+                  "Property": "Population (Quarterly - Latest YoY)"
+                }
+              },
+              "queryRef": "Pop_Quarterly.Population (Quarterly - Latest YoY)",
+              "nativeQueryRef": "Population (Quarterly - Latest YoY)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Pop_Quarterly"
+                    }
+                  },
+                  "Property": "Population (Quarterly - Latest YoY %)"
+                }
+              },
+              "queryRef": "Pop_Quarterly.Population (Quarterly - Latest YoY %)",
+              "nativeQueryRef": "Population (Quarterly - Latest YoY %)"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Pop_Quarterly"
+                  }
+                },
+                "Property": "Population (Quarterly - Latest)"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

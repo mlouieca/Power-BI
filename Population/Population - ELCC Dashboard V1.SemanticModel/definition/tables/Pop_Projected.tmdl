@@ -1,0 +1,161 @@
+table Pop_Projected
+	lineageTag: 83ac20a4-675f-41dc-8478-21528f20c6c8
+
+	measure 'Population (Projected)' = ```
+			
+			SUM ( Pop_Projected[Value_Persons] )
+			
+			```
+		formatString: 0
+		lineageTag: 7b134e3f-7b51-4b9f-9f38-27b4fbffcf87
+
+	measure 'Pop Age 0-5 (Projected)' = ```
+			
+			CALCULATE (
+			    [Population (Projected)],
+			    Pop_Projected[Age group]
+			        IN { "0 to 4 years", "5 years" }
+			)
+			
+			```
+		formatString: 0
+		lineageTag: dfa6b819-6972-405b-82d3-01265642b671
+
+	measure 'Pop Age 0-5 (Projected, M1)' = ```
+			
+			CALCULATE (
+			    [Population (Projected)],
+			    Pop_Projected[Age group] IN { "0 to 4 years", "5 years" },
+			    Pop_Projected[Projection scenario] = "Projection scenario M1: medium-growth"
+			)
+			
+			```
+		formatString: 0
+		lineageTag: 69ceb9d9-dc3b-428e-b7eb-de72a1a4fa6e
+
+	measure 'Pop Age 0-12 (Projected)' = ```
+			
+			CALCULATE (
+			    [Population (Projected)],
+			    Pop_Projected[Age group]
+			        IN { "0 to 4 years", "5 years","6 years", "7 years", "8 years", "9 years", "10 years", "11 years", "12 years" }
+			)
+			
+			```
+		formatString: 0
+		lineageTag: c75ba968-9705-4e02-b572-1acb0df350f6
+
+	measure 'Pop Age 6-12 (Projected, M1)' = ```
+			
+			CALCULATE (
+			    [Population (Projected)],
+			    Pop_Projected[Age group]
+			        IN { "6 years", "7 years", "8 years", "9 years", "10 years", "11 years", "12 years" },
+			    Pop_Projected[Projection scenario] = "Projection scenario M1: medium-growth"
+			)
+			
+			```
+		formatString: 0
+		lineageTag: 24bfefab-75d2-4263-9bbc-ad14ed0a3e6c
+
+	column REF_DATE
+		dataType: int64
+		formatString: 0
+		lineageTag: 12696083-6db2-48a7-82b7-8b8790d8e8cc
+		summarizeBy: sum
+		sourceColumn: REF_DATE
+
+		annotation SummarizationSetBy = Automatic
+
+	column GEO
+		dataType: string
+		lineageTag: 76b9b4d4-0b59-4ce0-ae2d-c661880eb5a1
+		summarizeBy: none
+		sourceColumn: GEO
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Projection scenario'
+		dataType: string
+		lineageTag: 3569bc64-97f0-4462-bc98-c9f7425aa83e
+		summarizeBy: none
+		sourceColumn: Projection scenario
+
+		annotation SummarizationSetBy = Automatic
+
+	column Gender
+		dataType: string
+		lineageTag: c9eff0de-9b4c-4a2b-a10d-2e338260ebcc
+		summarizeBy: none
+		sourceColumn: Gender
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Age group'
+		dataType: string
+		lineageTag: c5ab661c-598d-4fdc-9d8d-6e945c7b11a6
+		summarizeBy: none
+		sourceColumn: Age group
+
+		annotation SummarizationSetBy = Automatic
+
+	column UOM
+		dataType: string
+		lineageTag: ac7673ac-aa32-4612-8f0f-af1f60baed57
+		summarizeBy: none
+		sourceColumn: UOM
+
+		annotation SummarizationSetBy = Automatic
+
+	column VALUE
+		dataType: double
+		lineageTag: 20d6db36-235a-484a-b8fd-f1ee9c789fd5
+		summarizeBy: sum
+		sourceColumn: VALUE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 2b34bcff-645c-4b30-82f0-4cec3cbee7a8
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Value_Persons
+		dataType: int64
+		formatString: 0
+		lineageTag: 3a5e7b0f-bc80-4b12-b896-06ab2b8b8171
+		summarizeBy: sum
+		sourceColumn: Value_Persons
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Pop_Projected = m
+		mode: import
+		source =
+				let
+				    Source = Web.Contents("https://www150.statcan.gc.ca/n1/tbl/csv/17100057-eng.zip "),
+				    Custom1 = Unzip (Source),
+				    Content = Custom1{0}[Content],
+				    #"Imported CSV" = Csv.Document(Content,[Delimiter=",", Columns=17, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Imported CSV", [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"REF_DATE", Int64.Type}, {"GEO", type text}, {"DGUID", type text}, {"Projection scenario", type text}, {"Gender", type text}, {"Age group", type text}, {"UOM", type text}, {"UOM_ID", Int64.Type}, {"SCALAR_FACTOR", type text}, {"SCALAR_ID", Int64.Type}, {"VECTOR", type text}, {"COORDINATE", type text}, {"VALUE", type number}, {"STATUS", type text}, {"SYMBOL", type text}, {"TERMINATED", type text}, {"DECIMALS", Int64.Type}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"STATUS", "SYMBOL", "TERMINATED", "DECIMALS", "SCALAR_FACTOR", "SCALAR_ID", "VECTOR", "COORDINATE", "UOM_ID", "DGUID"}),
+				    #"Added Custom" = Table.AddColumn(#"Removed Columns", "Date", each #date(Number.FromText(Text.From([REF_DATE])), 7, 1)),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Added Custom",{{"Date", type date}}),
+				    #"Added Custom1" = Table.AddColumn(#"Changed Type1", "Value_Persons", each [VALUE] * 1000),
+				    #"Changed Type2" = Table.TransformColumnTypes(#"Added Custom1",{{"Value_Persons", Int64.Type}})
+				in
+				    #"Changed Type2"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

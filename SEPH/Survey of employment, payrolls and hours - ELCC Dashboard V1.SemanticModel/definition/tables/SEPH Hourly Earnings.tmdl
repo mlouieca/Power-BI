@@ -1,0 +1,253 @@
+table 'SEPH Hourly Earnings'
+	lineageTag: 5b1b866c-57f3-4540-a91c-766dc78e12b6
+
+	measure 'Hourly Earnings Value' =
+			
+			MAX ( 'SEPH Hourly Earnings'[VALUE] )
+		lineageTag: 50acafaf-c6c4-43d3-acb2-fa92312057d1
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Child Care Avg Hourly Earnings' =
+			
+			CALCULATE (
+			    [Hourly Earnings Value],
+			    'SEPH Hourly Earnings'[NAICS] = "Child day-care services [6244]",
+			    'SEPH Hourly Earnings'[Overtime] = "Including overtime"
+			)
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: dc53ff27-2a64-4067-82f3-312ac41176a3
+
+	measure 'All Industries Avg Hourly Earnings' =
+			
+			CALCULATE (
+			    [Hourly Earnings Value],
+			    'SEPH Hourly Earnings'[NAICS] = "Industrial aggregate excluding unclassified businesses [11-91N]",
+			    'SEPH Hourly Earnings'[Overtime] = "Including overtime"
+			)
+		lineageTag: 69d50d80-6fd7-48ef-ae31-9c3a986967e3
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Child Care Hourly Earnings Gap' =
+			
+			[Child Care Avg Hourly Earnings] - [All Industries Avg Hourly Earnings]
+		lineageTag: 13f66a37-9b83-49dc-9775-66e928dea008
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Child Care Hourly Earnings Relative to All Industries' =
+			
+			DIVIDE (
+			    [Child Care Avg Hourly Earnings],
+			    [All Industries Avg Hourly Earnings]
+			)
+		lineageTag: e5b34114-6788-4559-a8af-9e4e2a47ccf8
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Child Care Hourly Earnings YoY %' =
+			
+			VAR CurrentValue = [Child Care Avg Hourly Earnings]
+			VAR PreviousValue =
+			    CALCULATE (
+			        [Child Care Avg Hourly Earnings],
+			        DATEADD ( 'Date'[Date], -1, YEAR )
+			    )
+			RETURN
+			    DIVIDE ( CurrentValue - PreviousValue, PreviousValue )
+		lineageTag: 86a72d82-c056-4bcd-bc91-05cde9b1bba6
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'All Industries Hourly Earnings YoY %' =
+			
+			VAR CurrentValue = [All Industries Avg Hourly Earnings]
+			VAR PreviousValue =
+			    CALCULATE (
+			        [All Industries Avg Hourly Earnings],
+			        DATEADD ( 'Date'[Date], -1, YEAR )
+			    )
+			RETURN
+			    DIVIDE ( CurrentValue - PreviousValue, PreviousValue )
+		lineageTag: 2427639e-2d77-4459-ac78-3e40a583c0cc
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Child Care Hourly Earnings Relative Latest' =
+			
+			VAR LatestMonth = [Latest SEPH Month]
+			RETURN
+			    CALCULATE (
+			        [Child Care Hourly Earnings Relative to All Industries],
+			        FILTER (
+			            ALL ( 'Date'[Date] ),
+			            'Date'[Date] = LatestMonth
+			        )
+			    )
+		lineageTag: 2513404d-6aeb-480a-a678-51c1ecafa67a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Child Care Hourly Earnings Gap Latest' =
+			
+			VAR LatestMonth = [Latest SEPH Month]
+			RETURN
+			    CALCULATE (
+			        [Child Care Hourly Earnings Gap],
+			        FILTER (
+			            ALL ( 'Date'[Date] ),
+			            'Date'[Date] = LatestMonth
+			        )
+			    )
+		lineageTag: 8b348869-04d6-4b02-8295-d9860be40e9f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Child Care Hourly Earnings 2019 Avg' =
+			
+			CALCULATE (
+			    AVERAGEX (
+			        VALUES ( 'Date'[Year-Month] ),
+			        [Child Care Avg Hourly Earnings]
+			    ),
+			    FILTER (
+			        ALL ( 'Date' ),
+			        'Date'[Year] = 2019
+			    )
+			)
+		lineageTag: 2f4d77e4-0648-4602-9aee-5509cd971795
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'All Industries Hourly Earnings 2019 Avg' =
+			
+			CALCULATE (
+			    AVERAGEX (
+			        VALUES ( 'Date'[Year-Month] ),
+			        [All Industries Avg Hourly Earnings]
+			    ),
+			    FILTER (
+			        ALL ( 'Date' ),
+			        'Date'[Year] = 2019
+			    )
+			)
+		lineageTag: ea6a6e85-7833-467d-bbef-b50a9669c34f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Child Care Hourly Earnings Index 2019' =
+			100 =
+			DIVIDE (
+			    [Child Care Avg Hourly Earnings],
+			    [Child Care Hourly Earnings 2019 Avg]
+			) * 100
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 5f01307e-7eb8-4286-94e4-993f850635b5
+
+	measure 'All Industries Hourly Earnings Index 2019' =
+			100 =
+			DIVIDE (
+			    [All Industries Avg Hourly Earnings],
+			    [All Industries Hourly Earnings 2019 Avg]
+			) * 100
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 7fad6e71-aabe-4713-9fa1-f4e907702e29
+
+	measure 'Child Care Avg Hourly Earnings 3MMA' =
+			
+			AVERAGEX (
+			    DATESINPERIOD (
+			        'Date'[Date],
+			        MAX ( 'Date'[Date] ),
+			        -3,
+			        MONTH
+			    ),
+			    [Child Care Avg Hourly Earnings]
+			)
+		lineageTag: 7683b82b-303a-40f9-8684-0d58cfd415fa
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 0b37c2e8-7af3-412e-af6c-eb6f5b358b0a
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column GEO
+		dataType: string
+		lineageTag: 26ea3834-215e-4c42-b263-87d8d15d9e1a
+		summarizeBy: none
+		sourceColumn: GEO
+
+		annotation SummarizationSetBy = Automatic
+
+	column Overtime
+		dataType: string
+		lineageTag: 8b367834-9444-49ec-aa19-16fb3ef76127
+		summarizeBy: none
+		sourceColumn: Overtime
+
+		annotation SummarizationSetBy = Automatic
+
+	column NAICS
+		dataType: string
+		lineageTag: c9fd2564-8604-4a67-b8a1-943d554cf651
+		summarizeBy: none
+		sourceColumn: NAICS
+
+		annotation SummarizationSetBy = Automatic
+
+	column UOM
+		dataType: string
+		lineageTag: 85c4d56a-df0c-471e-b8d5-9bd4181b65cf
+		summarizeBy: none
+		sourceColumn: UOM
+
+		annotation SummarizationSetBy = Automatic
+
+	column VALUE
+		dataType: double
+		lineageTag: 8ac51f2b-1ae0-443f-8e4c-3beabbba52ed
+		summarizeBy: sum
+		sourceColumn: VALUE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Employee Type'
+		dataType: string
+		lineageTag: 275cb29a-c74b-42fc-8d9c-690bb39dfb82
+		summarizeBy: none
+		sourceColumn: Employee Type
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'SEPH Hourly Earnings' = m
+		mode: import
+		source =
+				let
+				  Source = Web.Contents("https://www150.statcan.gc.ca/n1/tbl/csv/14100205-eng.zip"),
+				    Custom1 = Unzip(Source),
+				    Content = Custom1{0}[Content],
+				    #"Imported CSV" = Csv.Document(Content,[Delimiter=",", Columns=16, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Imported CSV", [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"REF_DATE", type date}, {"GEO", type text}, {"DGUID", type text}, {"Overtime", type text}, {"North American Industry Classification System (NAICS)", type text}, {"UOM", type text}, {"UOM_ID", Int64.Type}, {"SCALAR_FACTOR", type text}, {"SCALAR_ID", Int64.Type}, {"VECTOR", type text}, {"COORDINATE", type text}, {"VALUE", type number}, {"STATUS", type text}, {"SYMBOL", type text}, {"TERMINATED", type text}, {"DECIMALS", Int64.Type}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"DGUID", "UOM_ID", "SCALAR_FACTOR", "SCALAR_ID", "VECTOR", "COORDINATE", "STATUS", "SYMBOL", "TERMINATED", "DECIMALS"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Removed Columns",{{"North American Industry Classification System (NAICS)", "NAICS"}}),
+				    #"Added Custom" = Table.AddColumn(#"Renamed Columns", "Employee Type", each "Employees paid by the hour"),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Added Custom",{{"REF_DATE", "Date"}})
+				in
+				  #"Renamed Columns1"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

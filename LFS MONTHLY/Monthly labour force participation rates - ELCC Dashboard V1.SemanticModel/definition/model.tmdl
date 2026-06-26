@@ -1,0 +1,22 @@
+model Model
+	culture: en-CA
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-CA
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["LFS_FamilyStructure_14100397","Unzip"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table LFS_FamilyStructure_14100397
+ref table DateTable
+ref table 'Metric Selector'
+ref table DateTableTemplate_d6c4ea08-7bfa-4118-b441-1a5aff2feceb
+ref table LocalDateTable_ebe79d5d-464c-4c8a-9415-56448b3fbaed
+
+ref cultureInfo en-CA
+

@@ -1,0 +1,8 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "c11e2a59fb31d965efd0",
+  "displayName": "Projections by Region",
+  "displayOption": "FitToPage",
+  "height": 720,
+  "width": 1280
+}

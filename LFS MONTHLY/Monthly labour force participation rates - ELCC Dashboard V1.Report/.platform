@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "Monthly labour force participation rates - ELCC Dashboard V1"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "9cc341b0-72d9-4f26-8803-c5220e9fff45"
+  }
+}

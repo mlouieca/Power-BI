@@ -1,0 +1,385 @@
+table 'Annual ECE'
+	lineageTag: 1b36fcff-bf83-4a96-a56a-be63f278629e
+
+	measure 'Annual Estimate' =
+			
+			CALCULATE (
+			    SUM ( 'Annual ECE'[Value] ),
+			    'Annual ECE'[Statistics] = "Estimates"
+			)
+		lineageTag: 7f78bb3a-3722-4348-bb57-8801a3007aff
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Lower CI' =
+			
+			CALCULATE (
+			    SUM ( 'Annual ECE'[Value] ),
+			    'Annual ECE'[Statistics] = "Lower bound (95% CI)"
+			)
+		lineageTag: 4ef55b47-9998-4ec9-8d45-42b28574f62b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Upper CI' =
+			
+			CALCULATE (
+			    SUM ( 'Annual ECE'[Value] ),
+			    'Annual ECE'[Statistics] = "Upper bound (95% CI)"
+			)
+		lineageTag: c4a50db5-100a-4008-99b3-2162fb471e60
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Coefficient of Variation' =
+			
+			CALCULATE (
+			    SUM ( 'Annual ECE'[Value] ),
+			    'Annual ECE'[Statistics] = "Coefficient of variation (%)"
+			)
+		lineageTag: e91f1e7d-aec9-4111-9f3e-550347595c3a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Latest Year' =
+			
+			MAXX (
+			    FILTER (
+			        ALLSELECTED ( DimYear[Year] ),
+			        NOT ISBLANK ( CALCULATE ( [Annual Estimate] ) )
+			    ),
+			    DimYear[Year]
+			)
+		formatString: 0
+		lineageTag: 31b55e07-9f58-4327-8c7e-8eba4679d5c3
+
+	measure 'Latest Value' =
+			
+			VAR _LatestYear = [Latest Year]
+			RETURN
+			    CALCULATE (
+			        [Annual Estimate],
+			        FILTER ( ALL ( DimYear[Year] ), DimYear[Year] = _LatestYear )
+			    )
+		lineageTag: 6982fe1d-3904-44e7-897c-a7205b1822f2
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Previous Year Value' =
+			
+			VAR _LatestYear = [Latest Year]
+			RETURN
+			    CALCULATE (
+			        [Annual Estimate],
+			        FILTER ( ALL ( DimYear[Year] ), DimYear[Year] = _LatestYear - 1 )
+			    )
+		lineageTag: e03c10aa-62a7-4fb8-95bd-464d2da12457
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'YoY Change' =
+			
+			[Latest Value] - [Previous Year Value]
+		lineageTag: a982143a-70ac-4046-9b6b-f2bc556a3be4
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'YoY %' =
+			
+			DIVIDE ( [YoY Change], [Previous Year Value] )
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: ce8cf49b-8843-4517-ae77-a487a27f5ed8
+
+	measure '2019 Value' =
+			
+			CALCULATE (
+			    [Annual Estimate],
+			    FILTER ( ALL ( DimYear[Year] ), DimYear[Year] = 2019 )
+			)
+		lineageTag: c57e05fd-ed51-4840-b072-17d1d5b0f978
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Change Since 2019' =
+			
+			[Latest Value] - [2019 Value]
+		lineageTag: fc07f06c-e7c4-42cd-a4cf-8d76e7915c44
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure '% Change Since 2019' =
+			
+			DIVIDE ( [Change Since 2019], [2019 Value] )
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 93b0d12a-0567-4da1-8720-16746e00489e
+
+	measure 'ECE Employment Latest' =
+			
+			CALCULATE (
+			    [Latest Value],
+			    DimOccupation[NOC] = "42202",
+			    DimCharacteristic[Characteristic] = "Total, employment"
+			)
+		lineageTag: 2f91b935-14d0-434f-a632-862c3d6bd777
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'ECE Employment Change Since 2019' =
+			
+			CALCULATE (
+			    [Change Since 2019],
+			    DimOccupation[NOC] = "42202",
+			    DimCharacteristic[Characteristic] = "Total, employment"
+			)
+		lineageTag: 820c75a4-1e22-41c0-acb5-32d2cf256f4d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'ECE Hourly Wage Latest' =
+			
+			CALCULATE (
+			    [Latest Value],
+			    DimOccupation[NOC] = "42202",
+			    DimCharacteristic[Characteristic] = "Average hourly wage rate (employees only)"
+			)
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 622692db-a759-42eb-89d8-d31b0f9cae27
+
+	measure 'ECE Hourly Wage % Change Since 2019' =
+			
+			CALCULATE (
+			    [% Change Since 2019],
+			    DimOccupation[NOC] = "42202",
+			    DimCharacteristic[Characteristic] = "Average hourly wage rate (employees only)"
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 64b27dbb-59b5-4ccf-a80b-385aea66205b
+
+	measure 'Full-Time Employment' =
+			
+			CALCULATE (
+			    [Annual Estimate],
+			    DimCharacteristic[Characteristic] = "Full-time employment"
+			)
+		lineageTag: 85778673-d0a6-4974-98a8-86d913bba9cd
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Part-Time Employment' =
+			
+			CALCULATE (
+			    [Annual Estimate],
+			    DimCharacteristic[Characteristic] = "Part-time employment"
+			)
+		lineageTag: 07eb41b1-9b8c-4b3b-8d59-f0eaa3dd86d4
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Employment' =
+			
+			CALCULATE (
+			    [Annual Estimate],
+			    DimCharacteristic[Characteristic] = "Total, employment"
+			)
+		lineageTag: 5d903a1f-1b0d-444f-950d-75c7f24f342b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Full-Time Share' =
+			
+			DIVIDE ( [Full-Time Employment], [Total Employment] )
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 9bf6cedc-664b-4a2e-88e2-4ba55f69a213
+
+	measure 'Part-Time Share' =
+			
+			DIVIDE ( [Part-Time Employment], [Total Employment] )
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 7ba7a741-26d4-48e0-8903-68c2f65bcafb
+
+	measure 'ECE Employment Change Since 2019 Generic' =
+			
+			CALCULATE (
+			    [Change Since 2019],
+			    DimOccupation[NOC] = "42202",
+			    DimCharacteristic[Characteristic] = "Total, employment"
+			)
+		lineageTag: f62ffb6e-50ed-4941-bd2b-7ec0d89a64cf
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'ECE Wage Latest Generic' =
+			
+			CALCULATE (
+			    [Latest Value],
+			    DimOccupation[NOC] = "42202",
+			    DimCharacteristic[Characteristic] = "Average hourly wage rate (employees only)"
+			)
+		lineageTag: 38cc1952-2fff-4b1b-848c-a49fe7d15aef
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Annual Estimate Previous Year' =
+			
+			VAR _CurrentYear =
+			    MAX ( DimYear[Year] )
+			RETURN
+			    CALCULATE (
+			        [Annual Estimate],
+			        FILTER (
+			            ALL ( DimYear[Year] ),
+			            DimYear[Year] = _CurrentYear - 1
+			        )
+			    )
+		lineageTag: 1482f7fd-7c40-4368-a9a0-19c8ebd6cff4
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Annual YoY Change' =
+			
+			[Annual Estimate] - [Annual Estimate Previous Year]
+		lineageTag: 45a8d7a5-9c28-4a32-8fdd-178bf1d5c042
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Annual YoY %' =
+			
+			DIVIDE (
+			    [Annual YoY Change],
+			    [Annual Estimate Previous Year]
+			)
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 7f601566-ffcc-44ec-8ab3-05b90879f458
+
+	measure 'Annual YoY % Clean' =
+			
+			VAR _PreviousYearValue = [Annual Estimate Previous Year]
+			RETURN
+			    IF (
+			        ISBLANK ( _PreviousYearValue ),
+			        BLANK (),
+			        DIVIDE ( [Annual Estimate] - _PreviousYearValue, _PreviousYearValue )
+			    )
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 53865e51-76b0-41d7-85dd-b6d45470998e
+
+	measure 'ECE Hourly Wage' =
+			
+			CALCULATE (
+			    [Annual Estimate],
+			    REMOVEFILTERS ( DimOccupation ),
+			    REMOVEFILTERS ( DimCharacteristic ),
+			    DimOccupation[NOC] = "42202",
+			    DimCharacteristic[Characteristic] = "Average hourly wage rate (employees only)"
+			)
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 00b4908d-97a7-4eaf-a2dc-414f91393d43
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column Geography
+		dataType: string
+		lineageTag: 72ef863a-a7bb-4631-8778-6dcfff6af7b0
+		summarizeBy: none
+		sourceColumn: Geography
+
+		annotation SummarizationSetBy = Automatic
+
+	column Occupation
+		dataType: string
+		lineageTag: a78bab12-426f-458f-957d-3157251cf5a5
+		summarizeBy: none
+		sourceColumn: Occupation
+
+		annotation SummarizationSetBy = Automatic
+
+	column NOC
+		dataType: string
+		lineageTag: ccbddff8-7880-480d-8dd7-51abd465ea6c
+		summarizeBy: none
+		sourceColumn: NOC
+
+		annotation SummarizationSetBy = Automatic
+
+	column Occupation_Name
+		dataType: string
+		lineageTag: de53a7b4-48da-4647-976b-676566ae2127
+		summarizeBy: none
+		sourceColumn: Occupation_Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column Selected_charac
+		dataType: string
+		lineageTag: affaf715-7d66-435e-9d68-3112078af2e6
+		summarizeBy: none
+		sourceColumn: Selected_charac
+
+		annotation SummarizationSetBy = Automatic
+
+	column Characteristic
+		dataType: string
+		lineageTag: 4666e1ee-3af9-4833-a522-dfc91629292c
+		summarizeBy: none
+		sourceColumn: Characteristic
+
+		annotation SummarizationSetBy = Automatic
+
+	column Unit
+		dataType: string
+		lineageTag: 9073ced0-767b-4fb4-b2c5-4f0cd831b6ee
+		summarizeBy: none
+		sourceColumn: Unit
+
+		annotation SummarizationSetBy = Automatic
+
+	column Statistics
+		dataType: string
+		lineageTag: 79ef048a-cfce-4adb-bc6b-a97ecdb3e6ab
+		summarizeBy: none
+		sourceColumn: Statistics
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: 1c96e900-2cf3-4e23-a2d3-461295ef6f65
+		summarizeBy: none
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column Value
+		dataType: double
+		lineageTag: 9f576145-69cb-40cd-ba55-21a90e869c70
+		summarizeBy: sum
+		sourceColumn: Value
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Is_Suppressed
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: ddee3c66-aa00-4e70-86b1-cd88af3ad238
+		summarizeBy: none
+		sourceColumn: Is_Suppressed
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Annual ECE' = m
+		mode: import
+		source =
+				let
+				  Source = Csv.Document(File.Contents("C:\Users\MLOUI\OneDrive\Work\PBI Data\ECE\Annual Historical ECE Data - Tall.csv"), [Delimiter = ",", Columns = 11, Encoding = 65001, QuoteStyle = QuoteStyle.None]),
+				  #"Promoted headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"Geography", type text}, {"Occupation", type text}, {"NOC", type text}, {"Occupation_Name", type text}, {"Selected_charac", type text}, {"Characteristic", type text}, {"Unit", type text}, {"Statistics", type text}, {"Year", Int64.Type}, {"Value", type number}, {"Is_Suppressed", type logical}}, "en-US")
+				in
+				  #"Changed column type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

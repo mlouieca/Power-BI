@@ -1,0 +1,88 @@
+table Proj_Components
+	lineageTag: b2c42814-8884-41d3-8c9b-14a6e1ca1976
+
+	column REF_DATE
+		dataType: string
+		lineageTag: 4c22dbb6-09b7-4deb-a5c4-2d74f1849c1a
+		summarizeBy: none
+		sourceColumn: REF_DATE
+
+		annotation SummarizationSetBy = Automatic
+
+	column GEO
+		dataType: string
+		lineageTag: 0e4de4ce-caea-432c-9775-f67f19722c44
+		summarizeBy: none
+		sourceColumn: GEO
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Projection scenario'
+		dataType: string
+		lineageTag: 8c3d6e8b-9ddf-476f-b09d-bd657515fc13
+		summarizeBy: none
+		sourceColumn: Projection scenario
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Components of population growth'
+		dataType: string
+		lineageTag: db927988-698d-4459-9b4c-97e8a5e45dc6
+		summarizeBy: none
+		sourceColumn: Components of population growth
+
+		annotation SummarizationSetBy = Automatic
+
+	column UOM
+		dataType: string
+		lineageTag: 31dc2147-7ab4-4cba-832e-c61ebfb351c8
+		summarizeBy: none
+		sourceColumn: UOM
+
+		annotation SummarizationSetBy = Automatic
+
+	column VALUE
+		dataType: double
+		lineageTag: 8f88e5e4-e331-4dce-ad69-1aa2fc791d19
+		summarizeBy: sum
+		sourceColumn: VALUE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 55839baf-e8b8-4cb5-8bb0-8dad6f522df4
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition Proj_Components = m
+		mode: import
+		source =
+				let
+				    Source = Web.Contents("https://www150.statcan.gc.ca/n1/tbl/csv/17100058-eng.zip "),
+				    Custom1 = Unzip(Source),
+				    Content = Custom1{0}[Content],
+				    #"Imported CSV" = Csv.Document(Content,[Delimiter=",", Columns=16, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Imported CSV", [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"REF_DATE", type text}, {"GEO", type text}, {"DGUID", type text}, {"Projection scenario", type text}, {"Components of population growth", type text}, {"UOM", type text}, {"UOM_ID", Int64.Type}, {"SCALAR_FACTOR", type text}, {"SCALAR_ID", Int64.Type}, {"VECTOR", type text}, {"COORDINATE", type date}, {"VALUE", type number}, {"STATUS", type text}, {"SYMBOL", type text}, {"TERMINATED", type text}, {"DECIMALS", Int64.Type}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"STATUS", "SYMBOL", "TERMINATED", "DECIMALS", "UOM_ID", "SCALAR_FACTOR", "SCALAR_ID", "VECTOR", "COORDINATE", "DGUID"}),
+				    #"Added Custom" = Table.AddColumn(#"Removed Columns", "Date", each #date(
+				    Number.FromText(Text.End(Text.From([REF_DATE]), 4)),
+				    7,
+				    1
+				)),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Added Custom",{{"Date", type date}})
+				in
+				    #"Changed Type1"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

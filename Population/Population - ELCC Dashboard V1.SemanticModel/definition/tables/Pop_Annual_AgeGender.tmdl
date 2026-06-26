@@ -1,0 +1,181 @@
+table Pop_Annual_AgeGender
+	lineageTag: 9026fc96-5579-4275-9112-dc0398bc5b17
+
+	measure 'Population (Annual Age/Gender)' = ```
+			
+			SUM ( Pop_Annual_AgeGender[VALUE] )
+			
+			```
+		lineageTag: 459c71e8-a042-4498-83f9-d2fe06c147ad
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Population (Annual)' = ```
+			
+			SUM ( Pop_Annual_AgeGender[VALUE] )
+			
+			```
+		lineageTag: a56f466e-7da4-40cc-abe5-1ab71a45a460
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Population (Annual - Latest)' = ```
+			
+			VAR MaxDate =
+			    CALCULATE ( MAX ( Pop_Annual_AgeGender[Date] ), REMOVEFILTERS ( 'Date' ) )
+			RETURN
+			    CALCULATE ( [Population (Annual)], Pop_Annual_AgeGender[Date] = MaxDate )
+			
+			```
+		lineageTag: f39f34e7-e244-45d9-879a-94f7ea45ea41
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Population (Annual - Latest YoY)' = ```
+			
+			VAR MaxDate =
+			    CALCULATE ( MAX ( Pop_Annual_AgeGender[Date] ), REMOVEFILTERS ( 'Date' ) )
+			VAR CurrentVal =
+			    CALCULATE ( [Population (Annual)], Pop_Annual_AgeGender[Date] = MaxDate )
+			VAR PrevVal =
+			    CALCULATE ( [Population (Annual)], Pop_Annual_AgeGender[Date] = EDATE ( MaxDate, -12 ) )
+			RETURN
+			    CurrentVal - PrevVal
+			
+			```
+		lineageTag: 93a7c965-82ea-4373-84e1-c45b8ebab5c0
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Population (Annual - Latest YoY %)' = ```
+			
+			VAR MaxDate =
+			    CALCULATE ( MAX ( Pop_Annual_AgeGender[Date] ), REMOVEFILTERS ( 'Date' ) )
+			VAR CurrentVal =
+			    CALCULATE ( [Population (Annual)], Pop_Annual_AgeGender[Date] = MaxDate )
+			VAR PrevVal =
+			    CALCULATE ( [Population (Annual)], Pop_Annual_AgeGender[Date] = EDATE ( MaxDate, -12 ) )
+			RETURN
+			    DIVIDE ( CurrentVal - PrevVal, PrevVal )
+			
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 6ec56cd6-6f3f-44e7-8732-0440c652cd30
+
+	measure 'Max Date - Pop Annual' = ```
+			
+			CALCULATE ( MAX ( Pop_Annual_AgeGender[Date] ), ALL ( Pop_Annual_AgeGender ) )
+			
+			```
+		formatString: General Date
+		lineageTag: ccf48daa-c02d-4b5a-9487-a8e25c1c3d74
+
+	measure 'Pop Age 0-5 (Actual)' = ```
+			
+			CALCULATE (
+			    [Population (Annual)],
+			    Pop_Annual_AgeGender[Age group]
+			        IN { "0 to 4 years", "5 years" }
+			)
+			
+			```
+		lineageTag: 56658335-10f1-40d0-b180-d59f970d8505
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Pop Age 0-12 (Actual)' = ```
+			
+			CALCULATE (
+			    [Population (Annual)],
+			    Pop_Annual_AgeGender[Age group]
+			        IN { "0 to 4 years", "5 years","6 years", "7 years", "8 years", "9 years", "10 years", "11 years", "12 years" }
+			)
+			
+			```
+		lineageTag: 09b9aa0d-cea9-4d56-9363-373e321bf1f9
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column REF_DATE
+		dataType: int64
+		formatString: 0
+		lineageTag: b451499a-1955-439c-a833-416f84242b33
+		summarizeBy: sum
+		sourceColumn: REF_DATE
+
+		annotation SummarizationSetBy = Automatic
+
+	column GEO
+		dataType: string
+		lineageTag: 1b384666-d61a-4678-af41-105d2ca42750
+		summarizeBy: none
+		sourceColumn: GEO
+
+		annotation SummarizationSetBy = Automatic
+
+	column Gender
+		dataType: string
+		lineageTag: aed9906a-241b-48fd-8c7a-15f7a0cb27e4
+		summarizeBy: none
+		sourceColumn: Gender
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Age group'
+		dataType: string
+		lineageTag: ba281c44-4994-4ad6-9a40-9462d6fe40ec
+		summarizeBy: none
+		sourceColumn: Age group
+
+		annotation SummarizationSetBy = Automatic
+
+	column UOM
+		dataType: string
+		lineageTag: 5fc7540e-f3e3-4a01-9584-6cbdf562540b
+		summarizeBy: none
+		sourceColumn: UOM
+
+		annotation SummarizationSetBy = Automatic
+
+	column VALUE
+		dataType: double
+		lineageTag: 84ca91fb-abe8-4383-a3dd-5f84e14e510b
+		summarizeBy: sum
+		sourceColumn: VALUE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 8b22aed1-4bb2-4026-b203-74c3bc3509df
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition Pop_Annual_AgeGender = m
+		mode: import
+		source =
+				let
+				    Source = Web.Contents("https://www150.statcan.gc.ca/n1/tbl/csv/17100005-eng.zip "),
+				    Custom1 = Unzip(Source),
+				    Content = Custom1{0}[Content],
+				    #"Imported CSV" = Csv.Document(Content,[Delimiter=",", Columns=16, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Imported CSV", [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"REF_DATE", Int64.Type}, {"GEO", type text}, {"DGUID", type text}, {"Gender", type text}, {"Age group", type text}, {"UOM", type text}, {"UOM_ID", Int64.Type}, {"SCALAR_FACTOR", type text}, {"SCALAR_ID", Int64.Type}, {"VECTOR", type text}, {"COORDINATE", type text}, {"VALUE", type number}, {"STATUS", type text}, {"SYMBOL", type text}, {"TERMINATED", type text}, {"DECIMALS", Int64.Type}}),
+				    #"Added Custom" = Table.AddColumn(#"Changed Type", "Custom", each #date(Number.FromText(Text.From([REF_DATE])), 7, 1)),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Added Custom",{{"Custom", type date}}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Changed Type1",{{"Custom", "Date"}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Renamed Columns",{"STATUS", "SYMBOL", "TERMINATED", "DECIMALS", "UOM_ID", "SCALAR_FACTOR", "SCALAR_ID", "VECTOR", "COORDINATE", "DGUID"})
+				in
+				    #"Removed Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

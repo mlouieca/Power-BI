@@ -1,0 +1,149 @@
+table Fertility_Annual
+	lineageTag: c78e548c-8557-4c98-b94b-dc9c0e932dd2
+
+	measure 'Fertility Value' = ```
+			
+			SUM ( Fertility_Annual[VALUE] )
+			
+			```
+		lineageTag: e7b762fe-0c7e-459a-8699-3ea4b10ef36b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Fertility (YoY Change)' = ```
+			
+			[Fertility Value]
+			    - CALCULATE ( [Fertility Value], DATEADD ( 'Date'[Date], -1, YEAR ) )
+			
+			```
+		lineageTag: 826a5b98-5362-49bb-9566-35969f036280
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Fertility (Latest)' = ```
+			
+			VAR MaxDate =
+			    CALCULATE ( MAX ( Fertility_Annual[Date] ), REMOVEFILTERS ( 'Date' ) )
+			RETURN
+			    CALCULATE ( [Fertility Value], Fertility_Annual[Date] = MaxDate )
+			
+			```
+		lineageTag: bfd24651-f580-480b-b70a-53c173392d91
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Fertility (Latest YoY)' = ```
+			
+			VAR MaxDate =
+			    CALCULATE ( MAX ( Fertility_Annual[Date] ), REMOVEFILTERS ( 'Date' ) )
+			VAR CurrentVal =
+			    CALCULATE ( [Fertility Value], Fertility_Annual[Date] = MaxDate )
+			VAR PrevVal =
+			    CALCULATE ( [Fertility Value], Fertility_Annual[Date] = EDATE ( MaxDate, -12 ) )
+			RETURN
+			    CurrentVal - PrevVal
+			
+			```
+		lineageTag: e96c97eb-e620-456e-93f7-d25105ca5ed0
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Fertility (Latest YoY %)' = ```
+			
+			VAR MaxDate =
+			    CALCULATE ( MAX ( Fertility_Annual[Date] ), REMOVEFILTERS ( 'Date' ) )
+			VAR CurrentVal =
+			    CALCULATE ( [Fertility Value], Fertility_Annual[Date] = MaxDate )
+			VAR PrevVal =
+			    CALCULATE ( [Fertility Value], Fertility_Annual[Date] = EDATE ( MaxDate, -12 ) )
+			RETURN
+			    DIVIDE ( CurrentVal - PrevVal, PrevVal )
+			
+			```
+		lineageTag: 16402f1e-8866-40e0-bf33-144836f9a39b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Max Date - Fertility' = ```
+			
+			CALCULATE ( MAX ( Fertility_Annual[Date] ), ALL ( Fertility_Annual ) )
+			
+			```
+		formatString: General Date
+		lineageTag: 1bd11954-cda2-4bb9-9e39-ce263d91770c
+
+	column REF_DATE
+		dataType: int64
+		formatString: 0
+		lineageTag: fdb14702-13cc-48ae-981a-1ae33275a11b
+		summarizeBy: sum
+		sourceColumn: REF_DATE
+
+		annotation SummarizationSetBy = Automatic
+
+	column GEO
+		dataType: string
+		lineageTag: 8ea88187-8c1b-48c7-8334-57951dfac028
+		summarizeBy: none
+		sourceColumn: GEO
+
+		annotation SummarizationSetBy = Automatic
+
+	column Characteristics
+		dataType: string
+		lineageTag: 339aad2e-9cd9-4ad8-bd8c-77c8d1d16f87
+		summarizeBy: none
+		sourceColumn: Characteristics
+
+		annotation SummarizationSetBy = Automatic
+
+	column UOM
+		dataType: string
+		lineageTag: b84784c5-f110-4e68-a139-b310347909ea
+		summarizeBy: none
+		sourceColumn: UOM
+
+		annotation SummarizationSetBy = Automatic
+
+	column VALUE
+		dataType: double
+		lineageTag: 82511d9e-b427-4c50-9ebc-3a09db107d10
+		summarizeBy: sum
+		sourceColumn: VALUE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 82cea3bb-2046-4cb1-b6cc-8fb900c28879
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition Fertility_Annual = m
+		mode: import
+		source =
+				let
+				    Source = Web.Contents("https://www150.statcan.gc.ca/n1/tbl/csv/13100418-eng.zip "),
+				    Custom1 = Unzip(Source),
+				    Content = Custom1{0}[Content],
+				    #"Imported CSV" = Csv.Document(Content,[Delimiter=",", Columns=15, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Imported CSV", [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"REF_DATE", Int64.Type}, {"GEO", type text}, {"DGUID", type text}, {"Characteristics", type text}, {"UOM", type text}, {"UOM_ID", Int64.Type}, {"SCALAR_FACTOR", type text}, {"SCALAR_ID", Int64.Type}, {"VECTOR", type text}, {"COORDINATE", type number}, {"VALUE", type number}, {"STATUS", type text}, {"SYMBOL", type text}, {"TERMINATED", type text}, {"DECIMALS", Int64.Type}}),
+				    #"Added Custom" = Table.AddColumn(#"Changed Type", "Custom", each #date(Number.FromText(Text.From([REF_DATE])), 7, 1)),
+				    #"Renamed Columns" = Table.RenameColumns(#"Added Custom",{{"Custom", "Date"}}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Renamed Columns",{{"Date", type date}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type1",{"STATUS", "SYMBOL", "TERMINATED", "DECIMALS", "UOM_ID", "SCALAR_FACTOR", "SCALAR_ID", "VECTOR", "COORDINATE", "DGUID"})
+				in
+				    #"Removed Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

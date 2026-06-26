@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "Job vacancies and offered wages for ECEs - ELCC Dashboard V1"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "510ddd1e-7a6a-4b55-b0aa-f997f2075c1b"
+  }
+}

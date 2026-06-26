@@ -1,0 +1,9 @@
+relationship a58cb96e-13ca-d6ec-6ee6-9bc4da481141
+	fromColumn: LFS_FamilyStructure_14100397.REF_DATE
+	toColumn: DateTable.Date
+
+relationship 10204b23-58ff-4ffd-b872-1e4ddb62194c
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DateTable.Date
+	toColumn: LocalDateTable_ebe79d5d-464c-4c8a-9415-56448b3fbaed.Date
+

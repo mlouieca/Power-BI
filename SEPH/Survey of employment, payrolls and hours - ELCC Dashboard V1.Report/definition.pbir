@@ -1,0 +1,8 @@
+{
+  "version": "4.0",
+  "datasetReference": {
+    "byPath": {
+      "path": "../Survey of employment, payrolls and hours - ELCC Dashboard V1.SemanticModel"
+    }
+  }
+}

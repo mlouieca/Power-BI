@@ -1,0 +1,25 @@
+table Geography
+	lineageTag: 05c21610-1167-499c-9dde-a82969eef488
+
+	column GEO
+		lineageTag: 7ebfa939-2417-4379-9dfc-49588b26563c
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [GEO]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Geography = calculated
+		mode: import
+		source =
+				
+				DISTINCT (
+				    UNION (
+				        SELECTCOLUMNS ( 'SEPH Employment', "GEO", 'SEPH Employment'[GEO] ),
+				        SELECTCOLUMNS ( 'SEPH Weekly Earnings', "GEO", 'SEPH Weekly Earnings'[GEO] ),
+				        SELECTCOLUMNS ( 'SEPH Hourly Earnings', "GEO", 'SEPH Hourly Earnings'[GEO] )
+				    )
+				)
+
+	annotation PBI_Id = dbc75b7686264bab9182d2e2b47d75cd
+

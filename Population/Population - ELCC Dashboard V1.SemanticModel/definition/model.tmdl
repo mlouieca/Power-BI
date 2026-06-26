@@ -1,0 +1,26 @@
+model Model
+	culture: en-CA
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-CA
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["Unzip","Pop_Annual_AgeGender","Pop_Quarterly","Fertility_Annual","Pop_Projected","Proj_Components","17100040-eng"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table Pop_Annual_AgeGender
+ref table Pop_Quarterly
+ref table DateTableTemplate_5ecafbbd-76de-4ed7-8988-68d092433b36
+ref table Fertility_Annual
+ref table 17100040-eng
+ref table LocalDateTable_03047ece-c07b-49d5-8da1-846a819151e0
+ref table Date
+ref table Pop_Projected
+ref table Proj_Components
+
+ref cultureInfo en-CA
+

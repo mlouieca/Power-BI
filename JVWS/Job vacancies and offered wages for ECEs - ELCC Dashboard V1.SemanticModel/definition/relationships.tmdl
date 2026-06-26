@@ -1,0 +1,4 @@
+relationship b23176bb-6222-adfd-48fd-11516ce0b454
+	fromColumn: JVWS.Date
+	toColumn: DateTable.Date
+

@@ -1,0 +1,4 @@
+relationship c76ff554-78f5-968f-bdac-02dd937cd184
+	fromColumn: 'CPS Monthly Labour Summary'.ReferenceMonth
+	toColumn: Date.Date
+

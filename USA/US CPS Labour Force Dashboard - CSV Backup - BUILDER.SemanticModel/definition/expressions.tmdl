@@ -1,0 +1,621 @@
+expression fnGetCPSMonth =
+		(referenceMonth as date) as record =>
+		let
+		    BaseUrl = "https://api.census.gov",
+		
+		    YearText =
+		        Date.ToText(
+		            referenceMonth,
+		            "yyyy",
+		            "en-US"
+		        ),
+		
+		    MonthText =
+		        Text.Lower(
+		            Date.ToText(
+		                referenceMonth,
+		                "MMM",
+		                "en-US"
+		            )
+		        ),
+		
+		    FileName =
+		        MonthText
+		            & Text.End(YearText, 2)
+		            & " CPS API",
+		
+		    RelativePath =
+		        "data/"
+		            & YearText
+		            & "/cps/basic/"
+		            & MonthText,
+		
+		    CoreVariables =
+		        "HRHHID,"
+		            & "HRHHID2,"
+		            & "HRYEAR4,"
+		            & "HRMONTH,"
+		            & "PULINENO,"
+		            & "PRTAGE,"
+		            & "PESEX,"
+		            & "PEMLR,"
+		            & "PWSSWGT,"
+		            & "PWCMPWGT",
+		
+		    IsLegacySchema =
+		        Date.Year(referenceMonth) < 2020,
+		
+		    ParentVariables =
+		        if IsLegacySchema then
+		            "PELNDAD,PELNMOM"
+		        else
+		            "PEPAR1,PEPAR2",
+		
+		    ParentPointerSchema =
+		        if IsLegacySchema then
+		            "Legacy: PELNDAD / PELNMOM"
+		        else
+		            "Modern: PEPAR1 / PEPAR2",
+		
+		    RequestAttempt =
+		        try
+		            Web.Contents(
+		                BaseUrl,
+		                [
+		                    RelativePath = RelativePath,
+		                    Query = [
+		                        #"get" =
+		                            CoreVariables
+		                                & ","
+		                                & ParentVariables,
+		                        key = pCensusApiKey
+		                    ],
+		                    Timeout = #duration(0, 0, 5, 0)
+		                ]
+		            ),
+		
+		    Response =
+		        if RequestAttempt[HasError] then
+		            null
+		        else
+		            RequestAttempt[Value],
+		
+		    RequestError =
+		        if RequestAttempt[HasError] then
+		            try RequestAttempt[Error][Message]
+		            otherwise "API request failed."
+		        else
+		            null,
+		
+		    ParsedJson =
+		        if Response = null then
+		            null
+		        else
+		            try Json.Document(Response)
+		            otherwise null,
+		
+		    Headers =
+		        if ParsedJson = null then
+		            null
+		        else
+		            try
+		                List.Transform(
+		                    ParsedJson{0},
+		                    each Text.Lower(Text.From(_))
+		                )
+		            otherwise
+		                null,
+		
+		    Rows =
+		        if ParsedJson = null or Headers = null then
+		            null
+		        else
+		            try List.Skip(ParsedJson, 1)
+		            otherwise null,
+		
+		    ApiTable =
+		        if Headers = null or Rows = null then
+		            null
+		        else
+		            Table.FromRows(
+		                Rows,
+		                Headers
+		            ),
+		
+		    StandardizedParentColumns =
+		        if ApiTable = null then
+		            null
+		        else if IsLegacySchema then
+		            Table.RenameColumns(
+		                ApiTable,
+		                {
+		                    {"pelndad", "pepar1"},
+		                    {"pelnmom", "pepar2"}
+		                },
+		                MissingField.Error
+		            )
+		        else
+		            ApiTable,
+		
+		    TypedTable =
+		        if StandardizedParentColumns = null then
+		            null
+		        else
+		            try
+		                Table.TransformColumnTypes(
+		                    StandardizedParentColumns,
+		                    {
+		                        {"hrhhid", type text},
+		                        {"hrhhid2", type text},
+		                        {"hryear4", Int64.Type},
+		                        {"hrmonth", Int64.Type},
+		                        {"pulineno", Int64.Type},
+		                        {"prtage", Int64.Type},
+		                        {"pesex", Int64.Type},
+		                        {"pemlr", Int64.Type},
+		                        {"pwsswgt", Int64.Type},
+		                        {"pwcmpwgt", Int64.Type},
+		                        {"pepar1", Int64.Type},
+		                        {"pepar2", Int64.Type}
+		                    }
+		                )
+		            otherwise
+		                null,
+		
+		    WithReferenceMonth =
+		        if TypedTable = null then
+		            null
+		        else
+		            Table.AddColumn(
+		                TypedTable,
+		                "ReferenceMonth",
+		                each referenceMonth,
+		                type date
+		            ),
+		
+		    WithSourceFile =
+		        if WithReferenceMonth = null then
+		            null
+		        else
+		            Table.AddColumn(
+		                WithReferenceMonth,
+		                "SourceFile",
+		                each FileName,
+		                type text
+		            ),
+		
+		    FinalTable =
+		        if WithSourceFile = null then
+		            null
+		        else
+		            Table.ReorderColumns(
+		                WithSourceFile,
+		                {
+		                    "ReferenceMonth",
+		                    "SourceFile",
+		                    "hrhhid",
+		                    "hrhhid2",
+		                    "hryear4",
+		                    "hrmonth",
+		                    "pulineno",
+		                    "prtage",
+		                    "pesex",
+		                    "pemlr",
+		                    "pwsswgt",
+		                    "pwcmpwgt",
+		                    "pepar1",
+		                    "pepar2"
+		                },
+		                MissingField.Error
+		            ),
+		
+		    Status =
+		        if FinalTable <> null then
+		            "Loaded"
+		        else
+		            "Unavailable or request failed"
+		in
+		    [
+		        ReferenceMonth = referenceMonth,
+		        FileName = FileName,
+		        RelativePath = RelativePath,
+		        ParentPointerSchema = ParentPointerSchema,
+		        Status = Status,
+		        ErrorMessage = RequestError,
+		        Data = FinalTable
+		    ]
+	lineageTag: aaf2c0bb-a786-4e46-adc3-89bca34d55ff
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Function
+
+expression 'CPS Download Staging' =
+		let
+		    // Start with July 2025 while we validate the workflow.
+		    // Change this to #date(2025, 1, 1) after the first test succeeds.
+		    StartMonth =
+		        #date(2019, 1, 1),
+		
+		    // Uses the most recently completed calendar month.
+		    // On June 24, 2026, this produces May 1, 2026.
+		    EndMonth =
+		        #date(2019, 12, 1),
+		
+		
+		    MonthList =
+		        List.Generate(
+		            () => StartMonth,
+		            each _ <= EndMonth,
+		            each Date.AddMonths(_, 1)
+		        ),
+		
+		    MonthTable =
+		        Table.FromList(
+		            MonthList,
+		            Splitter.SplitByNothing(),
+		            {"ReferenceMonth"}
+		        ),
+		
+		    TypedMonthTable =
+		        Table.TransformColumnTypes(
+		            MonthTable,
+		            {{"ReferenceMonth", type date}}
+		        ),
+		
+		    DownloadResults =
+		        Table.AddColumn(
+		            TypedMonthTable,
+		            "Download",
+		            each fnGetCPSMonth([ReferenceMonth])
+		        ),
+		
+		    ExpandedResults =
+		        Table.ExpandRecordColumn(
+		            DownloadResults,
+		            "Download",
+		            {
+		                "FileName",
+		                "RelativePath",
+		                "Status",
+		                "Data"
+		            },
+		            {
+		                "FileName",
+		                "RelativePath",
+		                "Status",
+		                "Data"
+		            }
+		        ),
+		
+		    Final =
+		        Table.ReorderColumns(
+		            ExpandedResults,
+		            {
+		                "ReferenceMonth",
+		                "FileName",
+		                "RelativePath",
+		                "Status",
+		                "Data"
+		            }
+		        )
+		in
+		    Final
+	lineageTag: 082284ef-3dd3-43e5-8b6d-443ca63e6372
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'CPS Raw Web' =
+		let
+		    Source =
+		        #"CPS Download Staging",
+		
+		    AvailableFiles =
+		        Table.SelectRows(
+		            Source,
+		            each [Status] = "Loaded"
+		                and [Data] <> null
+		        ),
+		
+		    CombinedData =
+		        Table.Combine(
+		            AvailableFiles[Data]
+		        ),
+		
+		    Final =
+		        Table.TransformColumnTypes(
+		            CombinedData,
+		            {
+		                {"ReferenceMonth", type date},
+		                {"SourceFile", type text},
+		                {"hrhhid", type text},
+		                {"hrhhid2", type text},
+		                {"hryear4", Int64.Type},
+		                {"hrmonth", Int64.Type},
+		                {"pulineno", Int64.Type},
+		                {"prtage", Int64.Type},
+		                {"pesex", Int64.Type},
+		                {"pemlr", Int64.Type},
+		                {"pwsswgt", Int64.Type},
+		                {"pwcmpwgt", Int64.Type},
+		                {"pepar1", Int64.Type},
+		                {"pepar2", Int64.Type}
+		            }
+		        )
+		in
+		    Final
+	lineageTag: ea319650-787d-49e3-9a84-46316430495a
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'CPS Person Records' =
+		let
+		    Source =
+		        #"CPS Raw Web",
+		
+		    ValidPersonRecords =
+		        Table.SelectRows(
+		            Source,
+		            each
+		                [hrhhid] <> null
+		                and [hrhhid2] <> null
+		                and [pulineno] <> null
+		                and [pulineno] > 0
+		                and [prtage] <> null
+		        ),
+		
+		    WithHouseholdID =
+		        Table.AddColumn(
+		            ValidPersonRecords,
+		            "HouseholdID",
+		            each [hrhhid] & "_" & [hrhhid2],
+		            type text
+		        ),
+		
+		    WithPersonLine =
+		        Table.AddColumn(
+		            WithHouseholdID,
+		            "PersonLine",
+		            each Int64.From([pulineno]),
+		            Int64.Type
+		        ),
+		
+		    WithCoreAgeFlag =
+		        Table.AddColumn(
+		            WithPersonLine,
+		            "IsCoreAged",
+		            each [prtage] >= 25 and [prtage] <= 54,
+		            type logical
+		        )
+		in
+		    WithCoreAgeFlag
+	lineageTag: f06b13a1-04f9-4edb-a9f2-8170819db55f
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'CPS Parent Links' =
+		let
+		    Source =
+		        #"CPS Person Records",
+		
+		    ChildrenUnder18 =
+		        Table.SelectRows(
+		            Source,
+		            each [prtage] >= 0 and [prtage] <= 17
+		        ),
+		
+		    ChildFields =
+		        Table.SelectColumns(
+		            ChildrenUnder18,
+		            {
+		                "ReferenceMonth",
+		                "HouseholdID",
+		                "PersonLine",
+		                "prtage",
+		                "pepar1",
+		                "pepar2"
+		            }
+		        ),
+		
+		    ParentPointersUnpivoted =
+		        Table.Unpivot(
+		            ChildFields,
+		            {"pepar1", "pepar2"},
+		            "ParentPointerField",
+		            "ParentLine"
+		        ),
+		
+		    ValidParentPointers =
+		        Table.SelectRows(
+		            ParentPointersUnpivoted,
+		            each [ParentLine] <> null and [ParentLine] > 0
+		        ),
+		
+		    TypedParentLine =
+		        Table.TransformColumnTypes(
+		            ValidParentPointers,
+		            {{"ParentLine", Int64.Type}}
+		        ),
+		
+		    DistinctChildParentLinks =
+		        Table.Distinct(
+		            TypedParentLine,
+		            {
+		                "ReferenceMonth",
+		                "HouseholdID",
+		                "PersonLine",
+		                "ParentLine"
+		            }
+		        ),
+		
+		    ParentFlags =
+		        Table.Group(
+		            DistinctChildParentLinks,
+		            {
+		                "ReferenceMonth",
+		                "HouseholdID",
+		                "ParentLine"
+		            },
+		            {
+		                {
+		                    "HasCoResidentChildUnder18",
+		                    each true,
+		                    type logical
+		                },
+		                {
+		                    "HasCoResidentChildAge0to5",
+		                    each List.AnyTrue(
+		                        List.Transform(
+		                            [prtage],
+		                            each _ >= 0 and _ <= 5
+		                        )
+		                    ),
+		                    type logical
+		                },
+		                {
+		                    "LinkedChildrenUnder18",
+		                    each List.Count(
+		                        List.Distinct([PersonLine])
+		                    ),
+		                    Int64.Type
+		                }
+		            }
+		        )
+		in
+		    ParentFlags
+	lineageTag: 8d0ed831-48ec-47dd-a965-7268d1470c53
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'CPS Core-Aged Adults' =
+		let
+		    Source =
+		        #"CPS Person Records",
+		
+		    CoreAgedCivilianPopulation =
+		        Table.SelectRows(
+		            Source,
+		            each
+		                [prtage] >= 25
+		                and [prtage] <= 54
+		                and [pesex] <> null
+		                and [pesex] >= 1
+		                and [pesex] <= 2
+		                and [pwcmpwgt] <> null
+		                and [pwcmpwgt] > 0
+		        ),
+		
+		    MergedParentFlags =
+		        Table.NestedJoin(
+		            CoreAgedCivilianPopulation,
+		            {
+		                "ReferenceMonth",
+		                "HouseholdID",
+		                "PersonLine"
+		            },
+		            #"CPS Parent Links",
+		            {
+		                "ReferenceMonth",
+		                "HouseholdID",
+		                "ParentLine"
+		            },
+		            "ParentFlags",
+		            JoinKind.LeftOuter
+		        ),
+		
+		    ExpandedParentFlags =
+		        Table.ExpandTableColumn(
+		            MergedParentFlags,
+		            "ParentFlags",
+		            {
+		                "HasCoResidentChildUnder18",
+		                "HasCoResidentChildAge0to5",
+		                "LinkedChildrenUnder18"
+		            },
+		            {
+		                "HasCoResidentChildUnder18",
+		                "HasCoResidentChildAge0to5",
+		                "LinkedChildrenUnder18"
+		            }
+		        ),
+		
+		    ReplaceMissingFlags =
+		        Table.ReplaceValue(
+		            ExpandedParentFlags,
+		            null,
+		            false,
+		            Replacer.ReplaceValue,
+		            {
+		                "HasCoResidentChildUnder18",
+		                "HasCoResidentChildAge0to5"
+		            }
+		        ),
+		
+		    ReplaceMissingChildCount =
+		        Table.ReplaceValue(
+		            ReplaceMissingFlags,
+		            null,
+		            0,
+		            Replacer.ReplaceValue,
+		            {"LinkedChildrenUnder18"}
+		        ),
+		
+		    WithSex =
+		        Table.AddColumn(
+		            ReplaceMissingChildCount,
+		            "Sex",
+		            each
+		                if [pesex] = 1 then
+		                    "Men"
+		                else if [pesex] = 2 then
+		                    "Women"
+		                else
+		                    null,
+		            type text
+		        ),
+		
+		    WithChildStatus =
+		        Table.AddColumn(
+		            WithSex,
+		            "ChildStatus",
+		            each
+		                if [HasCoResidentChildAge0to5] then
+		                    "Co-resident child aged 0–5"
+		                else if not [HasCoResidentChildUnder18] then
+		                    "No co-resident child under 18"
+		                else
+		                    "Co-resident child aged 6–17 only",
+		            type text
+		        ),
+		
+		    WithWeight =
+		        Table.AddColumn(
+		            WithChildStatus,
+		            "LabourForceWeight",
+		            each [pwcmpwgt] / 10000,
+		            type number
+		        )
+		in
+		    WithWeight
+	lineageTag: d9879acd-852b-44dc-9faa-8ffc3b1a7d6e
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+/// Census API key for CPS Basic Monthly microdata
+expression pCensusApiKey = "1a8e3aa3d88e871469e4ee867856fd6b9dc2a672" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: e0670281-bf62-4a0c-adb3-ea93a8c0a8c9
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Text
+
