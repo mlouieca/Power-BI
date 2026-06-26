@@ -58,22 +58,21 @@
         "sort": [
           {
             "field": {
-              "Column": {
+              "Measure": {
                 "Expression": {
                   "SourceRef": {
-                    "Entity": "DimYear"
+                    "Entity": "Annual ECE"
                   }
                 },
-                "Property": "Year"
+                "Property": "Real ECE Hourly Wage YoY %"
               }
             },
-            "direction": "Ascending"
+            "direction": "Descending"
           }
         ],
         "isDefaultSort": true
       }
     },
-    "drillFilterOtherVisuals": true,
     "visualContainerObjects": {
       "title": [
         {
@@ -95,6 +94,39 @@
           }
         }
       ]
-    }
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "d922e398b3bb70ebc871",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "DimYear"
+              }
+            },
+            "Property": "Year"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "31e38b29267860d1073b",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Annual ECE"
+              }
+            },
+            "Property": "Real ECE Hourly Wage YoY %"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
   }
 }

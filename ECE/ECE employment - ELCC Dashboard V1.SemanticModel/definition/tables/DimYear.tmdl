@@ -27,16 +27,17 @@ table DimYear
 	partition DimYear = calculated
 		mode: import
 		source = ```
+						
+						VAR MinYear = MIN ( 'Annual ECE'[Year] )
+						VAR MaxYear = MAX ( 'Annual ECE'[Year] )
+						RETURN
+						    SELECTCOLUMNS (
+						        GENERATESERIES ( MinYear, MaxYear, 1 ),
+						        "Year", [Value],
+						        "Year Date", DATE ( [Value], 1, 1 )
+						    )
 				
-				VAR MinYear = MIN ( 'Annual ECE'[Year] )
-				VAR MaxYear = MAX ( 'Annual ECE'[Year] )
-				RETURN
-				    SELECTCOLUMNS (
-				        GENERATESERIES ( MinYear, MaxYear, 1 ),
-				        "Year", [Value],
-				        "Year Date", DATE ( [Value], 1, 1 )
-				    )
+				```
 
-		```
 	annotation PBI_Id = 1d8a89d7b97749c38537ea46e77171cf
 

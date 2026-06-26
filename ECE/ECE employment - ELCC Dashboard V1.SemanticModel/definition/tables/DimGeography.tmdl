@@ -21,30 +21,31 @@ table DimGeography
 	partition DimGeography = calculated
 		mode: import
 		source = ```
+						
+						ADDCOLUMNS (
+						    DISTINCT ( 'Annual ECE'[Geography] ),
+						    "Geo Sort",
+						        SWITCH (
+						            [Geography],
+						            "Canada", 0,
+						            "Newfoundland and Labrador", 1,
+						            "Prince Edward Island", 2,
+						            "Nova Scotia", 3,
+						            "New Brunswick", 4,
+						            "Quebec", 5,
+						            "Ontario", 6,
+						            "Manitoba", 7,
+						            "Saskatchewan", 8,
+						            "Alberta", 9,
+						            "British Columbia", 10,
+						            "Yukon", 11,
+						            "Northwest Territories", 12,
+						            "Nunavut", 13,
+						            99
+						        )
+						)
 				
-				ADDCOLUMNS (
-				    DISTINCT ( 'Annual ECE'[Geography] ),
-				    "Geo Sort",
-				        SWITCH (
-				            [Geography],
-				            "Canada", 0,
-				            "Newfoundland and Labrador", 1,
-				            "Prince Edward Island", 2,
-				            "Nova Scotia", 3,
-				            "New Brunswick", 4,
-				            "Quebec", 5,
-				            "Ontario", 6,
-				            "Manitoba", 7,
-				            "Saskatchewan", 8,
-				            "Alberta", 9,
-				            "British Columbia", 10,
-				            "Yukon", 11,
-				            "Northwest Territories", 12,
-				            "Nunavut", 13,
-				            99
-				        )
-				)
+				```
 
-		```
 	annotation PBI_Id = e55ffb24316848bdb582c56e86d77401
 

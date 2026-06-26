@@ -28,16 +28,17 @@ table DimOccupation
 	partition DimOccupation = calculated
 		mode: import
 		source = ```
+						
+						DISTINCT (
+						    SELECTCOLUMNS (
+						        'Annual ECE',
+						        "NOC", 'Annual ECE'[NOC],
+						        "Occupation Name", 'Annual ECE'[Occupation_Name],
+						        "Occupation", 'Annual ECE'[Occupation]
+						    )
+						)
 				
-				DISTINCT (
-				    SELECTCOLUMNS (
-				        'Annual ECE',
-				        "NOC", 'Annual ECE'[NOC],
-				        "Occupation Name", 'Annual ECE'[Occupation_Name],
-				        "Occupation", 'Annual ECE'[Occupation]
-				    )
-				)
+				```
 
-		```
 	annotation PBI_Id = 7b204e3418954743a6b70c7e136e7250
 
