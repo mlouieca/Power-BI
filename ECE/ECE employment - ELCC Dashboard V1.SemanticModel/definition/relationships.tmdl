@@ -46,3 +46,7 @@ relationship 9118beaf-f3eb-498f-a7de-f6383a8eb454
 	fromColumn: 'CPI Annual'.REF_DATE
 	toColumn: DimYear.'Year Date'
 
+relationship b61c8e2d-5b67-4143-a5fd-06436f7f5f19
+	fromColumn: 'ECE Seasonally Adjusted'.Date
+	toColumn: DateTable.Date
+
