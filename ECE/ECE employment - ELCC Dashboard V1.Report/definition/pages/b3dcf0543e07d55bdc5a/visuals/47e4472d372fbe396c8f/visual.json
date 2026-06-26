@@ -1,0 +1,102 @@
+﻿{
+    "$schema":  "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+    "name":  "47e4472d372fbe396c8f",
+    "position":  {
+                     "x":  648,
+                     "y":  304,
+                     "z":  4000,
+                     "height":  344,
+                     "width":  600,
+                     "tabOrder":  4000
+                 },
+    "visual":  {
+                   "visualType":  "lineChart",
+                   "query":  {
+                                 "queryState":  {
+                                                    "Category":  {
+                                                                     "projections":  [
+                                                                                         {
+                                                                                             "field":  {
+                                                                                                           "Column":  {
+                                                                                                                          "Expression":  {
+                                                                                                                                             "SourceRef":  {
+                                                                                                                                                               "Entity":  "DimYear"
+                                                                                                                                                           }
+                                                                                                                                         },
+                                                                                                                          "Property":  "Year"
+                                                                                                                      }
+                                                                                                       },
+                                                                                             "queryRef":  "DimYear.Year",
+                                                                                             "nativeQueryRef":  "Year",
+                                                                                             "active":  true
+                                                                                         }
+                                                                                     ]
+                                                                 },
+                                                    "Series":  {
+                                                                   "projections":  [
+
+                                                                                   ]
+                                                               },
+                                                    "Y":  {
+                                                              "projections":  [
+                                                                                  {
+                                                                                      "field":  {
+                                                                                                    "Measure":  {
+                                                                                                                    "Expression":  {
+                                                                                                                                       "SourceRef":  {
+                                                                                                                                                         "Entity":  "Annual ECE"
+                                                                                                                                                     }
+                                                                                                                                   },
+                                                                                                                    "Property":  "Real ECE Hourly Wage YoY %"
+                                                                                                                }
+                                                                                                },
+                                                                                      "queryRef":  "Annual ECE.Real ECE Hourly Wage YoY %",
+                                                                                      "nativeQueryRef":  "Real ECE Hourly Wage YoY %"
+                                                                                  }
+                                                                              ]
+                                                          }
+                                                },
+                                 "sortDefinition":  {
+                                                        "sort":  [
+                                                                     {
+                                                                         "field":  {
+                                                                                       "Column":  {
+                                                                                                      "Expression":  {
+                                                                                                                         "SourceRef":  {
+                                                                                                                                           "Entity":  "DimYear"
+                                                                                                                                       }
+                                                                                                                     },
+                                                                                                      "Property":  "Year"
+                                                                                                  }
+                                                                                   },
+                                                                         "direction":  "Ascending"
+                                                                     }
+                                                                 ],
+                                                        "isDefaultSort":  true
+                                                    }
+                             },
+                   "drillFilterOtherVisuals":  true,
+                   "visualContainerObjects":  {
+                                                  "title":  [
+                                                                {
+                                                                    "properties":  {
+                                                                                       "text":  {
+                                                                                                    "expr":  {
+                                                                                                                 "Literal":  {
+                                                                                                                                 "Value":  "\u0027Real ECE hourly wage YoY growth\u0027"
+                                                                                                                             }
+                                                                                                             }
+                                                                                                },
+                                                                                       "show":  {
+                                                                                                    "expr":  {
+                                                                                                                 "Literal":  {
+                                                                                                                                 "Value":  "true"
+                                                                                                                             }
+                                                                                                             }
+                                                                                                }
+                                                                                   }
+                                                                }
+                                                            ]
+                                              }
+               }
+}

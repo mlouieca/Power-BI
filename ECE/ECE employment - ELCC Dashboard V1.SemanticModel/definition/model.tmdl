@@ -8,7 +8,7 @@ model Model
 
 annotation __PBI_TimeIntelligenceEnabled = 1
 
-annotation PBI_QueryOrder = ["ECE","Unzip","14100287-eng","14100062-eng","Annual ECE","Annual LFS Wage","Unzip (2)"]
+annotation PBI_QueryOrder = ["ECE","Unzip","14100287-eng","14100062-eng","Annual ECE","Annual LFS Wage","CPI Annual","Unzip (2)"]
 
 annotation PBI_ProTooling = ["DevMode"]
 
@@ -26,6 +26,7 @@ ref table DimCharacteristic
 ref table DimYear
 ref table LocalDateTable_13a87db4-2be7-449e-bfbf-68d9916c0e71
 ref table 'Annual LFS Wage'
+ref table 'CPI Annual'
 
 ref cultureInfo en-CA
 
