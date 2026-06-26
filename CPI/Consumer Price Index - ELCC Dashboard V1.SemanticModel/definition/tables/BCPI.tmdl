@@ -1,0 +1,200 @@
+table BCPI
+	lineageTag: 5c4f6d0d-21d0-4dc3-9c02-d2f4326cf9d3
+
+	measure 'BCPI Index' = ```
+			
+			AVERAGE ( 'BCPI'[VALUE] )
+			
+			```
+		lineageTag: 59a79d2f-54dc-40b7-8b06-a8346dc6e452
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'BCPI Index (Latest)' = ```
+			
+			VAR LatestDate =
+			    MAX ( 'BCPI'[REF_DATE] )
+			RETURN
+			CALCULATE (
+			    [BCPI Index],
+			    'BCPI'[REF_DATE] = LatestDate
+			)
+			
+			```
+		formatString: 0.0
+		lineageTag: 24c4e9eb-0b11-40a4-92e4-f223ed0dd7c2
+
+	measure 'BCPI QoQ %' = ```
+			
+			VAR CurrKey =
+			    MAX ( 'BCPI'[YearQuarterKey] )
+			VAR CurrYear =
+			    QUOTIENT ( CurrKey, 10 )
+			VAR CurrQuarter =
+			    MOD ( CurrKey, 10 )
+			VAR PrevKey =
+			    IF (
+			        CurrQuarter = 1,
+			        ( CurrYear - 1 ) * 10 + 4,
+			        CurrYear * 10 + CurrQuarter - 1
+			    )
+			VAR CurrVal =
+			    [BCPI Index]
+			VAR PrevVal =
+			    CALCULATE (
+			        [BCPI Index],
+			        REMOVEFILTERS ( 'BCPI'[REF_DATE] ),
+			        REMOVEFILTERS ( 'BCPI'[YearQuarterKey] ),
+			        'BCPI'[YearQuarterKey] = PrevKey
+			    )
+			RETURN
+			DIVIDE ( CurrVal - PrevVal, PrevVal )
+			
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: ddf456fd-2f08-48d6-a75d-7d55831d5c29
+
+	measure 'BCPI QoQ % (Latest)' = ```
+			
+			VAR LatestDate =
+			    MAX ( 'BCPI'[REF_DATE] )
+			RETURN
+			CALCULATE (
+			    [BCPI QoQ %],
+			    'BCPI'[REF_DATE] = LatestDate
+			)
+			
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 2afe3c4a-0ff8-40d5-b2e0-49d9f630f6a9
+
+	measure 'BCPI YoY %' = ```
+			
+			VAR CurrKey =
+			    MAX ( 'BCPI'[YearQuarterKey] )
+			VAR CurrYear =
+			    QUOTIENT ( CurrKey, 10 )
+			VAR CurrQuarter =
+			    MOD ( CurrKey, 10 )
+			VAR PrevKey =
+			    ( CurrYear - 1 ) * 10 + CurrQuarter
+			VAR CurrVal =
+			    [BCPI Index]
+			VAR PrevVal =
+			    CALCULATE (
+			        [BCPI Index],
+			        REMOVEFILTERS ( 'BCPI'[REF_DATE] ),
+			        REMOVEFILTERS ( 'BCPI'[YearQuarterKey] ),
+			        'BCPI'[YearQuarterKey] = PrevKey
+			    )
+			RETURN
+			DIVIDE ( CurrVal - PrevVal, PrevVal )
+			
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 8f0af680-2399-458c-9acf-d20afaa89da8
+
+	measure 'BCPI YoY % (Latest)' = ```
+			
+			VAR LatestDate =
+			    MAX ( 'BCPI'[REF_DATE] )
+			RETURN
+			CALCULATE (
+			    [BCPI YoY %],
+			    'BCPI'[REF_DATE] = LatestDate
+			)
+			
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 2b97ea9c-e8d3-4fc0-b963-bf60bd6de6df
+
+	column REF_DATE
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 9e37fd3d-63aa-4c8e-a614-934d83ef3f79
+		summarizeBy: none
+		sourceColumn: REF_DATE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column GEO
+		dataType: string
+		lineageTag: f51571e0-319a-4c30-85a3-439c57f182f3
+		summarizeBy: none
+		sourceColumn: GEO
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Type of building'
+		dataType: string
+		lineageTag: 1f84529d-767d-4699-a796-dd1572685c0a
+		summarizeBy: none
+		sourceColumn: Type of building
+
+		annotation SummarizationSetBy = Automatic
+
+	column Division
+		dataType: string
+		lineageTag: 5042018f-09ea-4bbf-b2ef-2e1ee4602e67
+		summarizeBy: none
+		sourceColumn: Division
+
+		annotation SummarizationSetBy = Automatic
+
+	column UOM
+		dataType: string
+		lineageTag: 0e5a927b-e6cf-4134-80be-2079be9b85fd
+		summarizeBy: none
+		sourceColumn: UOM
+
+		annotation SummarizationSetBy = Automatic
+
+	column SCALAR_FACTOR
+		dataType: string
+		lineageTag: c68eafad-512b-4b27-b649-c3b683f66607
+		summarizeBy: none
+		sourceColumn: SCALAR_FACTOR
+
+		annotation SummarizationSetBy = Automatic
+
+	column VALUE
+		dataType: double
+		lineageTag: 6f68fe50-a73e-4719-bf86-b83aaf626e60
+		summarizeBy: sum
+		sourceColumn: VALUE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column YearQuarterKey =
+			
+			YEAR ( 'BCPI'[REF_DATE] ) * 10
+			    + QUARTER ( 'BCPI'[REF_DATE] )
+		formatString: 0
+		lineageTag: 6cd5ddf6-9271-4b69-869e-ae0c3e09d8f9
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	partition BCPI = m
+		mode: import
+		source =
+				let
+				    Source = Web.Contents("https://www150.statcan.gc.ca/n1/tbl/csv/18100289-eng.zip"),
+				    Custom1 = Unzip(Source),
+				    Content = Custom1{0}[Content],
+				    #"Imported CSV" = Csv.Document(Content,[Delimiter=",", Columns=16, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Imported CSV", [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"REF_DATE", type text}, {"GEO", type text}, {"DGUID", type text}, {"Type of building", type text}, {"Division", type text}, {"UOM", type text}, {"UOM_ID", Int64.Type}, {"SCALAR_FACTOR", type text}, {"SCALAR_ID", Int64.Type}, {"VECTOR", type text}, {"COORDINATE", type text}, {"VALUE", type number}, {"STATUS", type text}, {"SYMBOL", type text}, {"TERMINATED", type text}, {"DECIMALS", Int64.Type}}),
+				    #"Quarter Dates" = Table.TransformColumns(#"Changed Type", {{"REF_DATE", each Date.FromText(_ & "-01"), type date}}),
+				    #"Remove Columns" = Table.RemoveColumns(#"Quarter Dates",{"DECIMALS", "TERMINATED", "SYMBOL", "STATUS", "COORDINATE", "VECTOR", "DGUID", "UOM_ID", "SCALAR_ID"}),
+				    #"Filter Rows" = Table.SelectRows(#"Remove Columns", each [REF_DATE] > #date(2001, 12, 31) and [GEO] = "Fifteen census metropolitan area composite" and [Division] = "Division composite")
+				in
+				    #"Filter Rows"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
