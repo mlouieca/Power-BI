@@ -294,9 +294,14 @@ table 'Annual ECE'
 			
 			VAR _CurrentYear =
 			    MAX ( DimYear[Year] )
+			VAR _SelectedBaseCPI =
+			    [CPI Annual Index Latest Selected]
 			RETURN
 			    CALCULATE (
-			        [Real ECE Hourly Wage],
+			        DIVIDE (
+			            [ECE Hourly Wage] * _SelectedBaseCPI,
+			            [CPI Annual Index]
+			        ),
 			        FILTER ( ALL ( DimYear[Year] ), DimYear[Year] = _CurrentYear - 1 )
 			    )
 			
@@ -308,10 +313,34 @@ table 'Annual ECE'
 
 	measure 'Real ECE Hourly Wage YoY %' = ```
 			
-			DIVIDE (
-			    [Real ECE Hourly Wage] - [Real ECE Hourly Wage Previous Year],
-			    [Real ECE Hourly Wage Previous Year]
-			)
+			VAR _CurrentYear =
+			    MAX ( DimYear[Year] )
+			VAR _CurrentWage =
+			    [ECE Hourly Wage]
+			VAR _CurrentCPI =
+			    [CPI Annual Index]
+			VAR _PreviousWage =
+			    CALCULATE (
+			        [ECE Hourly Wage],
+			        FILTER ( ALL ( DimYear[Year] ), DimYear[Year] = _CurrentYear - 1 )
+			    )
+			VAR _PreviousCPI =
+			    CALCULATE (
+			        [CPI Annual Index],
+			        FILTER ( ALL ( DimYear[Year] ), DimYear[Year] = _CurrentYear - 1 )
+			    )
+			RETURN
+			    IF (
+			        ISBLANK ( _CurrentWage )
+			            || ISBLANK ( _CurrentCPI )
+			            || ISBLANK ( _PreviousWage )
+			            || ISBLANK ( _PreviousCPI ),
+			        BLANK (),
+			        DIVIDE (
+			            DIVIDE ( _CurrentWage, _CurrentCPI ),
+			            DIVIDE ( _PreviousWage, _PreviousCPI )
+			        ) - 1
+			    )
 			
 			```
 		formatString: 0.0%;-0.0%;0.0%
@@ -319,10 +348,16 @@ table 'Annual ECE'
 
 	measure 'Real ECE Hourly Wage 2019' = ```
 			
-			CALCULATE (
-			    [Real ECE Hourly Wage],
-			    FILTER ( ALL ( DimYear[Year] ), DimYear[Year] = 2019 )
-			)
+			VAR _SelectedBaseCPI =
+			    [CPI Annual Index Latest Selected]
+			RETURN
+			    CALCULATE (
+			        DIVIDE (
+			            [ECE Hourly Wage] * _SelectedBaseCPI,
+			            [CPI Annual Index]
+			        ),
+			        FILTER ( ALL ( DimYear[Year] ), DimYear[Year] = 2019 )
+			    )
 			
 			```
 		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
@@ -332,10 +367,32 @@ table 'Annual ECE'
 
 	measure 'Real ECE Hourly Wage % Change Since 2019' = ```
 			
-			DIVIDE (
-			    [Real ECE Hourly Wage] - [Real ECE Hourly Wage 2019],
-			    [Real ECE Hourly Wage 2019]
-			)
+			VAR _CurrentWage =
+			    [ECE Hourly Wage]
+			VAR _CurrentCPI =
+			    [CPI Annual Index]
+			VAR _Wage2019 =
+			    CALCULATE (
+			        [ECE Hourly Wage],
+			        FILTER ( ALL ( DimYear[Year] ), DimYear[Year] = 2019 )
+			    )
+			VAR _CPI2019 =
+			    CALCULATE (
+			        [CPI Annual Index],
+			        FILTER ( ALL ( DimYear[Year] ), DimYear[Year] = 2019 )
+			    )
+			RETURN
+			    IF (
+			        ISBLANK ( _CurrentWage )
+			            || ISBLANK ( _CurrentCPI )
+			            || ISBLANK ( _Wage2019 )
+			            || ISBLANK ( _CPI2019 ),
+			        BLANK (),
+			        DIVIDE (
+			            DIVIDE ( _CurrentWage, _CurrentCPI ),
+			            DIVIDE ( _Wage2019, _CPI2019 )
+			        ) - 1
+			    )
 			
 			```
 		formatString: 0.0%;-0.0%;0.0%
