@@ -2,15 +2,15 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "852af19d523672b50b57",
   "position": {
-    "x": 0,
-    "y": 0,
-    "z": 0,
-    "height": 504,
-    "width": 600,
-    "tabOrder": 0
+    "x": 950,
+    "y": 20,
+    "z": 1000,
+    "height": 150,
+    "width": 300,
+    "tabOrder": 1000
   },
   "visual": {
-    "visualType": "tableEx",
+    "visualType": "slicer",
     "query": {
       "queryState": {
         "Values": {
@@ -20,153 +20,20 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Date"
+                      "Entity": "Labour Force Indicator"
                     }
                   },
-                  "Property": "Date"
+                  "Property": "Labour Force Indicator"
                 }
               },
-              "queryRef": "Date.Date",
-              "nativeQueryRef": "Date"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "CPS Monthly Labour Summary"
-                    }
-                  },
-                  "Property": "Sex"
-                }
-              },
-              "queryRef": "CPS Monthly Labour Summary.Sex",
-              "nativeQueryRef": "Sex"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "CPS Monthly Labour Summary"
-                    }
-                  },
-                  "Property": "ChildStatus"
-                }
-              },
-              "queryRef": "CPS Monthly Labour Summary.ChildStatus",
-              "nativeQueryRef": "ChildStatus"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "CPS Monthly Labour Summary"
-                    }
-                  },
-                  "Property": "Participation Rate (Calculated)"
-                }
-              },
-              "queryRef": "CPS Monthly Labour Summary.Participation Rate (Calculated)",
-              "nativeQueryRef": "Participation Rate (Calculated)"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "CPS Monthly Labour Summary"
-                    }
-                  },
-                  "Property": "Unemployment Rate (Calculated)"
-                }
-              },
-              "queryRef": "CPS Monthly Labour Summary.Unemployment Rate (Calculated)",
-              "nativeQueryRef": "Unemployment Rate (Calculated)"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "CPS Monthly Labour Summary"
-                    }
-                  },
-                  "Property": "Employment Rate (Calculated)"
-                }
-              },
-              "queryRef": "CPS Monthly Labour Summary.Employment Rate (Calculated)",
-              "nativeQueryRef": "Employment Rate (Calculated)"
+              "queryRef": "Labour Force Indicator.Labour Force Indicator",
+              "nativeQueryRef": "Labour Force Indicator",
+              "active": true
             }
           ]
         }
       }
     },
     "drillFilterOtherVisuals": true
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "2bd3f05279071d83ab9c",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "CPS Monthly Labour Summary"
-              }
-            },
-            "Property": "ChildStatus"
-          }
-        },
-        "type": "Categorical",
-        "filter": {
-          "Version": 2,
-          "From": [
-            {
-              "Name": "c",
-              "Entity": "CPS Monthly Labour Summary",
-              "Type": 0
-            }
-          ],
-          "Where": [
-            {
-              "Condition": {
-                "In": {
-                  "Expressions": [
-                    {
-                      "Column": {
-                        "Expression": {
-                          "SourceRef": {
-                            "Source": "c"
-                          }
-                        },
-                        "Property": "ChildStatus"
-                      }
-                    }
-                  ],
-                  "Values": [
-                    [
-                      {
-                        "Literal": {
-                          "Value": "'Co-resident child aged 0–5'"
-                        }
-                      }
-                    ],
-                    [
-                      {
-                        "Literal": {
-                          "Value": "'No co-resident child under 18'"
-                        }
-                      }
-                    ]
-                  ]
-                }
-              }
-            }
-          ]
-        }
-      }
-    ]
   }
 }

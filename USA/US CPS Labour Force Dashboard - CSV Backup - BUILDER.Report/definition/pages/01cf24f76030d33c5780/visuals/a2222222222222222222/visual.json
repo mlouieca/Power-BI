@@ -1,0 +1,39 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "a2222222222222222222",
+  "position": {
+    "x": 950,
+    "y": 350,
+    "z": 1002,
+    "height": 220,
+    "width": 300,
+    "tabOrder": 1002
+  },
+  "visual": {
+    "visualType": "slicer",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CPS Monthly Labour Summary"
+                    }
+                  },
+                  "Property": "ChildStatus"
+                }
+              },
+              "queryRef": "CPS Monthly Labour Summary.ChildStatus",
+              "nativeQueryRef": "ChildStatus",
+              "active": true
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

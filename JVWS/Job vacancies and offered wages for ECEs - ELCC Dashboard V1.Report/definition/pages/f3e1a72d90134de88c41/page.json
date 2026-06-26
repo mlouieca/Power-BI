@@ -1,0 +1,8 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "f3e1a72d90134de88c41",
+  "displayName": "JVWS Vacancy Characteristics",
+  "displayOption": "FitToPage",
+  "height": 720,
+  "width": 1280
+}

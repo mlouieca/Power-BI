@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "c44ac9c3b8123970d45c",
   "position": {
-    "x": 0,
-    "y": 0,
+    "x": 20,
+    "y": 20,
     "z": 0,
-    "height": 384,
-    "width": 768,
+    "height": 500,
+    "width": 900,
     "tabOrder": 0
   },
   "visual": {
@@ -39,14 +39,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "CPS Monthly Labour Summary"
+                      "Entity": "Labour Force Comparison"
                     }
                   },
-                  "Property": "ChildStatus"
+                  "Property": "Country"
                 }
               },
-              "queryRef": "CPS Monthly Labour Summary.ChildStatus",
-              "nativeQueryRef": "ChildStatus"
+              "queryRef": "Labour Force Comparison.Country",
+              "nativeQueryRef": "Country"
             }
           ]
         },
@@ -57,154 +57,37 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "CPS Monthly Labour Summary"
+                      "Entity": "Labour Force Comparison"
                     }
                   },
-                  "Property": "Employment Rate (Calculated)"
+                  "Property": "Comparison Value"
                 }
               },
-              "queryRef": "CPS Monthly Labour Summary.Employment Rate (Calculated)",
-              "nativeQueryRef": "Employment Rate (Calculated)",
-              "displayName": "Employment Rate (Calculated)"
-            }
-          ],
-          "fieldParameters": [
-            {
-              "parameterExpr": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "Labour Force Indicator"
-                    }
-                  },
-                  "Property": "Labour Force Indicator"
-                }
-              },
-              "index": 0,
-              "length": 1
-            }
-          ]
-        }
-      }
-    },
-    "drillFilterOtherVisuals": true
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "26d84f8848a9b02e3d81",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "CPS Monthly Labour Summary"
-              }
-            },
-            "Property": "ChildStatus"
-          }
-        },
-        "type": "Categorical",
-        "filter": {
-          "Version": 2,
-          "From": [
-            {
-              "Name": "c",
-              "Entity": "CPS Monthly Labour Summary",
-              "Type": 0
-            }
-          ],
-          "Where": [
-            {
-              "Condition": {
-                "In": {
-                  "Expressions": [
-                    {
-                      "Column": {
-                        "Expression": {
-                          "SourceRef": {
-                            "Source": "c"
-                          }
-                        },
-                        "Property": "ChildStatus"
-                      }
-                    }
-                  ],
-                  "Values": [
-                    [
-                      {
-                        "Literal": {
-                          "Value": "'No co-resident child under 18'"
-                        }
-                      }
-                    ],
-                    [
-                      {
-                        "Literal": {
-                          "Value": "'All core-aged adults'"
-                        }
-                      }
-                    ]
-                  ]
-                }
-              }
+              "queryRef": "Labour Force Comparison.Comparison Value",
+              "nativeQueryRef": "Comparison Value"
             }
           ]
         }
       },
-      {
-        "name": "6bcc2382054d09b7ed12",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "CPS Monthly Labour Summary"
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Date"
+                  }
+                },
+                "Property": "Date"
               }
             },
-            "Property": "Sex"
+            "direction": "Ascending"
           }
-        },
-        "type": "Categorical",
-        "filter": {
-          "Version": 2,
-          "From": [
-            {
-              "Name": "c",
-              "Entity": "CPS Monthly Labour Summary",
-              "Type": 0
-            }
-          ],
-          "Where": [
-            {
-              "Condition": {
-                "In": {
-                  "Expressions": [
-                    {
-                      "Column": {
-                        "Expression": {
-                          "SourceRef": {
-                            "Source": "c"
-                          }
-                        },
-                        "Property": "Sex"
-                      }
-                    }
-                  ],
-                  "Values": [
-                    [
-                      {
-                        "Literal": {
-                          "Value": "'Women'"
-                        }
-                      }
-                    ]
-                  ]
-                }
-              }
-            }
-          ]
-        },
-        "howCreated": "User"
+        ],
+        "isDefaultSort": true
       }
-    ]
+    },
+    "drillFilterOtherVisuals": true
   }
 }

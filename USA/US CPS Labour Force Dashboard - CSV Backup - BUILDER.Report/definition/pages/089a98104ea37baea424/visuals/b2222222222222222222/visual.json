@@ -1,0 +1,39 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "b2222222222222222222",
+  "position": {
+    "x": 950,
+    "y": 360,
+    "z": 1002,
+    "height": 200,
+    "width": 300,
+    "tabOrder": 1002
+  },
+  "visual": {
+    "visualType": "slicer",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Labour Force Comparison"
+                    }
+                  },
+                  "Property": "ChildStatus"
+                }
+              },
+              "queryRef": "Labour Force Comparison.ChildStatus",
+              "nativeQueryRef": "ChildStatus",
+              "active": true
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

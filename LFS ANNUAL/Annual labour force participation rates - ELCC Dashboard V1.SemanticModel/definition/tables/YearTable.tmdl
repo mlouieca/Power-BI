@@ -34,7 +34,8 @@ table YearTable
 				VAR Years =
 				    UNION(
 				        SELECTCOLUMNS('LFS_FamilyStructure_14100396_Annual', "REF_DATE", 'LFS_FamilyStructure_14100396_Annual'[REF_DATE]),
-				        SELECTCOLUMNS(LFS_Headline_14100327_Annual, "REF_DATE", LFS_Headline_14100327_Annual[REF_DATE])
+				        SELECTCOLUMNS(LFS_Headline_14100327_Annual, "REF_DATE", LFS_Headline_14100327_Annual[REF_DATE]),
+				        SELECTCOLUMNS(LFS_GenderWageGap_14100062, "REF_DATE", LFS_GenderWageGap_14100062[REF_DATE])
 				    )
 				RETURN
 				ADDCOLUMNS(
