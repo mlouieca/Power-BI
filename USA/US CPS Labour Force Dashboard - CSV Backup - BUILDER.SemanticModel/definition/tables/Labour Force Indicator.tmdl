@@ -38,12 +38,14 @@ table 'Labour Force Indicator'
 
 	partition 'Labour Force Indicator' = calculated
 		mode: import
-		source =
-				{
-				    ("Employment Rate (Calculated)", NAMEOF('CPS Monthly Labour Summary'[Employment Rate (Calculated)]), 0),
-				    ("Participation Rate (Calculated)", NAMEOF('CPS Monthly Labour Summary'[Participation Rate (Calculated)]), 1),
-				    ("Unemployment Rate (Calculated)", NAMEOF('CPS Monthly Labour Summary'[Unemployment Rate (Calculated)]), 2)
-				}
+		source = ```
+						{
+						    ("Employment Rate (Calculated)", NAMEOF('CPS Monthly Labour Summary'[Employment Rate (Calculated)]), 0),
+						    ("Participation Rate (Calculated)", NAMEOF('CPS Monthly Labour Summary'[Participation Rate (Calculated)]), 1),
+						    ("Unemployment Rate (Calculated)", NAMEOF('CPS Monthly Labour Summary'[Unemployment Rate (Calculated)]), 2)
+						}
+				
+				```
 
 	annotation PBI_Id = 086d87be29b2499b835e809e225e072f
 

@@ -2,98 +2,98 @@ table 'LFS Labour Force Occupation'
 	lineageTag: 18375021-75aa-4767-9a09-4b87310ca8c2
 
 	measure 'Unemployed Persons (NOC 422)' = ```
-
+			
 			CALCULATE(
 			    SUM('LFS Labour Force Occupation'[VALUE]) * 1000,
 			    'LFS Labour Force Occupation'[Labour force characteristics] = "Unemployment",
 			    'LFS Labour Force Occupation'[Gender] = "Total - Gender",
 			    'LFS Labour Force Occupation'[NOC_3] = "422"
 			)
-
+			
 			```
 		formatString: #,0
 		lineageTag: d897701d-e71e-495b-863f-f555fc33ab48
 
 	measure 'Unemployed Persons (NOC 422 Latest)' = ```
-
+			
 			VAR _LatestDate = [Latest Common Ratio Month]
 			RETURN
 			CALCULATE(
 			    [Unemployed Persons (NOC 422)],
 			    TREATAS({_LatestDate}, DateTable[Date])
 			)
-
+			
 			```
 		formatString: #,0
 		lineageTag: fbf4a6fc-4e3e-4685-ad96-aac776c57569
 
 	measure 'ECE Job Vacancies for Ratio' = ```
-
+			
 			CALCULATE(
 			    [Job Vacancies],
 			    TREATAS(VALUES('LFS Labour Force Occupation'[GEO]), 'JVWS'[GEO]),
 			    'JVWS'[National Occupational Classification] = "Early childhood educators and assistants [42202]"
 			)
-
+			
 			```
 		formatString: #,0
 		lineageTag: 45e94ce5-b73d-4b20-8614-8bd517f35fe9
 
 	measure 'ECE Job Vacancies for Ratio (Latest)' = ```
-
+			
 			VAR _LatestDate = [Latest Common Ratio Month]
 			RETURN
 			CALCULATE(
 			    [ECE Job Vacancies for Ratio],
 			    TREATAS({_LatestDate}, DateTable[Date])
 			)
-
+			
 			```
 		formatString: #,0
 		lineageTag: c81aff97-2a10-4f99-811d-70e4ba459c11
 
 	measure 'Unemployment to Job Vacancy Ratio' = ```
-
+			
 			DIVIDE(
 			    [Unemployed Persons (NOC 422)],
 			    [ECE Job Vacancies for Ratio]
 			)
-
+			
 			```
 		formatString: 0.0
 		lineageTag: 867fd06e-8d8f-4721-8b5d-15c4988b9c43
 
 	measure 'Unemployment to Job Vacancy Ratio (Latest)' = ```
-
+			
 			VAR _LatestDate = [Latest Common Ratio Month]
 			RETURN
 			CALCULATE(
 			    [Unemployment to Job Vacancy Ratio],
 			    TREATAS({_LatestDate}, DateTable[Date])
 			)
-
+			
 			```
 		formatString: 0.0
 		lineageTag: 36530b2d-02c6-4b50-b25c-84ed6d091b33
 
 	measure 'Latest LFS Occupation Month' = ```
-
+			
 			CALCULATE(
 			    MAX('LFS Labour Force Occupation'[Date]),
 			    REMOVEFILTERS(DateTable)
 			)
-
+			
 			```
 		formatString: General Date
 		lineageTag: e6b89e5d-7b82-4f58-b5a6-7cc8c86d6ef5
 
 	measure 'Latest Common Ratio Month' = ```
-
+			
 			VAR _LatestLFS = [Latest LFS Occupation Month]
 			VAR _LatestJVWS = [Latest Month]
 			RETURN
 			MIN(_LatestLFS, _LatestJVWS)
-
+			
 			```
 		formatString: General Date
 		lineageTag: f72fbc65-57a8-433c-83e7-8d454c96724c
@@ -179,12 +179,13 @@ table 'LFS Labour Force Occupation'
 				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"REF_DATE", type date}, {"GEO", type text}, {"DGUID", type text}, {"Labour force characteristics", type text}, {"National Occupational Classification (NOC)", type text}, {"Gender", type text}, {"UOM", type text}, {"UOM_ID", Int64.Type}, {"SCALAR_FACTOR", type text}, {"SCALAR_ID", Int64.Type}, {"VECTOR", type text}, {"COORDINATE", type text}, {"VALUE", type number}, {"STATUS", type text}, {"SYMBOL", type text}, {"TERMINATED", type text}, {"DECIMALS", Int64.Type}}),
 				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"UOM", "UOM_ID", "SCALAR_FACTOR", "SCALAR_ID", "VECTOR", "COORDINATE", "STATUS", "SYMBOL", "TERMINATED", "DECIMALS", "DGUID"}),
 				    #"Renamed Columns" = Table.RenameColumns(#"Removed Columns",{{"REF_DATE", "Date"}}),
-				    #"Inserted Text Between Delimiters" = Table.AddColumn(#"Renamed Columns", "NOC_3", each try Text.BetweenDelimiters([National Occupational Classification (NOC)], "[", "]") otherwise null, type text),
+				    #"Inserted Text Between Delimiters" = Table.AddColumn(#"Renamed Columns", "NOC_3", each try Text.BetweenDelimiters([#"National Occupational Classification (NOC)"], "[", "]") otherwise null, type text),
 				    #"Filtered Rows" = Table.SelectRows(#"Inserted Text Between Delimiters", each [NOC_3] = "422" and ([Labour force characteristics] = "Unemployment" or [Labour force characteristics] = "Unemployment rate" or [Labour force characteristics] = "Labour force") and [Gender] = "Total - Gender"),
-				    #"Added Occupation Label" = Table.AddColumn(#"Filtered Rows", "Occupation Label", each Text.BeforeDelimiter([National Occupational Classification (NOC)], " [") & " (" & [NOC_3] & ")", type text)
+				    #"Added Occupation Label" = Table.AddColumn(#"Filtered Rows", "Occupation Label", each Text.BeforeDelimiter([#"National Occupational Classification (NOC)"], " [") & " (" & [NOC_3] & ")", type text)
 				in
 				    #"Added Occupation Label"
 
 	annotation PBI_NavigationStepName = Navigation
 
 	annotation PBI_ResultType = Table
+

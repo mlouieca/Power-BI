@@ -259,7 +259,7 @@ table ECE
 		mode: import
 		source =
 				let
-				    Source = Csv.Document(File.Contents("C:\Users\MLOUI\OneDrive\Work\PBI Data\ECE\Historical ECE data.csv"),[Delimiter=",", Columns=10, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    Source = Csv.Document(File.Contents("C:\Users\MLOUI\OneDrive\Work\PBI\PBI DATA FILES\ECE\Historical ECE data.csv"),[Delimiter=",", Columns=10, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
 				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
 				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Reference Period", Int64.Type}, {"Province", type text}, {"Occupation (5-digit NOC)", type text}, {"Variable", type text}, {"Estimate (rounded)5", type number}, {"Coefficient of#(lf)variation (%) of#(lf)estimate6", type number}, {"Standard error of#(lf)estimate", type number}, {"Lower bound (95%#(lf)CI) of estimate", type number}, {"Upper bound (95%#(lf)CI) of estimate", type number}, {"Column1", type text}}),
 				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"Column1"}),

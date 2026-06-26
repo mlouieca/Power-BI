@@ -13,3 +13,4 @@ relationship a18c8882-75b5-4a8f-b4ae-cbb7af01d643
 relationship eee374ab-3727-45e4-b4e8-3ab5b02752c1
 	fromColumn: 'Inflation Comparison'.ReferenceMonth
 	toColumn: Date.Date
+

@@ -1,4 +1,4 @@
-﻿table 'SEPH Weekly Earnings'
+table 'SEPH Weekly Earnings'
 	lineageTag: 0dfc7f33-5f18-4e27-9a17-f681433f197f
 
 	measure 'Weekly Earnings Value' =
@@ -86,6 +86,7 @@
 			        )
 			    )
 		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 58810211-1b22-4df1-ab80-3df3da49a32a
 
 	measure 'All Industries Weekly Earnings YoY % Latest' =
 			
@@ -99,6 +100,8 @@
 			        )
 			    )
 		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 0a7dcbac-0d58-40a3-8cfc-620591d42bd0
+
 	measure 'Child Care Weekly Earnings Relative Latest' =
 			
 			VAR LatestMonth = [Latest SEPH Month]
@@ -271,6 +274,4 @@
 	annotation PBI_NavigationStepName = Navigation
 
 	annotation PBI_ResultType = Table
-
-
 

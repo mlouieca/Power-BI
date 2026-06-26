@@ -1,108 +1,108 @@
-﻿{
-    "$schema":  "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
-    "name":  "8583d0182fd72deb342d",
-    "position":  {
-                     "x":  0,
-                     "y":  0,
-                     "z":  2000,
-                     "height":  64,
-                     "width":  376.00000000000006,
-                     "tabOrder":  2000
-                 },
-    "visual":  {
-                   "visualType":  "slicer",
-                   "query":  {
-                                 "queryState":  {
-                                                    "Values":  {
-                                                                   "projections":  [
-                                                                                       {
-                                                                                           "field":  {
-                                                                                                         "Column":  {
-                                                                                                                        "Expression":  {
-                                                                                                                                           "SourceRef":  {
-                                                                                                                                                             "Entity":  "ECE Seasonally Adjusted"
-                                                                                                                                                         }
-                                                                                                                                       },
-                                                                                                                        "Property":  "Occupation"
-                                                                                                                    }
-                                                                                                     },
-                                                                                           "queryRef":  "ECE Seasonally Adjusted.Occupation",
-                                                                                           "nativeQueryRef":  "Occupation",
-                                                                                           "active":  true
-                                                                                       }
-                                                                                   ]
-                                                               }
-                                                }
-                             },
-                   "objects":  {
-                                   "data":  [
-                                                {
-                                                    "properties":  {
-                                                                       "mode":  {
-                                                                                    "expr":  {
-                                                                                                 "Literal":  {
-                                                                                                                 "Value":  "\u0027Dropdown\u0027"
-                                                                                                             }
-                                                                                             }
-                                                                                }
-                                                                   }
-                                                }
-                                            ],
-                                   "general":  [
-                                                   {
-                                                       "properties":  {
-                                                                          "filter":  {
-                                                                                         "filter":  {
-                                                                                                        "Version":  2,
-                                                                                                        "From":  [
-                                                                                                                     {
-                                                                                                                         "Name":  "e",
-                                                                                                                         "Entity":  "ECE Seasonally Adjusted",
-                                                                                                                         "Type":  0
-                                                                                                                     }
-                                                                                                                 ],
-                                                                                                        "Where":  [
-                                                                                                                      {
-                                                                                                                          "Condition":  {
-                                                                                                                                            "In":  {
-                                                                                                                                                       "Expressions":  [
-                                                                                                                                                                           {
-                                                                                                                                                                               "Column":  {
-                                                                                                                                                                                              "Expression":  {
-                                                                                                                                                                                                                 "SourceRef":  {
-                                                                                                                                                                                                                                   "Source":  "e"
-                                                                                                                                                                                                                               }
-                                                                                                                                                                                                             },
-                                                                                                                                                                                              "Property":  "Occupation"
-                                                                                                                                                                                          }
-                                                                                                                                                                           }
-                                                                                                                                                                       ],
-                                                                                                                                                       "Values":  [
-                                                                                                                                                                      [
-                                                                                                                                                                          {
-                                                                                                                                                                              "Literal":  {
-                                                                                                                                                                                              "Value":  "\u002742202 Early childhood educators and assistants\u0027"
-                                                                                                                                                                                          }
-                                                                                                                                                                          }
-                                                                                                                                                                      ],
-                                                                                                                                                                      [
-                                                                                                                                                                          {
-                                                                                                                                                                              "Literal":  {
-                                                                                                                                                                                              "Value":  "\u002744100 Home child care providers\u0027"
-                                                                                                                                                                                          }
-                                                                                                                                                                          }
-                                                                                                                                                                      ]
-                                                                                                                                                                  ]
-                                                                                                                                                   }
-                                                                                                                                        }
-                                                                                                                      }
-                                                                                                                  ]
-                                                                                                    }
-                                                                                     }
-                                                                      }
-                                                   }
-                                               ]
-                               },
-                   "drillFilterOtherVisuals":  true
-               }
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "8583d0182fd72deb342d",
+  "position": {
+    "x": 0,
+    "y": 0,
+    "z": 2000,
+    "height": 64,
+    "width": 376.00000000000006,
+    "tabOrder": 2000
+  },
+  "visual": {
+    "visualType": "slicer",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ECE Seasonally Adjusted"
+                    }
+                  },
+                  "Property": "Occupation"
+                }
+              },
+              "queryRef": "ECE Seasonally Adjusted.Occupation",
+              "nativeQueryRef": "Occupation",
+              "active": true
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "data": [
+        {
+          "properties": {
+            "mode": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Dropdown'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "general": [
+        {
+          "properties": {
+            "filter": {
+              "filter": {
+                "Version": 2,
+                "From": [
+                  {
+                    "Name": "e",
+                    "Entity": "ECE Seasonally Adjusted",
+                    "Type": 0
+                  }
+                ],
+                "Where": [
+                  {
+                    "Condition": {
+                      "In": {
+                        "Expressions": [
+                          {
+                            "Column": {
+                              "Expression": {
+                                "SourceRef": {
+                                  "Source": "e"
+                                }
+                              },
+                              "Property": "Occupation"
+                            }
+                          }
+                        ],
+                        "Values": [
+                          [
+                            {
+                              "Literal": {
+                                "Value": "'42202 Early childhood educators and assistants'"
+                              }
+                            }
+                          ],
+                          [
+                            {
+                              "Literal": {
+                                "Value": "'44100 Home child care providers'"
+                              }
+                            }
+                          ]
+                        ]
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
 }

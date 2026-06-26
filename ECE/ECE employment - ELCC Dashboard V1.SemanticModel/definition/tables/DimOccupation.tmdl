@@ -27,7 +27,7 @@ table DimOccupation
 
 	partition DimOccupation = calculated
 		mode: import
-		source =
+		source = ```
 				
 				DISTINCT (
 				    SELECTCOLUMNS (
@@ -38,5 +38,6 @@ table DimOccupation
 				    )
 				)
 
+		```
 	annotation PBI_Id = 7b204e3418954743a6b70c7e136e7250
 

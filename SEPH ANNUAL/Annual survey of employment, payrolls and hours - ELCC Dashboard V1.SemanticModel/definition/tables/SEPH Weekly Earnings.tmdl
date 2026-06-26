@@ -1,4 +1,4 @@
-﻿table 'SEPH Weekly Earnings'
+table 'SEPH Weekly Earnings'
 	lineageTag: 0dfc7f33-5f18-4e27-9a17-f681433f197f
 
 	measure 'Weekly Earnings Value' =
@@ -86,6 +86,7 @@
 			        )
 			    )
 		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: a8e4be25-313f-4b47-b6f8-7d3aed50bf1d
 
 	measure 'All Industries Weekly Earnings YoY % Latest' =
 			
@@ -99,6 +100,8 @@
 			        )
 			    )
 		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: c1ec5c1b-10fa-487e-a6d6-972774bc2bf3
+
 	measure 'Child Care Weekly Earnings Relative Latest' =
 			
 			VAR LatestYear = [Latest SEPH Year]
@@ -257,24 +260,20 @@
 		mode: import
 		source =
 				let
-				  Source = Web.Contents("https://www150.statcan.gc.ca/n1/tbl/csv/14100204-eng.zip"),
-				    Custom1 = Unzip(Source),
-				    Content = Custom1{0}[Content],
-				    #"Imported CSV" = Csv.Document(Content,[Delimiter=",", Columns=17, Encoding=65001, QuoteStyle=QuoteStyle.None]),
-				    #"Promoted Headers" = Table.PromoteHeaders(#"Imported CSV", [PromoteAllScalars=true]),
-				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"REF_DATE", type text}, {"GEO", type text}, {"DGUID", type text}, {"Type of employees", type text}, {"Overtime", type text}, {"North American Industry Classification System (NAICS)", type text}, {"UOM", type text}, {"UOM_ID", Int64.Type}, {"SCALAR_FACTOR", type text}, {"SCALAR_ID", Int64.Type}, {"VECTOR", type text}, {"COORDINATE", type text}, {"VALUE", type number}, {"STATUS", type text}, {"SYMBOL", type text}, {"TERMINATED", type text}, {"DECIMALS", Int64.Type}}),
-				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"DGUID", "UOM_ID", "SCALAR_FACTOR", "SCALAR_ID", "VECTOR", "COORDINATE", "STATUS", "SYMBOL", "TERMINATED", "DECIMALS"}),
-				    #"Renamed Columns" = Table.RenameColumns(#"Removed Columns",{{"Type of employees", "Employee Type"}, {"North American Industry Classification System (NAICS)", "NAICS"}}),
-                    #"Added Date" = Table.AddColumn(#"Renamed Columns", "Date", each Date.FromText([REF_DATE] & "-01-01"), type date),
-                    #"Removed Columns1" = Table.RemoveColumns(#"Added Date",{"REF_DATE"})
-                in
-                  #"Removed Columns1"
+								  Source = Web.Contents("https://www150.statcan.gc.ca/n1/tbl/csv/14100204-eng.zip"),
+								    Custom1 = Unzip(Source),
+								    Content = Custom1{0}[Content],
+								    #"Imported CSV" = Csv.Document(Content,[Delimiter=",", Columns=17, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+								    #"Promoted Headers" = Table.PromoteHeaders(#"Imported CSV", [PromoteAllScalars=true]),
+								    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"REF_DATE", type text}, {"GEO", type text}, {"DGUID", type text}, {"Type of employees", type text}, {"Overtime", type text}, {"North American Industry Classification System (NAICS)", type text}, {"UOM", type text}, {"UOM_ID", Int64.Type}, {"SCALAR_FACTOR", type text}, {"SCALAR_ID", Int64.Type}, {"VECTOR", type text}, {"COORDINATE", type text}, {"VALUE", type number}, {"STATUS", type text}, {"SYMBOL", type text}, {"TERMINATED", type text}, {"DECIMALS", Int64.Type}}),
+								    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"DGUID", "UOM_ID", "SCALAR_FACTOR", "SCALAR_ID", "VECTOR", "COORDINATE", "STATUS", "SYMBOL", "TERMINATED", "DECIMALS"}),
+								    #"Renamed Columns" = Table.RenameColumns(#"Removed Columns",{{"Type of employees", "Employee Type"}, {"North American Industry Classification System (NAICS)", "NAICS"}}),
+				                    #"Added Date" = Table.AddColumn(#"Renamed Columns", "Date", each Date.FromText([REF_DATE] & "-01-01"), type date),
+				                    #"Removed Columns1" = Table.RemoveColumns(#"Added Date",{"REF_DATE"})
+				                in
+				                  #"Removed Columns1"
 
 	annotation PBI_NavigationStepName = Navigation
 
 	annotation PBI_ResultType = Table
-
-
-
-
 

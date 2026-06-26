@@ -1,80 +1,80 @@
-﻿{
-    "$schema":  "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
-    "name":  "seph_hourly_headlines",
-    "position":  {
-                     "x":  0,
-                     "y":  88,
-                     "z":  4500,
-                     "height":  104,
-                     "width":  1280,
-                     "tabOrder":  4500
-                 },
-    "visual":  {
-                   "visualType":  "multiRowCard",
-                   "query":  {
-                                 "queryState":  {
-                                                    "Values":  {
-                                                                   "projections":  [
-                                                                                       {
-                                                                                           "field":  {
-                                                                                                         "Measure":  {
-                                                                                                                         "Expression":  {
-                                                                                                                                            "SourceRef":  {
-                                                                                                                                                              "Entity":  "SEPH Hourly Earnings"
-                                                                                                                                                          }
-                                                                                                                                        },
-                                                                                                                         "Property":  "Child Care Hourly Earnings Relative Latest"
-                                                                                                                     }
-                                                                                                     },
-                                                                                           "queryRef":  "SEPH Hourly Earnings.Child Care Hourly Earnings Relative Latest",
-                                                                                           "nativeQueryRef":  "Child Care Hourly Earnings Relative Latest"
-                                                                                       },
-                                                                                       {
-                                                                                           "field":  {
-                                                                                                         "Measure":  {
-                                                                                                                         "Expression":  {
-                                                                                                                                            "SourceRef":  {
-                                                                                                                                                              "Entity":  "SEPH Hourly Earnings"
-                                                                                                                                                          }
-                                                                                                                                        },
-                                                                                                                         "Property":  "Child Care Hourly Earnings Gap Latest"
-                                                                                                                     }
-                                                                                                     },
-                                                                                           "queryRef":  "SEPH Hourly Earnings.Child Care Hourly Earnings Gap Latest",
-                                                                                           "nativeQueryRef":  "Child Care Hourly Earnings Gap Latest"
-                                                                                       },
-                                                                                       {
-                                                                                           "field":  {
-                                                                                                         "Measure":  {
-                                                                                                                         "Expression":  {
-                                                                                                                                            "SourceRef":  {
-                                                                                                                                                              "Entity":  "SEPH Hourly Earnings"
-                                                                                                                                                          }
-                                                                                                                                        },
-                                                                                                                         "Property":  "Child Care Hourly Earnings YoY % Latest"
-                                                                                                                     }
-                                                                                                     },
-                                                                                           "queryRef":  "SEPH Hourly Earnings.Child Care Hourly Earnings YoY % Latest",
-                                                                                           "nativeQueryRef":  "Child Care Hourly Earnings YoY % Latest"
-                                                                                       },
-                                                                                       {
-                                                                                           "field":  {
-                                                                                                         "Measure":  {
-                                                                                                                         "Expression":  {
-                                                                                                                                            "SourceRef":  {
-                                                                                                                                                              "Entity":  "SEPH Hourly Earnings"
-                                                                                                                                                          }
-                                                                                                                                        },
-                                                                                                                         "Property":  "All Industries Hourly Earnings YoY % Latest"
-                                                                                                                     }
-                                                                                                     },
-                                                                                           "queryRef":  "SEPH Hourly Earnings.All Industries Hourly Earnings YoY % Latest",
-                                                                                           "nativeQueryRef":  "All Industries Hourly Earnings YoY % Latest"
-                                                                                       }
-                                                                                   ]
-                                                               }
-                                                }
-                             },
-                   "drillFilterOtherVisuals":  true
-               }
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "seph_hourly_headlines",
+  "position": {
+    "x": 0,
+    "y": 88,
+    "z": 4500,
+    "height": 104,
+    "width": 1280,
+    "tabOrder": 4500
+  },
+  "visual": {
+    "visualType": "multiRowCard",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SEPH Hourly Earnings"
+                    }
+                  },
+                  "Property": "Child Care Hourly Earnings Relative Latest"
+                }
+              },
+              "queryRef": "SEPH Hourly Earnings.Child Care Hourly Earnings Relative Latest",
+              "nativeQueryRef": "Child Care Hourly Earnings Relative Latest"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SEPH Hourly Earnings"
+                    }
+                  },
+                  "Property": "Child Care Hourly Earnings Gap Latest"
+                }
+              },
+              "queryRef": "SEPH Hourly Earnings.Child Care Hourly Earnings Gap Latest",
+              "nativeQueryRef": "Child Care Hourly Earnings Gap Latest"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SEPH Hourly Earnings"
+                    }
+                  },
+                  "Property": "Child Care Hourly Earnings YoY % Latest"
+                }
+              },
+              "queryRef": "SEPH Hourly Earnings.Child Care Hourly Earnings YoY % Latest",
+              "nativeQueryRef": "Child Care Hourly Earnings YoY % Latest"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SEPH Hourly Earnings"
+                    }
+                  },
+                  "Property": "All Industries Hourly Earnings YoY % Latest"
+                }
+              },
+              "queryRef": "SEPH Hourly Earnings.All Industries Hourly Earnings YoY % Latest",
+              "nativeQueryRef": "All Industries Hourly Earnings YoY % Latest"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
 }

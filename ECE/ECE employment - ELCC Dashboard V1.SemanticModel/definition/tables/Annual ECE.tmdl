@@ -437,7 +437,7 @@ table 'Annual ECE'
 		mode: import
 		source =
 				let
-				  Source = Csv.Document(File.Contents("C:\Users\MLOUI\OneDrive\Work\PBI Data\ECE\Annual Historical ECE Data - Tall.csv"), [Delimiter = ",", Columns = 11, Encoding = 65001, QuoteStyle = QuoteStyle.None]),
+				  Source = Csv.Document(File.Contents("C:\Users\MLOUI\OneDrive\Work\PBI\PBI DATA FILES\ECE\Annual Historical ECE Data - Tall.csv"),[Delimiter=",", Columns=11, Encoding=65001, QuoteStyle=QuoteStyle.None]),
 				  #"Promoted headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
 				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"Geography", type text}, {"Occupation", type text}, {"NOC", type text}, {"Occupation_Name", type text}, {"Selected_charac", type text}, {"Characteristic", type text}, {"Unit", type text}, {"Statistics", type text}, {"Year", Int64.Type}, {"Value", type number}, {"Is_Suppressed", type logical}}, "en-US")
 				in

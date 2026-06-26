@@ -1,4 +1,4 @@
-﻿model Model
+model Model
 	culture: en-US
 	defaultPowerBIDataSourceVersion: powerBI_V3
 	sourceQueryCulture: en-CA
@@ -19,5 +19,4 @@ ref table Date
 ref table Geography
 
 ref cultureInfo en-US
-
 

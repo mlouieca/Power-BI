@@ -38,12 +38,13 @@ table 'Metric Selector'
 
 	partition 'Metric Selector' = calculated
 		mode: import
-		source =
+		source = ```
 				{
 				    ("Metric - Motherhood Gap (pp)", NAMEOF('LFS_FamilyStructure_14100397'[Metric - Motherhood Gap (pp)]), 0),
 				    ("Metric - Participation Rate (Mothers)", NAMEOF('LFS_FamilyStructure_14100397'[Metric - Participation Rate (Mothers)]), 1),
 				    ("Metric - Unemployment Rate (Mothers)", NAMEOF('LFS_FamilyStructure_14100397'[Metric - Unemployment Rate (Mothers)]), 2)
 				}
 
+		```
 	annotation PBI_Id = f18ba0d0fbb848c4b4eb37753a9e7336
 

@@ -20,7 +20,7 @@ table DimGeography
 
 	partition DimGeography = calculated
 		mode: import
-		source =
+		source = ```
 				
 				ADDCOLUMNS (
 				    DISTINCT ( 'Annual ECE'[Geography] ),
@@ -45,5 +45,6 @@ table DimGeography
 				        )
 				)
 
+		```
 	annotation PBI_Id = e55ffb24316848bdb582c56e86d77401
 

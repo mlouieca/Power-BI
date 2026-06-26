@@ -68,7 +68,7 @@ table Date
 
 	partition Date = calculated
 		mode: import
-		source =
+		source = ```
 				
 				VAR AllDates =
 				    UNION (
@@ -87,6 +87,7 @@ table Date
 				        "Year-Month", FORMAT ( [Date], "yyyy-MM" ),
 				        "Year-Month Label", FORMAT ( [Date], "mmm yyyy" )
 				    )
+		```
 
 	annotation PBI_Id = aba93490ff1e42fda9ab16e35c0f0a41
 

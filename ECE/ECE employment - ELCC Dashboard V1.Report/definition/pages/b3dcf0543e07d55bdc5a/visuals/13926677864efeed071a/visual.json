@@ -1,61 +1,59 @@
-﻿{
-    "$schema":  "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
-    "name":  "13926677864efeed071a",
-    "position":  {
-                     "x":  8,
-                     "y":  200,
-                     "z":  2000,
-                     "height":  96,
-                     "width":  576,
-                     "tabOrder":  2000
-                 },
-    "visual":  {
-                   "visualType":  "slicer",
-                   "query":  {
-                                 "queryState":  {
-                                                    "Values":  {
-                                                                   "projections":  [
-                                                                                       {
-                                                                                           "field":  {
-                                                                                                         "Column":  {
-                                                                                                                        "Expression":  {
-                                                                                                                                           "SourceRef":  {
-                                                                                                                                                             "Entity":  "DimYear"
-                                                                                                                                                         }
-                                                                                                                                       },
-                                                                                                                        "Property":  "Year"
-                                                                                                                    }
-                                                                                                     },
-                                                                                           "queryRef":  "DimYear.Year",
-                                                                                           "nativeQueryRef":  "Year",
-                                                                                           "active":  true
-                                                                                       }
-                                                                                   ]
-                                                               }
-                                                }
-                             },
-                   "objects":  {
-                                   "data":  [
-                                                {
-                                                    "properties":  {
-                                                                       "mode":  {
-                                                                                    "expr":  {
-                                                                                                 "Literal":  {
-                                                                                                                 "Value":  "\u0027Between\u0027"
-                                                                                                             }
-                                                                                             }
-                                                                                }
-                                                                   }
-                                                }
-                                            ],
-                                   "general":  [
-                                                   {
-                                                       "properties":  {
-
-                                                                      }
-                                                   }
-                                               ]
-                               },
-                   "drillFilterOtherVisuals":  true
-               }
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "13926677864efeed071a",
+  "position": {
+    "x": 8,
+    "y": 200,
+    "z": 2000,
+    "height": 96,
+    "width": 576,
+    "tabOrder": 2000
+  },
+  "visual": {
+    "visualType": "slicer",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimYear"
+                    }
+                  },
+                  "Property": "Year"
+                }
+              },
+              "queryRef": "DimYear.Year",
+              "nativeQueryRef": "Year",
+              "active": true
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "data": [
+        {
+          "properties": {
+            "mode": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Between'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "general": [
+        {
+          "properties": {}
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
 }

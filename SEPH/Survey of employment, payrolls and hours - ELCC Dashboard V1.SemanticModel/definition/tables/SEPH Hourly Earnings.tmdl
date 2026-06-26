@@ -1,4 +1,4 @@
-﻿table 'SEPH Hourly Earnings'
+table 'SEPH Hourly Earnings'
 	lineageTag: 5b1b866c-57f3-4540-a91c-766dc78e12b6
 
 	measure 'Hourly Earnings Value' =
@@ -86,6 +86,7 @@
 			        )
 			    )
 		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 4b4ea710-9599-48db-b63f-7f88503622d0
 
 	measure 'All Industries Hourly Earnings YoY % Latest' =
 			
@@ -99,6 +100,8 @@
 			        )
 			    )
 		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 0246803f-470b-4835-b913-f2120b369cb6
+
 	measure 'Child Care Hourly Earnings Relative Latest' =
 			
 			VAR LatestMonth = [Latest SEPH Month]
@@ -273,6 +276,4 @@
 	annotation PBI_NavigationStepName = Navigation
 
 	annotation PBI_ResultType = Table
-
-
 

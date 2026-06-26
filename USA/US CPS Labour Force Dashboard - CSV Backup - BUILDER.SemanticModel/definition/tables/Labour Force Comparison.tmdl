@@ -92,110 +92,112 @@ table 'Labour Force Comparison'
 
 	partition 'Labour Force Comparison' = calculated
 		mode: import
-		source =
+		source = ```
+						
+						VAR UsRows =
+						    FILTER (
+						        'CPS Monthly Labour Summary',
+						        NOT CONTAINSSTRING ( 'CPS Monthly Labour Summary'[ChildStatus], "6" )
+						    )
+						
+						VAR UsParticipation =
+						    SELECTCOLUMNS (
+						        UsRows,
+						        "ReferenceMonth", 'CPS Monthly Labour Summary'[ReferenceMonth],
+						        "Country", "United States",
+						        "Sex", 'CPS Monthly Labour Summary'[Sex],
+						        "ChildStatus",
+						            SWITCH (
+						                TRUE (),
+						                'CPS Monthly Labour Summary'[ChildStatus] = "All core-aged adults", "All core-aged adults",
+						                'CPS Monthly Labour Summary'[ChildStatus] = "No co-resident child under 18", "No child under 18",
+						                "Youngest child 0 to 5 years"
+						            ),
+						        "Indicator", "Participation rate",
+						        "Value", 'CPS Monthly Labour Summary'[ParticipationRate] * 100,
+						        "SeriesLabel",
+						            "United States - " & 'CPS Monthly Labour Summary'[Sex] & " - "
+						                & SWITCH (
+						                    TRUE (),
+						                    'CPS Monthly Labour Summary'[ChildStatus] = "All core-aged adults", "All core-aged adults",
+						                    'CPS Monthly Labour Summary'[ChildStatus] = "No co-resident child under 18", "No child under 18",
+						                    "Youngest child 0 to 5 years"
+						                )
+						    )
+						
+						VAR UsEmployment =
+						    SELECTCOLUMNS (
+						        UsRows,
+						        "ReferenceMonth", 'CPS Monthly Labour Summary'[ReferenceMonth],
+						        "Country", "United States",
+						        "Sex", 'CPS Monthly Labour Summary'[Sex],
+						        "ChildStatus",
+						            SWITCH (
+						                TRUE (),
+						                'CPS Monthly Labour Summary'[ChildStatus] = "All core-aged adults", "All core-aged adults",
+						                'CPS Monthly Labour Summary'[ChildStatus] = "No co-resident child under 18", "No child under 18",
+						                "Youngest child 0 to 5 years"
+						            ),
+						        "Indicator", "Employment rate",
+						        "Value", 'CPS Monthly Labour Summary'[EmploymentRate] * 100,
+						        "SeriesLabel",
+						            "United States - " & 'CPS Monthly Labour Summary'[Sex] & " - "
+						                & SWITCH (
+						                    TRUE (),
+						                    'CPS Monthly Labour Summary'[ChildStatus] = "All core-aged adults", "All core-aged adults",
+						                    'CPS Monthly Labour Summary'[ChildStatus] = "No co-resident child under 18", "No child under 18",
+						                    "Youngest child 0 to 5 years"
+						                )
+						    )
+						
+						VAR UsUnemployment =
+						    SELECTCOLUMNS (
+						        UsRows,
+						        "ReferenceMonth", 'CPS Monthly Labour Summary'[ReferenceMonth],
+						        "Country", "United States",
+						        "Sex", 'CPS Monthly Labour Summary'[Sex],
+						        "ChildStatus",
+						            SWITCH (
+						                TRUE (),
+						                'CPS Monthly Labour Summary'[ChildStatus] = "All core-aged adults", "All core-aged adults",
+						                'CPS Monthly Labour Summary'[ChildStatus] = "No co-resident child under 18", "No child under 18",
+						                "Youngest child 0 to 5 years"
+						            ),
+						        "Indicator", "Unemployment rate",
+						        "Value", 'CPS Monthly Labour Summary'[UnemploymentRate] * 100,
+						        "SeriesLabel",
+						            "United States - " & 'CPS Monthly Labour Summary'[Sex] & " - "
+						                & SWITCH (
+						                    TRUE (),
+						                    'CPS Monthly Labour Summary'[ChildStatus] = "All core-aged adults", "All core-aged adults",
+						                    'CPS Monthly Labour Summary'[ChildStatus] = "No co-resident child under 18", "No child under 18",
+						                    "Youngest child 0 to 5 years"
+						                )
+						    )
+						
+						VAR CanadaRows =
+						    SELECTCOLUMNS (
+						        'Canada LFS Monthly',
+						        "ReferenceMonth", 'Canada LFS Monthly'[ReferenceMonth],
+						        "Country", 'Canada LFS Monthly'[Country],
+						        "Sex", 'Canada LFS Monthly'[Sex],
+						        "ChildStatus", 'Canada LFS Monthly'[ChildStatus],
+						        "Indicator", 'Canada LFS Monthly'[Indicator],
+						        "Value", 'Canada LFS Monthly'[Value],
+						        "SeriesLabel",
+						            'Canada LFS Monthly'[Country] & " - " & 'Canada LFS Monthly'[Sex] & " - "
+						                & 'Canada LFS Monthly'[ChildStatus]
+						    )
+						
+						RETURN
+						    UNION (
+						        UsParticipation,
+						        UsEmployment,
+						        UsUnemployment,
+						        CanadaRows
+						    )
 				
-				VAR UsRows =
-				    FILTER (
-				        'CPS Monthly Labour Summary',
-				        NOT CONTAINSSTRING ( 'CPS Monthly Labour Summary'[ChildStatus], "6" )
-				    )
-				
-				VAR UsParticipation =
-				    SELECTCOLUMNS (
-				        UsRows,
-				        "ReferenceMonth", 'CPS Monthly Labour Summary'[ReferenceMonth],
-				        "Country", "United States",
-				        "Sex", 'CPS Monthly Labour Summary'[Sex],
-				        "ChildStatus",
-				            SWITCH (
-				                TRUE (),
-				                'CPS Monthly Labour Summary'[ChildStatus] = "All core-aged adults", "All core-aged adults",
-				                'CPS Monthly Labour Summary'[ChildStatus] = "No co-resident child under 18", "No child under 18",
-				                "Youngest child 0 to 5 years"
-				            ),
-				        "Indicator", "Participation rate",
-				        "Value", 'CPS Monthly Labour Summary'[ParticipationRate] * 100,
-				        "SeriesLabel",
-				            "United States - " & 'CPS Monthly Labour Summary'[Sex] & " - "
-				                & SWITCH (
-				                    TRUE (),
-				                    'CPS Monthly Labour Summary'[ChildStatus] = "All core-aged adults", "All core-aged adults",
-				                    'CPS Monthly Labour Summary'[ChildStatus] = "No co-resident child under 18", "No child under 18",
-				                    "Youngest child 0 to 5 years"
-				                )
-				    )
-				
-				VAR UsEmployment =
-				    SELECTCOLUMNS (
-				        UsRows,
-				        "ReferenceMonth", 'CPS Monthly Labour Summary'[ReferenceMonth],
-				        "Country", "United States",
-				        "Sex", 'CPS Monthly Labour Summary'[Sex],
-				        "ChildStatus",
-				            SWITCH (
-				                TRUE (),
-				                'CPS Monthly Labour Summary'[ChildStatus] = "All core-aged adults", "All core-aged adults",
-				                'CPS Monthly Labour Summary'[ChildStatus] = "No co-resident child under 18", "No child under 18",
-				                "Youngest child 0 to 5 years"
-				            ),
-				        "Indicator", "Employment rate",
-				        "Value", 'CPS Monthly Labour Summary'[EmploymentRate] * 100,
-				        "SeriesLabel",
-				            "United States - " & 'CPS Monthly Labour Summary'[Sex] & " - "
-				                & SWITCH (
-				                    TRUE (),
-				                    'CPS Monthly Labour Summary'[ChildStatus] = "All core-aged adults", "All core-aged adults",
-				                    'CPS Monthly Labour Summary'[ChildStatus] = "No co-resident child under 18", "No child under 18",
-				                    "Youngest child 0 to 5 years"
-				                )
-				    )
-				
-				VAR UsUnemployment =
-				    SELECTCOLUMNS (
-				        UsRows,
-				        "ReferenceMonth", 'CPS Monthly Labour Summary'[ReferenceMonth],
-				        "Country", "United States",
-				        "Sex", 'CPS Monthly Labour Summary'[Sex],
-				        "ChildStatus",
-				            SWITCH (
-				                TRUE (),
-				                'CPS Monthly Labour Summary'[ChildStatus] = "All core-aged adults", "All core-aged adults",
-				                'CPS Monthly Labour Summary'[ChildStatus] = "No co-resident child under 18", "No child under 18",
-				                "Youngest child 0 to 5 years"
-				            ),
-				        "Indicator", "Unemployment rate",
-				        "Value", 'CPS Monthly Labour Summary'[UnemploymentRate] * 100,
-				        "SeriesLabel",
-				            "United States - " & 'CPS Monthly Labour Summary'[Sex] & " - "
-				                & SWITCH (
-				                    TRUE (),
-				                    'CPS Monthly Labour Summary'[ChildStatus] = "All core-aged adults", "All core-aged adults",
-				                    'CPS Monthly Labour Summary'[ChildStatus] = "No co-resident child under 18", "No child under 18",
-				                    "Youngest child 0 to 5 years"
-				                )
-				    )
-				
-				VAR CanadaRows =
-				    SELECTCOLUMNS (
-				        'Canada LFS Monthly',
-				        "ReferenceMonth", 'Canada LFS Monthly'[ReferenceMonth],
-				        "Country", 'Canada LFS Monthly'[Country],
-				        "Sex", 'Canada LFS Monthly'[Sex],
-				        "ChildStatus", 'Canada LFS Monthly'[ChildStatus],
-				        "Indicator", 'Canada LFS Monthly'[Indicator],
-				        "Value", 'Canada LFS Monthly'[Value],
-				        "SeriesLabel",
-				            'Canada LFS Monthly'[Country] & " - " & 'Canada LFS Monthly'[Sex] & " - "
-				                & 'Canada LFS Monthly'[ChildStatus]
-				    )
-				
-				RETURN
-				    UNION (
-				        UsParticipation,
-				        UsEmployment,
-				        UsUnemployment,
-				        CanadaRows
-				    )
+				```
 
 	annotation PBI_Id = 8ad7b6d90f7f4e1e83a7cb723db60e03
 

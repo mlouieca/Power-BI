@@ -1,4 +1,4 @@
-﻿expression fnGetCPSMonth =
+expression fnGetCPSMonth =
 		(referenceMonth as date) as record =>
 		let
 		    BaseUrl = "https://api.census.gov",
@@ -240,7 +240,7 @@ expression 'CPS Download Staging' =
 		    // Uses the most recently completed calendar month.
 		    // On June 24, 2026, this produces May 1, 2026.
 		    EndMonth =
-		        #date(2019, 12, 1),
+		        #date(2019, 1, 1),
 		
 		
 		    MonthList =
@@ -1238,3 +1238,4 @@ expression Unzip =
 	annotation PBI_NavigationStepName = Navigation
 
 	annotation PBI_ResultType = Function
+

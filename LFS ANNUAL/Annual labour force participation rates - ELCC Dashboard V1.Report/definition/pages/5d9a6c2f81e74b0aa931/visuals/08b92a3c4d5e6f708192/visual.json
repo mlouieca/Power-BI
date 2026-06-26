@@ -85,5 +85,51 @@
       }
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "11eb2a6d1ad8521a45ed",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "YearTable"
+              }
+            },
+            "Property": "Year"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "1a454a46b0dafb8b430a",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "LFS_GenderWageGap_14100062"
+              }
+            },
+            "Property": "Female Hourly Wage"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "c645bffc74a69f03e6d8",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "LFS_GenderWageGap_14100062"
+              }
+            },
+            "Property": "Male Hourly Wage"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
   }
 }

@@ -1,139 +1,139 @@
-﻿{
-    "$schema":  "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
-    "name":  "seph_hourly_index_chart",
-    "position":  {
-                     "x":  864,
-                     "y":  104,
-                     "z":  5000,
-                     "height":  576,
-                     "width":  416,
-                     "tabOrder":  5000
-                 },
-    "visual":  {
-                   "visualType":  "lineChart",
-                   "query":  {
-                                 "queryState":  {
-                                                    "Category":  {
-                                                                     "projections":  [
-                                                                                         {
-                                                                                             "field":  {
-                                                                                                           "Column":  {
-                                                                                                                          "Expression":  {
-                                                                                                                                             "SourceRef":  {
-                                                                                                                                                               "Entity":  "Date"
-                                                                                                                                                           }
-                                                                                                                                         },
-                                                                                                                          "Property":  "Date"
-                                                                                                                      }
-                                                                                                       },
-                                                                                             "queryRef":  "Date.Date",
-                                                                                             "nativeQueryRef":  "Date",
-                                                                                             "active":  true
-                                                                                         }
-                                                                                     ]
-                                                                 },
-                                                    "Y":  {
-                                                              "projections":  [
-                                                                                  {
-                                                                                      "field":  {
-                                                                                                    "Measure":  {
-                                                                                                                    "Expression":  {
-                                                                                                                                       "SourceRef":  {
-                                                                                                                                                         "Entity":  "SEPH Hourly Earnings"
-                                                                                                                                                     }
-                                                                                                                                   },
-                                                                                                                    "Property":  "Child Care Hourly Earnings Index 2019"
-                                                                                                                }
-                                                                                                },
-                                                                                      "queryRef":  "SEPH Hourly Earnings.Child Care Hourly Earnings Index 2019",
-                                                                                      "nativeQueryRef":  "Child Care Hourly Earnings Index 2019"
-                                                                                  },
-                                                                                  {
-                                                                                      "field":  {
-                                                                                                    "Measure":  {
-                                                                                                                    "Expression":  {
-                                                                                                                                       "SourceRef":  {
-                                                                                                                                                         "Entity":  "SEPH Hourly Earnings"
-                                                                                                                                                     }
-                                                                                                                                   },
-                                                                                                                    "Property":  "All Industries Hourly Earnings Index 2019"
-                                                                                                                }
-                                                                                                },
-                                                                                      "queryRef":  "SEPH Hourly Earnings.All Industries Hourly Earnings Index 2019",
-                                                                                      "nativeQueryRef":  "All Industries Hourly Earnings Index 2019"
-                                                                                  }
-                                                                              ]
-                                                          }
-                                                },
-                                 "sortDefinition":  {
-                                                        "sort":  [
-                                                                     {
-                                                                         "field":  {
-                                                                                       "Column":  {
-                                                                                                      "Expression":  {
-                                                                                                                         "SourceRef":  {
-                                                                                                                                           "Entity":  "Date"
-                                                                                                                                       }
-                                                                                                                     },
-                                                                                                      "Property":  "Date"
-                                                                                                  }
-                                                                                   },
-                                                                         "direction":  "Ascending"
-                                                                     }
-                                                                 ],
-                                                        "isDefaultSort":  true
-                                                    }
-                             },
-                   "objects":  {
-                                   "categoryAxis":  [
-                                                        {
-                                                            "properties":  {
-                                                                               "showAxisTitle":  {
-                                                                                                     "expr":  {
-                                                                                                                  "Literal":  {
-                                                                                                                                  "Value":  "false"
-                                                                                                                              }
-                                                                                                              }
-                                                                                                 }
-                                                                           }
-                                                        }
-                                                    ],
-                                   "valueAxis":  [
-                                                     {
-                                                         "properties":  {
-                                                                            "showAxisTitle":  {
-                                                                                                  "expr":  {
-                                                                                                               "Literal":  {
-                                                                                                                               "Value":  "false"
-                                                                                                                           }
-                                                                                                           }
-                                                                                              }
-                                                                        }
-                                                     }
-                                                 ]
-                               },
-                   "visualContainerObjects":  {
-                                                  "title":  [
-                                                                {
-                                                                    "properties":  {
-                                                                                       "show":  {
-                                                                                                    "expr":  {
-                                                                                                                 "Literal":  {
-                                                                                                                                 "Value":  "true"
-                                                                                                                             }
-                                                                                                             }
-                                                                                                },
-                                                                                       "text":  {
-                                                                                                    "expr":  {
-                                                                                                                 "Literal":  {
-                                                                                                                                 "Value":  "\u0027Hourly earnings index (2019 = 100)\u0027"
-                                                                                                                             }
-                                                                                                             }
-                                                                                                }
-                                                                                   }
-                                                                }
-                                                            ]
-                                              },
-                   "drillFilterOtherVisuals":  true
-               }
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "seph_hourly_index_chart",
+  "position": {
+    "x": 864,
+    "y": 104,
+    "z": 5000,
+    "height": 576,
+    "width": 416,
+    "tabOrder": 5000
+  },
+  "visual": {
+    "visualType": "lineChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Date"
+                    }
+                  },
+                  "Property": "Date"
+                }
+              },
+              "queryRef": "Date.Date",
+              "nativeQueryRef": "Date",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SEPH Hourly Earnings"
+                    }
+                  },
+                  "Property": "Child Care Hourly Earnings Index 2019"
+                }
+              },
+              "queryRef": "SEPH Hourly Earnings.Child Care Hourly Earnings Index 2019",
+              "nativeQueryRef": "Child Care Hourly Earnings Index 2019"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SEPH Hourly Earnings"
+                    }
+                  },
+                  "Property": "All Industries Hourly Earnings Index 2019"
+                }
+              },
+              "queryRef": "SEPH Hourly Earnings.All Industries Hourly Earnings Index 2019",
+              "nativeQueryRef": "All Industries Hourly Earnings Index 2019"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Date"
+                  }
+                },
+                "Property": "Date"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "objects": {
+      "categoryAxis": [
+        {
+          "properties": {
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "valueAxis": [
+        {
+          "properties": {
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Hourly earnings index (2019 = 100)'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
 }

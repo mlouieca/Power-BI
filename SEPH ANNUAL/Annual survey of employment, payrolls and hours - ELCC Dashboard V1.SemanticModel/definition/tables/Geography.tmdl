@@ -11,15 +11,16 @@ table Geography
 
 	partition Geography = calculated
 		mode: import
-		source =
-				
-				DISTINCT (
-				    UNION (
-				        SELECTCOLUMNS ( 'SEPH Employment', "GEO", 'SEPH Employment'[GEO] ),
-				        SELECTCOLUMNS ( 'SEPH Weekly Earnings', "GEO", 'SEPH Weekly Earnings'[GEO] ),
-				        SELECTCOLUMNS ( 'SEPH Hourly Earnings', "GEO", 'SEPH Hourly Earnings'[GEO] )
-				    )
-				)
+		source = ```
+						
+						DISTINCT (
+						    UNION (
+						        SELECTCOLUMNS ( 'SEPH Employment', "GEO", 'SEPH Employment'[GEO] ),
+						        SELECTCOLUMNS ( 'SEPH Weekly Earnings', "GEO", 'SEPH Weekly Earnings'[GEO] ),
+						        SELECTCOLUMNS ( 'SEPH Hourly Earnings', "GEO", 'SEPH Hourly Earnings'[GEO] )
+						    )
+						)
+				```
 
 	annotation PBI_Id = dbc75b7686264bab9182d2e2b47d75cd
 

@@ -410,7 +410,7 @@ table JVWS
 		mode: import
 		source =
 				let
-				    Source = Web.Contents("https://www150.statcan.gc.ca/n1/tbl/csv/14100444-eng.zip "),
+				    Source = Web.Contents("https://www150.statcan.gc.ca/n1/tbl/csv/14100444-eng.zip"),
 				    Custom1 = Unzip (Source),
 				    Content = Custom1{0}[Content],
 				    #"Imported CSV" = Csv.Document(Content,[Delimiter=",", Columns=16, Encoding=65001, QuoteStyle=QuoteStyle.None]),

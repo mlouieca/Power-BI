@@ -9,3 +9,4 @@ relationship 6a4b2d0f-0df4-4b90-ae28-e0f2477fd751
 relationship 1b6a59f8-d987-4d40-9bbf-7f7e53f4c91c
 	fromColumn: LFS_GenderWageGap_14100062.REF_DATE
 	toColumn: YearTable.Year
+

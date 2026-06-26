@@ -85,22 +85,24 @@ table Date
 
 	partition Date = calculated
 		mode: import
-		source =
+		source = ```
+						
+						ADDCOLUMNS (
+						    CALENDAR (
+						        DATE ( 2010, 1, 1 ),
+						        EOMONTH ( TODAY (), 0 )
+						    ),
+						    "Year", YEAR ( [Date] ),
+						    "Month Number", MONTH ( [Date] ),
+						    "Month Year", FORMAT ( [Date], "MMM yyyy" ),
+						    "Month Sort", YEAR ( [Date] ) * 100 + MONTH ( [Date] ),
+						    "Quarter Number", QUARTER ( [Date] ),
+						    "Quarter", "Q" & QUARTER ( [Date] ),
+						    "Quarter Year", "Q" & QUARTER ( [Date] ) & " " & YEAR ( [Date] ),
+						    "Quarter Sort", YEAR ( [Date] ) * 10 + QUARTER ( [Date] )
+						)
 				
-				ADDCOLUMNS (
-				    CALENDAR (
-				        DATE ( 2010, 1, 1 ),
-				        EOMONTH ( TODAY (), 0 )
-				    ),
-				    "Year", YEAR ( [Date] ),
-				    "Month Number", MONTH ( [Date] ),
-				    "Month Year", FORMAT ( [Date], "MMM yyyy" ),
-				    "Month Sort", YEAR ( [Date] ) * 100 + MONTH ( [Date] ),
-				    "Quarter Number", QUARTER ( [Date] ),
-				    "Quarter", "Q" & QUARTER ( [Date] ),
-				    "Quarter Year", "Q" & QUARTER ( [Date] ) & " " & YEAR ( [Date] ),
-				    "Quarter Sort", YEAR ( [Date] ) * 10 + QUARTER ( [Date] )
-				)
+				```
 
 	annotation PBI_Id = c15c50553e744b27afb8ae448ac865fa
 

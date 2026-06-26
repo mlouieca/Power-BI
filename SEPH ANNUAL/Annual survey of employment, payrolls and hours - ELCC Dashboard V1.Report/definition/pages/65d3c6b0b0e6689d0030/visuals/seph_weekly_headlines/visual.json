@@ -1,80 +1,80 @@
-﻿{
-    "$schema":  "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
-    "name":  "seph_weekly_headlines",
-    "position":  {
-                     "x":  0,
-                     "y":  88,
-                     "z":  4500,
-                     "height":  104,
-                     "width":  1280,
-                     "tabOrder":  4500
-                 },
-    "visual":  {
-                   "visualType":  "multiRowCard",
-                   "query":  {
-                                 "queryState":  {
-                                                    "Values":  {
-                                                                   "projections":  [
-                                                                                       {
-                                                                                           "field":  {
-                                                                                                         "Measure":  {
-                                                                                                                         "Expression":  {
-                                                                                                                                            "SourceRef":  {
-                                                                                                                                                              "Entity":  "SEPH Weekly Earnings"
-                                                                                                                                                          }
-                                                                                                                                        },
-                                                                                                                         "Property":  "Child Care Weekly Earnings Relative Latest"
-                                                                                                                     }
-                                                                                                     },
-                                                                                           "queryRef":  "SEPH Weekly Earnings.Child Care Weekly Earnings Relative Latest",
-                                                                                           "nativeQueryRef":  "Child Care Weekly Earnings Relative Latest"
-                                                                                       },
-                                                                                       {
-                                                                                           "field":  {
-                                                                                                         "Measure":  {
-                                                                                                                         "Expression":  {
-                                                                                                                                            "SourceRef":  {
-                                                                                                                                                              "Entity":  "SEPH Weekly Earnings"
-                                                                                                                                                          }
-                                                                                                                                        },
-                                                                                                                         "Property":  "Child Care Weekly Earnings Gap Latest"
-                                                                                                                     }
-                                                                                                     },
-                                                                                           "queryRef":  "SEPH Weekly Earnings.Child Care Weekly Earnings Gap Latest",
-                                                                                           "nativeQueryRef":  "Child Care Weekly Earnings Gap Latest"
-                                                                                       },
-                                                                                       {
-                                                                                           "field":  {
-                                                                                                         "Measure":  {
-                                                                                                                         "Expression":  {
-                                                                                                                                            "SourceRef":  {
-                                                                                                                                                              "Entity":  "SEPH Weekly Earnings"
-                                                                                                                                                          }
-                                                                                                                                        },
-                                                                                                                         "Property":  "Child Care Weekly Earnings YoY % Latest"
-                                                                                                                     }
-                                                                                                     },
-                                                                                           "queryRef":  "SEPH Weekly Earnings.Child Care Weekly Earnings YoY % Latest",
-                                                                                           "nativeQueryRef":  "Child Care Weekly Earnings YoY % Latest"
-                                                                                       },
-                                                                                       {
-                                                                                           "field":  {
-                                                                                                         "Measure":  {
-                                                                                                                         "Expression":  {
-                                                                                                                                            "SourceRef":  {
-                                                                                                                                                              "Entity":  "SEPH Weekly Earnings"
-                                                                                                                                                          }
-                                                                                                                                        },
-                                                                                                                         "Property":  "All Industries Weekly Earnings YoY % Latest"
-                                                                                                                     }
-                                                                                                     },
-                                                                                           "queryRef":  "SEPH Weekly Earnings.All Industries Weekly Earnings YoY % Latest",
-                                                                                           "nativeQueryRef":  "All Industries Weekly Earnings YoY % Latest"
-                                                                                       }
-                                                                                   ]
-                                                               }
-                                                }
-                             },
-                   "drillFilterOtherVisuals":  true
-               }
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "seph_weekly_headlines",
+  "position": {
+    "x": 0,
+    "y": 88,
+    "z": 4500,
+    "height": 104,
+    "width": 1280,
+    "tabOrder": 4500
+  },
+  "visual": {
+    "visualType": "multiRowCard",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SEPH Weekly Earnings"
+                    }
+                  },
+                  "Property": "Child Care Weekly Earnings Relative Latest"
+                }
+              },
+              "queryRef": "SEPH Weekly Earnings.Child Care Weekly Earnings Relative Latest",
+              "nativeQueryRef": "Child Care Weekly Earnings Relative Latest"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SEPH Weekly Earnings"
+                    }
+                  },
+                  "Property": "Child Care Weekly Earnings Gap Latest"
+                }
+              },
+              "queryRef": "SEPH Weekly Earnings.Child Care Weekly Earnings Gap Latest",
+              "nativeQueryRef": "Child Care Weekly Earnings Gap Latest"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SEPH Weekly Earnings"
+                    }
+                  },
+                  "Property": "Child Care Weekly Earnings YoY % Latest"
+                }
+              },
+              "queryRef": "SEPH Weekly Earnings.Child Care Weekly Earnings YoY % Latest",
+              "nativeQueryRef": "Child Care Weekly Earnings YoY % Latest"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SEPH Weekly Earnings"
+                    }
+                  },
+                  "Property": "All Industries Weekly Earnings YoY % Latest"
+                }
+              },
+              "queryRef": "SEPH Weekly Earnings.All Industries Weekly Earnings YoY % Latest",
+              "nativeQueryRef": "All Industries Weekly Earnings YoY % Latest"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
 }

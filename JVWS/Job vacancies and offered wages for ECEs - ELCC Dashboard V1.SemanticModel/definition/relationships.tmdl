@@ -9,3 +9,4 @@ relationship 6fea2a6c-a53c-4005-ad5b-59b3b8889e23
 relationship 189f8c2f-11be-4126-aa77-0c84b97ae009
 	fromColumn: 'LFS Labour Force Occupation'.Date
 	toColumn: DateTable.Date
+

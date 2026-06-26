@@ -30,7 +30,7 @@ table 'ECE Seasonally Adjusted'
 
 	measure 'Seasonal Factor' = ```
 			
-			SUM ( 'ECE Seasonally Adjusted'[Seasonal Factor] )
+			SUM ( 'ECE Seasonally Adjusted'[Seasonal Factor Value] )
 			
 			```
 		lineageTag: 0ca0170f-8e7c-4017-8904-0ea83b29cf57
@@ -154,7 +154,7 @@ table 'ECE Seasonally Adjusted'
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	column 'Seasonal Factor'
+	column 'Seasonal Factor Value'
 		dataType: double
 		lineageTag: 6b9a98a7-88d2-42de-b8d4-8ff86607765f
 		summarizeBy: sum

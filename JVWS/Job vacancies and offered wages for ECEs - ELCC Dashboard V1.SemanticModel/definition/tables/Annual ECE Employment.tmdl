@@ -2,83 +2,83 @@ table 'Annual ECE Employment'
 	lineageTag: 2f318a5a-0a9a-4c20-bc69-c9da345bba47
 
 	measure 'ECE Employment (Annual)' = ```
-
+			
 			CALCULATE(
 			    SUM('Annual ECE Employment'[Value]),
 			    TREATAS(VALUES(DateTable[Year]), 'Annual ECE Employment'[Year]),
 			    TREATAS(VALUES('JVWS'[GEO]), 'Annual ECE Employment'[Geography])
 			)
-
+			
 			```
 		formatString: #,0
 		lineageTag: 1a3040f7-9915-40c4-a9af-8611acacdf7f
 
 	measure 'ECE Job Vacancies' = ```
-
+			
 			CALCULATE(
 			    [Job Vacancies],
 			    'JVWS'[NOC_5] = "42202"
 			)
-
+			
 			```
 		formatString: #,0
 		lineageTag: 4bc2cabc-86ff-4509-9fa5-848534e84245
 
 	measure 'ECE Job Vacancies as % of Employment' = ```
-
+			
 			DIVIDE(
 			    [ECE Job Vacancies],
 			    [ECE Employment (Annual)]
 			)
-
+			
 			```
 		formatString: 0.00%;-0.00%;0.00%
 		lineageTag: 8365f095-19e2-45f3-95f3-447cf89039ca
 
 	measure 'ECE Employment (Latest JVWS Month)' = ```
-
+			
 			VAR _LatestDate = [Latest Month]
 			RETURN
 			CALCULATE(
 			    [ECE Employment (Annual)],
 			    TREATAS({_LatestDate}, DateTable[Date])
 			)
-
+			
 			```
 		formatString: #,0
 		lineageTag: 84713f67-8da2-499e-bdfa-54c1a66d7a0b
 
 	measure 'ECE Job Vacancies (Latest)' = ```
-
+			
 			VAR _LatestDate = [Latest Month]
 			RETURN
 			CALCULATE(
 			    [ECE Job Vacancies],
 			    TREATAS({_LatestDate}, DateTable[Date])
 			)
-
+			
 			```
 		formatString: #,0
 		lineageTag: 164af470-f10c-4e5f-b58b-0bdc8d780564
 
 	measure 'ECE Job Vacancies as % of Employment (Latest)' = ```
-
+			
 			DIVIDE(
 			    [ECE Job Vacancies (Latest)],
 			    [ECE Employment (Latest JVWS Month)]
 			)
-
+			
 			```
 		formatString: 0.00%;-0.00%;0.00%
 		lineageTag: d89c55c9-d448-4433-81b5-4250c3a3ad35
 
 	measure 'Latest Employment Year' = ```
-
+			
 			CALCULATE(
 			    MAX('Annual ECE Employment'[Year]),
 			    REMOVEFILTERS(DateTable)
 			)
-
+			
 			```
 		formatString: 0
 		lineageTag: 56da819e-e7b2-4b3b-9c0c-363e969fdea8
@@ -154,7 +154,7 @@ table 'Annual ECE Employment'
 		mode: import
 		source =
 				let
-				  Source = Csv.Document(File.Contents("C:\Users\MLOUI\OneDrive\Work\PBI Data\ECE\Annual Historical ECE Data - Tall.csv"), [Delimiter = ",", Columns = 11, Encoding = 65001, QuoteStyle = QuoteStyle.None]),
+				  Source = Csv.Document(File.Contents("C:\Users\MLOUI\OneDrive\Work\PBI\PBI DATA FILES\ECE\Annual Historical ECE Data - Tall.csv"),[Delimiter=",", Columns=11, Encoding=65001, QuoteStyle=QuoteStyle.None]),
 				  #"Promoted headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
 				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"Geography", type text}, {"Occupation", type text}, {"NOC", type text}, {"Occupation_Name", type text}, {"Selected_charac", type text}, {"Characteristic", type text}, {"Unit", type text}, {"Statistics", type text}, {"Year", Int64.Type}, {"Value", type number}, {"Is_Suppressed", type logical}}, "en-US"),
 				  #"Filtered rows" = Table.SelectRows(#"Changed column type", each [NOC] = "42202" and [Characteristic] = "Total, employment" and [Statistics] = "Estimates"),
@@ -165,3 +165,4 @@ table 'Annual ECE Employment'
 	annotation PBI_NavigationStepName = Navigation
 
 	annotation PBI_ResultType = Table
+

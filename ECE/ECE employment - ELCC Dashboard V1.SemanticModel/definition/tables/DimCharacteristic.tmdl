@@ -27,7 +27,7 @@ table DimCharacteristic
 
 	partition DimCharacteristic = calculated
 		mode: import
-		source =
+		source = ```
 				
 				DISTINCT (
 				    SELECTCOLUMNS (
@@ -38,5 +38,6 @@ table DimCharacteristic
 				    )
 				)
 
+		```
 	annotation PBI_Id = 86d3cf57e2ce4d989ab07172a0b4210a
 

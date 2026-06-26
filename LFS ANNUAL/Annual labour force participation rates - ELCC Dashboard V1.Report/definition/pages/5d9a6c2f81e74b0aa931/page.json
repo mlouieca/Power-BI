@@ -4,8 +4,5 @@
   "displayName": "Annual Gender Wage Gap",
   "displayOption": "FitToPage",
   "height": 720,
-  "width": 1280,
-  "filterConfig": {
-    "filterSortOrder": "Custom"
-  }
+  "width": 1280
 }

@@ -246,3 +246,4 @@ table LFS_GenderWageGap_14100062
 	annotation PBI_NavigationStepName = Navigation
 
 	annotation PBI_ResultType = Table
+
