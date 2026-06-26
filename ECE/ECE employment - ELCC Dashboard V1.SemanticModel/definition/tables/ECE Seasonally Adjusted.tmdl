@@ -1,0 +1,394 @@
+table 'ECE Seasonally Adjusted'
+	lineageTag: 59e36583-aab8-4afd-8751-c6bb7235e712
+
+	measure 'NSA Employment' = ```
+			
+			SUM ( 'ECE Seasonally Adjusted'[Estimate] )
+			
+			```
+		lineageTag: cb176fc0-c2a4-4b4e-a5c1-6d645a545b51
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Seasonally Adjusted Employment' = ```
+			
+			SUM ( 'ECE Seasonally Adjusted'[Seasonally Adjusted Estimate] )
+			
+			```
+		lineageTag: e679ae54-73c8-420d-8e56-ee511bca9136
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Seasonal Trend' = ```
+			
+			SUM ( 'ECE Seasonally Adjusted'[Trend] )
+			
+			```
+		lineageTag: b64c6e6e-368e-42be-8ee3-f1958dbdd314
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Seasonal Factor' = ```
+			
+			SUM ( 'ECE Seasonally Adjusted'[Seasonal Factor] )
+			
+			```
+		lineageTag: 0ca0170f-8e7c-4017-8904-0ea83b29cf57
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'SA YoY Change' = ```
+			
+			[Seasonally Adjusted Employment]
+			    - CALCULATE (
+			        [Seasonally Adjusted Employment],
+			        SAMEPERIODLASTYEAR ( DateTable[Date] )
+			    )
+			
+			```
+		lineageTag: 15c8ae40-8586-42bb-b984-ef56a7edbdab
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'SA YoY %' = ```
+			
+			DIVIDE (
+			    [SA YoY Change],
+			    CALCULATE (
+			        [Seasonally Adjusted Employment],
+			        SAMEPERIODLASTYEAR ( DateTable[Date] )
+			    )
+			)
+			
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 92f0752c-15d5-4b47-8d8d-19116f2e29cb
+
+	column 'Reference Period'
+		dataType: int64
+		formatString: 0
+		lineageTag: 701171c5-b971-4c83-a320-9bcd7bff09ef
+		summarizeBy: sum
+		sourceColumn: Reference Period
+
+		annotation SummarizationSetBy = Automatic
+
+	column Province
+		dataType: string
+		lineageTag: ec6eaa9d-e864-4be6-a08b-b433239cb8d6
+		summarizeBy: none
+		sourceColumn: Province
+
+		annotation SummarizationSetBy = Automatic
+
+	column Occupation
+		dataType: string
+		lineageTag: 43ba2696-d35d-446e-8055-af44e68410cf
+		summarizeBy: none
+		sourceColumn: Occupation
+
+		annotation SummarizationSetBy = Automatic
+
+	column Variable
+		dataType: string
+		lineageTag: 782dc30e-b2b1-4a2d-a602-c077358b12dd
+		summarizeBy: none
+		sourceColumn: Variable
+
+		annotation SummarizationSetBy = Automatic
+
+	column Estimate
+		dataType: double
+		lineageTag: 61c240b2-936f-4df5-8ca1-d5d50710376d
+		summarizeBy: sum
+		sourceColumn: Estimate
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 6f07d205-c41d-4276-9216-7d3f620bb880
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: 853f402e-7521-4924-a9a6-d050d11b75d5
+		summarizeBy: sum
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Name'
+		dataType: string
+		lineageTag: 6beab1f3-ea38-4b54-a274-395ebbd28250
+		summarizeBy: none
+		sourceColumn: Month Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column Month
+		dataType: int64
+		formatString: 0
+		lineageTag: 1e19a06a-16e8-41fa-8806-c9c49879637d
+		summarizeBy: sum
+		sourceColumn: Month
+
+		annotation SummarizationSetBy = Automatic
+
+	column Trend
+		dataType: double
+		lineageTag: 9bb3c04a-3759-4fac-91c1-b5658d12258e
+		summarizeBy: sum
+		sourceColumn: Trend
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Seasonal Factor'
+		dataType: double
+		lineageTag: 6b9a98a7-88d2-42de-b8d4-8ff86607765f
+		summarizeBy: sum
+		sourceColumn: Seasonal Factor
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Seasonally Adjusted Estimate'
+		dataType: double
+		lineageTag: 51f64397-e9e0-4b18-a482-911eb55f6f5a
+		summarizeBy: sum
+		sourceColumn: Seasonally Adjusted Estimate
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Adjustment Method'
+		dataType: string
+		lineageTag: 20af890e-5e4c-4ed1-85be-1d723f477c84
+		summarizeBy: none
+		sourceColumn: Adjustment Method
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Group Observations'
+		dataType: int64
+		formatString: 0
+		lineageTag: 694e58c9-849f-4ec6-a07e-f4b1cce2eeb0
+		summarizeBy: sum
+		sourceColumn: Group Observations
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'ECE Seasonally Adjusted' = m
+		mode: import
+		source =
+				let
+				    Source = ECE,
+				    #"Filtered Employment" =
+				        Table.SelectRows(
+				            Source,
+				            each [Variable] = "Employment"
+				                and [Estimate] <> null
+				                and [Date] <> null
+				        ),
+				    #"Selected Columns" =
+				        Table.SelectColumns(
+				            #"Filtered Employment",
+				            {
+				                "Reference Period",
+				                "Province",
+				                "Occupation",
+				                "Variable",
+				                "Estimate",
+				                "Date",
+				                "Year",
+				                "Month Name",
+				                "Month"
+				            }
+				        ),
+				    #"Grouped Series" =
+				        Table.Group(
+				            #"Selected Columns",
+				            {"Province", "Occupation", "Variable"},
+				            {
+				                {
+				                    "AdjustedData",
+				                    (Series as table) as table =>
+				                        let
+				                            Sorted = Table.Sort(Series, {{"Date", Order.Ascending}}),
+				                            Indexed = Table.AddIndexColumn(Sorted, "Series Index", 0, 1, Int64.Type),
+				                            Estimates = List.Buffer(Indexed[Estimate]),
+				                            CountRows = List.Count(Estimates),
+				                            WithTrend =
+				                                Table.AddColumn(
+				                                    Indexed,
+				                                    "Trend",
+				                                    each
+				                                        let
+				                                            i = [Series Index],
+				                                            FirstWindow =
+				                                                if CountRows >= 13 and i >= 6 and i <= CountRows - 7 then
+				                                                    List.Average(List.Range(Estimates, i - 6, 12))
+				                                                else
+				                                                    null,
+				                                            SecondWindow =
+				                                                if CountRows >= 13 and i >= 6 and i <= CountRows - 7 then
+				                                                    List.Average(List.Range(Estimates, i - 5, 12))
+				                                                else
+				                                                    null
+				                                        in
+				                                            if FirstWindow = null or SecondWindow = null then
+				                                                null
+				                                            else
+				                                                (FirstWindow + SecondWindow) / 2,
+				                                    type number
+				                                ),
+				                            WithResidual =
+				                                Table.AddColumn(
+				                                    WithTrend,
+				                                    "Seasonal Residual",
+				                                    each if [Trend] = null then null else [Estimate] - [Trend],
+				                                    type number
+				                                ),
+				                            ResidualRows =
+				                                Table.SelectRows(
+				                                    WithResidual,
+				                                    each [Seasonal Residual] <> null
+				                                ),
+				                            MonthlyFactorsRaw =
+				                                Table.Group(
+				                                    ResidualRows,
+				                                    {"Month"},
+				                                    {{"Raw Seasonal Factor", each List.Average([Seasonal Residual]), type number}}
+				                                ),
+				                            RawFactors = MonthlyFactorsRaw[Raw Seasonal Factor],
+				                            FactorMean =
+				                                if List.Count(RawFactors) = 12 then
+				                                    List.Average(RawFactors)
+				                                else
+				                                    0,
+				                            MonthlyFactors =
+				                                Table.AddColumn(
+				                                    MonthlyFactorsRaw,
+				                                    "Seasonal Factor",
+				                                    each [Raw Seasonal Factor] - FactorMean,
+				                                    type number
+				                                ),
+				                            MergedFactors =
+				                                Table.NestedJoin(
+				                                    WithResidual,
+				                                    {"Month"},
+				                                    MonthlyFactors,
+				                                    {"Month"},
+				                                    "MonthlyFactor",
+				                                    JoinKind.LeftOuter
+				                                ),
+				                            ExpandedFactors =
+				                                Table.ExpandTableColumn(
+				                                    MergedFactors,
+				                                    "MonthlyFactor",
+				                                    {"Seasonal Factor"},
+				                                    {"Seasonal Factor"}
+				                                ),
+				                            WithAdjusted =
+				                                Table.AddColumn(
+				                                    ExpandedFactors,
+				                                    "Seasonally Adjusted Estimate",
+				                                    each if [Seasonal Factor] = null then null else [Estimate] - [Seasonal Factor],
+				                                    type number
+				                                ),
+				                            WithMethod =
+				                                Table.AddColumn(
+				                                    WithAdjusted,
+				                                    "Adjustment Method",
+				                                    each "Classical additive decomposition: centered 12-month moving average trend; normalized monthly residual factors",
+				                                    type text
+				                                ),
+				                            WithObservationCount =
+				                                Table.AddColumn(
+				                                    WithMethod,
+				                                    "Group Observations",
+				                                    each CountRows,
+				                                    Int64.Type
+				                                ),
+				                            Clean =
+				                                Table.RemoveColumns(
+				                                    WithObservationCount,
+				                                    {"Series Index", "Seasonal Residual"}
+				                                )
+				                        in
+				                            Clean,
+				                    type table
+				                }
+				            }
+				        ),
+				    #"Expanded AdjustedData" =
+				        Table.ExpandTableColumn(
+				            #"Grouped Series",
+				            "AdjustedData",
+				            {
+				                "Reference Period",
+				                "Estimate",
+				                "Date",
+				                "Year",
+				                "Month Name",
+				                "Month",
+				                "Trend",
+				                "Seasonal Factor",
+				                "Seasonally Adjusted Estimate",
+				                "Adjustment Method",
+				                "Group Observations"
+				            },
+				            {
+				                "Reference Period",
+				                "Estimate",
+				                "Date",
+				                "Year",
+				                "Month Name",
+				                "Month",
+				                "Trend",
+				                "Seasonal Factor",
+				                "Seasonally Adjusted Estimate",
+				                "Adjustment Method",
+				                "Group Observations"
+				            }
+				        ),
+				    #"Changed Type" =
+				        Table.TransformColumnTypes(
+				            #"Expanded AdjustedData",
+				            {
+				                {"Reference Period", Int64.Type},
+				                {"Province", type text},
+				                {"Occupation", type text},
+				                {"Variable", type text},
+				                {"Estimate", type number},
+				                {"Date", type date},
+				                {"Year", Int64.Type},
+				                {"Month Name", type text},
+				                {"Month", Int64.Type},
+				                {"Trend", type number},
+				                {"Seasonal Factor", type number},
+				                {"Seasonally Adjusted Estimate", type number},
+				                {"Adjustment Method", type text},
+				                {"Group Observations", Int64.Type}
+				            }
+				        )
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
