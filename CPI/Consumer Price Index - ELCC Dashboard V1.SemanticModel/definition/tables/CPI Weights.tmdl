@@ -1,8 +1,7 @@
 table 'CPI Weights'
 	lineageTag: 3a4f2e6c-9e2b-4c96-9f5e-45e2d055e116
 
-	measure 'CPI Weight %' =
-			DIVIDE ( AVERAGE ( 'CPI Weights'[VALUE] ), 100 )
+	measure 'CPI Weight %' = DIVIDE ( AVERAGE ( 'CPI Weights'[VALUE] ), 100 )
 		formatString: 0.00%;-0.00%;0.00%
 		lineageTag: 76e1fb0b-1b88-4d72-a790-e5e03ea1e492
 
@@ -164,3 +163,4 @@ table 'CPI Weights'
 	annotation PBI_NavigationStepName = Navigation
 
 	annotation PBI_ResultType = Table
+
