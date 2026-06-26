@@ -290,8 +290,7 @@ table 'Annual ECE'
 
 		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
 
-	measure 'Real ECE Hourly Wage Previous Year' = ```
-			
+	measure 'Real ECE Hourly Wage Previous Year' =
 			VAR _CurrentYear =
 			    MAX ( DimYear[Year] )
 			VAR _SelectedBaseCPI =
@@ -304,15 +303,12 @@ table 'Annual ECE'
 			        ),
 			        FILTER ( ALL ( DimYear[Year] ), DimYear[Year] = _CurrentYear - 1 )
 			    )
-			
-			```
 		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
 		lineageTag: e5ef020f-aa2b-4be9-9138-6ba9352c40c7
 
 		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
 
-	measure 'Real ECE Hourly Wage YoY %' = ```
-			
+	measure 'Real ECE Hourly Wage YoY %' =
 			VAR _CurrentYear =
 			    MAX ( DimYear[Year] )
 			VAR _CurrentWage =
@@ -341,13 +337,10 @@ table 'Annual ECE'
 			            DIVIDE ( _PreviousWage, _PreviousCPI )
 			        ) - 1
 			    )
-			
-			```
 		formatString: 0.0%;-0.0%;0.0%
 		lineageTag: f8992f4a-439b-4794-987a-6d9d679a7756
 
-	measure 'Real ECE Hourly Wage 2019' = ```
-			
+	measure 'Real ECE Hourly Wage 2019' =
 			VAR _SelectedBaseCPI =
 			    [CPI Annual Index Latest Selected]
 			RETURN
@@ -358,15 +351,12 @@ table 'Annual ECE'
 			        ),
 			        FILTER ( ALL ( DimYear[Year] ), DimYear[Year] = 2019 )
 			    )
-			
-			```
 		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
 		lineageTag: 997ab247-8b50-4d33-8d5c-904147aba032
 
 		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
 
-	measure 'Real ECE Hourly Wage % Change Since 2019' = ```
-			
+	measure 'Real ECE Hourly Wage % Change Since 2019' =
 			VAR _CurrentWage =
 			    [ECE Hourly Wage]
 			VAR _CurrentCPI =
@@ -393,8 +383,6 @@ table 'Annual ECE'
 			            DIVIDE ( _Wage2019, _CPI2019 )
 			        ) - 1
 			    )
-			
-			```
 		formatString: 0.0%;-0.0%;0.0%
 		lineageTag: a8048baf-8cb5-4d11-bb11-67ebb1d03380
 
