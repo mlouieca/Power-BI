@@ -1,7 +1,14 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "2c3d4e5f60718293a4b5",
-  "position": { "x": 0, "y": 72, "z": 3000, "height": 72, "width": 816, "tabOrder": 3000 },
+  "position": {
+    "x": 0,
+    "y": 72,
+    "z": 3000,
+    "height": 72,
+    "width": 816,
+    "tabOrder": 3000
+  },
   "visual": {
     "visualType": "slicer",
     "query": {
@@ -9,7 +16,16 @@
         "Values": {
           "projections": [
             {
-              "field": { "Column": { "Expression": { "SourceRef": { "Entity": "CPI" } }, "Property": "REF_DATE" } },
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CPI"
+                    }
+                  },
+                  "Property": "REF_DATE"
+                }
+              },
               "queryRef": "CPI.REF_DATE",
               "nativeQueryRef": "REF_DATE",
               "active": true
@@ -19,15 +35,51 @@
       }
     },
     "objects": {
-      "data": [ { "properties": { "mode": { "expr": { "Literal": { "Value": "'Between'" } } } } } ],
-      "header": [ { "properties": { "show": { "expr": { "Literal": { "Value": "false" } } } } } ]
+      "data": [
+        {
+          "properties": {
+            "mode": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Between'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "header": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
     },
     "visualContainerObjects": {
       "title": [
         {
           "properties": {
-            "show": { "expr": { "Literal": { "Value": "false" } } },
-            "text": { "expr": { "Literal": { "Value": "'Date range'" } } }
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Date range'"
+                }
+              }
+            }
           }
         }
       ]

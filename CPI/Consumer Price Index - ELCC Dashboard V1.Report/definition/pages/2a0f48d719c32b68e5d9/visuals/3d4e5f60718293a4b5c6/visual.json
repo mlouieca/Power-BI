@@ -1,7 +1,14 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "3d4e5f60718293a4b5c6",
-  "position": { "x": 0, "y": 152, "z": 0, "height": 440, "width": 816, "tabOrder": 0 },
+  "position": {
+    "x": 0,
+    "y": 152,
+    "z": 0,
+    "height": 440,
+    "width": 816,
+    "tabOrder": 0
+  },
   "visual": {
     "visualType": "lineChart",
     "query": {
@@ -9,7 +16,16 @@
         "Category": {
           "projections": [
             {
-              "field": { "Column": { "Expression": { "SourceRef": { "Entity": "CPI" } }, "Property": "REF_DATE" } },
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CPI"
+                    }
+                  },
+                  "Property": "REF_DATE"
+                }
+              },
               "queryRef": "CPI.REF_DATE",
               "nativeQueryRef": "REF_DATE",
               "active": true
@@ -19,7 +35,16 @@
         "Series": {
           "projections": [
             {
-              "field": { "Column": { "Expression": { "SourceRef": { "Entity": "CPI" } }, "Property": "Products and product groups" } },
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CPI"
+                    }
+                  },
+                  "Property": "Products and product groups"
+                }
+              },
               "queryRef": "CPI.Products and product groups",
               "nativeQueryRef": "Products and product groups"
             }
@@ -28,7 +53,16 @@
         "Y": {
           "projections": [
             {
-              "field": { "Measure": { "Expression": { "SourceRef": { "Entity": "CPI" } }, "Property": "CPI YoY %" } },
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CPI"
+                    }
+                  },
+                  "Property": "CPI YoY %"
+                }
+              },
               "queryRef": "CPI.CPI YoY %",
               "nativeQueryRef": "CPI YoY %"
             }
@@ -38,7 +72,16 @@
       "sortDefinition": {
         "sort": [
           {
-            "field": { "Column": { "Expression": { "SourceRef": { "Entity": "CPI" } }, "Property": "REF_DATE" } },
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "CPI"
+                  }
+                },
+                "Property": "REF_DATE"
+              }
+            },
             "direction": "Ascending"
           }
         ],
@@ -46,14 +89,38 @@
       }
     },
     "objects": {
-      "categoryAxis": [ { "properties": { "titleText": { "expr": { "Literal": { "Value": "'Month'" } } } } } ]
+      "categoryAxis": [
+        {
+          "properties": {
+            "titleText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Month'"
+                }
+              }
+            }
+          }
+        }
+      ]
     },
     "visualContainerObjects": {
       "title": [
         {
           "properties": {
-            "text": { "expr": { "Literal": { "Value": "'CPI Monthly YoY %'" } } },
-            "show": { "expr": { "Literal": { "Value": "true" } } }
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'CPI Monthly YoY %'"
+                }
+              }
+            },
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
           }
         }
       ]
@@ -64,13 +131,28 @@
     "filters": [
       {
         "name": "4e5f60718293a4b5c6d7",
-        "field": { "Column": { "Expression": { "SourceRef": { "Entity": "CPI" } }, "Property": "Products and product groups" } },
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "CPI"
+              }
+            },
+            "Property": "Products and product groups"
+          }
+        },
         "type": "Categorical",
         "objects": {
           "general": [
             {
               "properties": {
-                "isInvertedSelectionMode": { "expr": { "Literal": { "Value": "true" } } }
+                "isInvertedSelectionMode": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "true"
+                    }
+                  }
+                }
               }
             }
           ]
