@@ -1,0 +1,150 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "a1b2c3d4e5f607182930",
+  "position": {
+    "x": 0,
+    "y": 0,
+    "z": 1000,
+    "height": 120,
+    "width": 880,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "multiRowCard",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "LFS_Headline_14100287"
+                    }
+                  },
+                  "Property": "Latest Headline Date (Monthly)"
+                }
+              },
+              "queryRef": "LFS_Headline_14100287.Latest Headline Date (Monthly)",
+              "nativeQueryRef": "Latest Headline Date (Monthly)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "LFS_Headline_14100287"
+                    }
+                  },
+                  "Property": "Overall Unemployment Rate (Monthly Latest)"
+                }
+              },
+              "queryRef": "LFS_Headline_14100287.Overall Unemployment Rate (Monthly Latest)",
+              "nativeQueryRef": "Overall Unemployment Rate (Monthly Latest)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "LFS_Headline_14100287"
+                    }
+                  },
+                  "Property": "Overall Unemployment Rate YoY (Monthly pp)"
+                }
+              },
+              "queryRef": "LFS_Headline_14100287.Overall Unemployment Rate YoY (Monthly pp)",
+              "nativeQueryRef": "Overall Unemployment Rate YoY (Monthly pp)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "LFS_Headline_14100287"
+                    }
+                  },
+                  "Property": "Youth Unemployment Rate (Monthly Latest)"
+                }
+              },
+              "queryRef": "LFS_Headline_14100287.Youth Unemployment Rate (Monthly Latest)",
+              "nativeQueryRef": "Youth Unemployment Rate (Monthly Latest)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "LFS_Headline_14100287"
+                    }
+                  },
+                  "Property": "Youth Unemployment Rate YoY (Monthly pp)"
+                }
+              },
+              "queryRef": "LFS_Headline_14100287.Youth Unemployment Rate YoY (Monthly pp)",
+              "nativeQueryRef": "Youth Unemployment Rate YoY (Monthly pp)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "LFS_Headline_14100287"
+                    }
+                  },
+                  "Property": "Participation Rate (Monthly Latest)"
+                }
+              },
+              "queryRef": "LFS_Headline_14100287.Participation Rate (Monthly Latest)",
+              "nativeQueryRef": "Participation Rate (Monthly Latest)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "LFS_Headline_14100287"
+                    }
+                  },
+                  "Property": "Participation Rate YoY (Monthly pp)"
+                }
+              },
+              "queryRef": "LFS_Headline_14100287.Participation Rate YoY (Monthly pp)",
+              "nativeQueryRef": "Participation Rate YoY (Monthly pp)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "LFS_Headline_14100287"
+                    }
+                  },
+                  "Property": "Employment Rate (Monthly Latest)"
+                }
+              },
+              "queryRef": "LFS_Headline_14100287.Employment Rate (Monthly Latest)",
+              "nativeQueryRef": "Employment Rate (Monthly Latest)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "LFS_Headline_14100287"
+                    }
+                  },
+                  "Property": "Employment Rate YoY (Monthly pp)"
+                }
+              },
+              "queryRef": "LFS_Headline_14100287.Employment Rate YoY (Monthly pp)",
+              "nativeQueryRef": "Employment Rate YoY (Monthly pp)"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

@@ -2,3 +2,6 @@ relationship f8079560-2fbb-dd29-ebc3-ffe83b97d0f2
 	fromColumn: LFS_FamilyStructure_14100396_Annual.REF_DATE
 	toColumn: YearTable.Year
 
+relationship 6a4b2d0f-0df4-4b90-ae28-e0f2477fd751
+	fromColumn: LFS_Headline_14100327_Annual.REF_DATE
+	toColumn: YearTable.Year
