@@ -1,4 +1,4 @@
-table 'SEPH Hourly Earnings'
+﻿table 'SEPH Hourly Earnings'
 	lineageTag: 5b1b866c-57f3-4540-a91c-766dc78e12b6
 
 	measure 'Hourly Earnings Value' =
@@ -74,6 +74,31 @@ table 'SEPH Hourly Earnings'
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
+	measure 'Child Care Hourly Earnings YoY % Latest' =
+			
+			VAR LatestMonth = [Latest SEPH Month]
+			RETURN
+			    CALCULATE (
+			        [Child Care Hourly Earnings YoY %],
+			        FILTER (
+			            ALL ( 'Date'[Date] ),
+			            'Date'[Date] = LatestMonth
+			        )
+			    )
+		formatString: 0.0%;-0.0%;0.0%
+
+	measure 'All Industries Hourly Earnings YoY % Latest' =
+			
+			VAR LatestMonth = [Latest SEPH Month]
+			RETURN
+			    CALCULATE (
+			        [All Industries Hourly Earnings YoY %],
+			        FILTER (
+			            ALL ( 'Date'[Date] ),
+			            'Date'[Date] = LatestMonth
+			        )
+			    )
+		formatString: 0.0%;-0.0%;0.0%
 	measure 'Child Care Hourly Earnings Relative Latest' =
 			
 			VAR LatestMonth = [Latest SEPH Month]
@@ -137,21 +162,19 @@ table 'SEPH Hourly Earnings'
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 	measure 'Child Care Hourly Earnings Index 2019' =
-			100 =
 			DIVIDE (
 			    [Child Care Avg Hourly Earnings],
 			    [Child Care Hourly Earnings 2019 Avg]
 			) * 100
-		formatString: """TRUE"";""TRUE"";""FALSE"""
+		formatString: 0.0
 		lineageTag: 5f01307e-7eb8-4286-94e4-993f850635b5
 
 	measure 'All Industries Hourly Earnings Index 2019' =
-			100 =
 			DIVIDE (
 			    [All Industries Avg Hourly Earnings],
 			    [All Industries Hourly Earnings 2019 Avg]
 			) * 100
-		formatString: """TRUE"";""TRUE"";""FALSE"""
+		formatString: 0.0
 		lineageTag: 7fad6e71-aabe-4713-9fa1-f4e907702e29
 
 	measure 'Child Care Avg Hourly Earnings 3MMA' =
@@ -250,4 +273,6 @@ table 'SEPH Hourly Earnings'
 	annotation PBI_NavigationStepName = Navigation
 
 	annotation PBI_ResultType = Table
+
+
 

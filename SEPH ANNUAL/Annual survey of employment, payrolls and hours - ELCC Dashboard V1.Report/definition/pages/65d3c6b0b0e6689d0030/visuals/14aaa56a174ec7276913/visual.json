@@ -1,0 +1,143 @@
+﻿{
+    "$schema":  "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+    "name":  "14aaa56a174ec7276913",
+    "position":  {
+                     "x":  0,
+                     "y":  216,
+                     "z":  5000,
+                     "height":  464,
+                     "width":  1280,
+                     "tabOrder":  5000
+                 },
+    "visual":  {
+                   "visualType":  "lineChart",
+                   "query":  {
+                                 "queryState":  {
+                                                    "Category":  {
+                                                                     "projections":  [
+                                                                                         {
+                                                                                             "field":  {
+                                                                                                           "Column":  {
+                                                                                                                          "Expression":  {
+                                                                                                                                             "SourceRef":  {
+                                                                                                                                                               "Entity":  "Date"
+                                                                                                                                                           }
+                                                                                                                                         },
+                                                                                                                          "Property":  "Year"
+                                                                                                                      }
+                                                                                                       },
+                                                                                             "queryRef":  "Date.Year",
+                                                                                             "nativeQueryRef":  "Year",
+                                                                                             "active":  true
+                                                                                         }
+                                                                                     ]
+                                                                 },
+                                                    "Y":  {
+                                                              "projections":  [
+                                                                                  {
+                                                                                      "field":  {
+                                                                                                    "Measure":  {
+                                                                                                                    "Expression":  {
+                                                                                                                                       "SourceRef":  {
+                                                                                                                                                         "Entity":  "SEPH Weekly Earnings"
+                                                                                                                                                     }
+                                                                                                                                   },
+                                                                                                                    "Property":  "Weekly Earnings Value"
+                                                                                                                }
+                                                                                                },
+                                                                                      "queryRef":  "SEPH Weekly Earnings.Weekly Earnings Value",
+                                                                                      "nativeQueryRef":  "Weekly Earnings Value"
+                                                                                  }
+                                                                              ]
+                                                          },
+                                                    "Series":  {
+                                                                   "projections":  [
+                                                                                       {
+                                                                                           "field":  {
+                                                                                                         "Column":  {
+                                                                                                                        "Expression":  {
+                                                                                                                                           "SourceRef":  {
+                                                                                                                                                             "Entity":  "SEPH Weekly Earnings"
+                                                                                                                                                         }
+                                                                                                                                       },
+                                                                                                                        "Property":  "NAICS"
+                                                                                                                    }
+                                                                                                     },
+                                                                                           "queryRef":  "SEPH Weekly Earnings.NAICS",
+                                                                                           "nativeQueryRef":  "NAICS"
+                                                                                       }
+                                                                                   ]
+                                                               }
+                                                },
+                                 "sortDefinition":  {
+                                                        "sort":  [
+                                                                     {
+                                                                         "field":  {
+                                                                                       "Column":  {
+                                                                                                      "Expression":  {
+                                                                                                                         "SourceRef":  {
+                                                                                                                                           "Entity":  "Date"
+                                                                                                                                       }
+                                                                                                                     },
+                                                                                                      "Property":  "Year"
+                                                                                                  }
+                                                                                   },
+                                                                         "direction":  "Ascending"
+                                                                     }
+                                                                 ],
+                                                        "isDefaultSort":  true
+                                                    }
+                             },
+                   "drillFilterOtherVisuals":  true,
+                   "visualContainerObjects":  {
+                                                  "title":  [
+                                                                {
+                                                                    "properties":  {
+                                                                                       "show":  {
+                                                                                                    "expr":  {
+                                                                                                                 "Literal":  {
+                                                                                                                                 "Value":  "true"
+                                                                                                                             }
+                                                                                                             }
+                                                                                                },
+                                                                                       "text":  {
+                                                                                                    "expr":  {
+                                                                                                                 "Literal":  {
+                                                                                                                                 "Value":  "\u0027Average weekly earnings by industry\u0027"
+                                                                                                                             }
+                                                                                                             }
+                                                                                                }
+                                                                                   }
+                                                                }
+                                                            ]
+                                              },
+                   "objects":  {
+                                   "categoryAxis":  [
+                                                        {
+                                                            "properties":  {
+                                                                               "showAxisTitle":  {
+                                                                                                     "expr":  {
+                                                                                                                  "Literal":  {
+                                                                                                                                  "Value":  "false"
+                                                                                                                              }
+                                                                                                              }
+                                                                                                 }
+                                                                           }
+                                                        }
+                                                    ],
+                                   "valueAxis":  [
+                                                     {
+                                                         "properties":  {
+                                                                            "showAxisTitle":  {
+                                                                                                  "expr":  {
+                                                                                                               "Literal":  {
+                                                                                                                               "Value":  "false"
+                                                                                                                           }
+                                                                                                           }
+                                                                                              }
+                                                                        }
+                                                     }
+                                                 ]
+                               }
+               }
+}

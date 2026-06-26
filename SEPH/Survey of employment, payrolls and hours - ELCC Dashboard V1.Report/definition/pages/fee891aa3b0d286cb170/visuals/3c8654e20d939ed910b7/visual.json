@@ -1,89 +1,139 @@
-{
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
-  "name": "3c8654e20d939ed910b7",
-  "position": {
-    "x": 688,
-    "y": 136,
-    "z": 1000,
-    "height": 328,
-    "width": 592,
-    "tabOrder": 1000
-  },
-  "visual": {
-    "visualType": "lineChart",
-    "query": {
-      "queryState": {
-        "Category": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "Date"
-                    }
-                  },
-                  "Property": "Date"
-                }
-              },
-              "queryRef": "Date.Date",
-              "nativeQueryRef": "Date",
-              "active": true
-            }
-          ]
-        },
-        "Y": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "SEPH Employment"
-                    }
-                  },
-                  "Property": "Child Care Payroll Employment YoY %"
-                }
-              },
-              "queryRef": "SEPH Employment.Child Care Payroll Employment YoY %",
-              "nativeQueryRef": "Child Care Payroll Employment YoY %"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "SEPH Employment"
-                    }
-                  },
-                  "Property": "All Industries Payroll Employment YoY %"
-                }
-              },
-              "queryRef": "SEPH Employment.All Industries Payroll Employment YoY %",
-              "nativeQueryRef": "All Industries Payroll Employment YoY %"
-            }
-          ]
-        }
-      },
-      "sortDefinition": {
-        "sort": [
-          {
-            "field": {
-              "Column": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "Date"
-                  }
-                },
-                "Property": "Date"
-              }
-            },
-            "direction": "Ascending"
-          }
-        ],
-        "isDefaultSort": true
-      }
-    },
-    "drillFilterOtherVisuals": true
-  }
+﻿{
+    "$schema":  "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+    "name":  "3c8654e20d939ed910b7",
+    "position":  {
+                     "x":  432,
+                     "y":  104,
+                     "z":  4000,
+                     "height":  576,
+                     "width":  416,
+                     "tabOrder":  4000
+                 },
+    "visual":  {
+                   "visualType":  "lineChart",
+                   "query":  {
+                                 "queryState":  {
+                                                    "Category":  {
+                                                                     "projections":  [
+                                                                                         {
+                                                                                             "field":  {
+                                                                                                           "Column":  {
+                                                                                                                          "Expression":  {
+                                                                                                                                             "SourceRef":  {
+                                                                                                                                                               "Entity":  "Date"
+                                                                                                                                                           }
+                                                                                                                                         },
+                                                                                                                          "Property":  "Date"
+                                                                                                                      }
+                                                                                                       },
+                                                                                             "queryRef":  "Date.Date",
+                                                                                             "nativeQueryRef":  "Date",
+                                                                                             "active":  true
+                                                                                         }
+                                                                                     ]
+                                                                 },
+                                                    "Y":  {
+                                                              "projections":  [
+                                                                                  {
+                                                                                      "field":  {
+                                                                                                    "Measure":  {
+                                                                                                                    "Expression":  {
+                                                                                                                                       "SourceRef":  {
+                                                                                                                                                         "Entity":  "SEPH Weekly Earnings"
+                                                                                                                                                     }
+                                                                                                                                   },
+                                                                                                                    "Property":  "Child Care Weekly Earnings Index 2019"
+                                                                                                                }
+                                                                                                },
+                                                                                      "queryRef":  "SEPH Weekly Earnings.Child Care Weekly Earnings Index 2019",
+                                                                                      "nativeQueryRef":  "Child Care Weekly Earnings Index 2019"
+                                                                                  },
+                                                                                  {
+                                                                                      "field":  {
+                                                                                                    "Measure":  {
+                                                                                                                    "Expression":  {
+                                                                                                                                       "SourceRef":  {
+                                                                                                                                                         "Entity":  "SEPH Weekly Earnings"
+                                                                                                                                                     }
+                                                                                                                                   },
+                                                                                                                    "Property":  "All Industries Weekly Earnings Index 2019"
+                                                                                                                }
+                                                                                                },
+                                                                                      "queryRef":  "SEPH Weekly Earnings.All Industries Weekly Earnings Index 2019",
+                                                                                      "nativeQueryRef":  "All Industries Weekly Earnings Index 2019"
+                                                                                  }
+                                                                              ]
+                                                          }
+                                                },
+                                 "sortDefinition":  {
+                                                        "sort":  [
+                                                                     {
+                                                                         "field":  {
+                                                                                       "Column":  {
+                                                                                                      "Expression":  {
+                                                                                                                         "SourceRef":  {
+                                                                                                                                           "Entity":  "Date"
+                                                                                                                                       }
+                                                                                                                     },
+                                                                                                      "Property":  "Date"
+                                                                                                  }
+                                                                                   },
+                                                                         "direction":  "Ascending"
+                                                                     }
+                                                                 ],
+                                                        "isDefaultSort":  true
+                                                    }
+                             },
+                   "drillFilterOtherVisuals":  true,
+                   "objects":  {
+                                   "categoryAxis":  [
+                                                        {
+                                                            "properties":  {
+                                                                               "showAxisTitle":  {
+                                                                                                     "expr":  {
+                                                                                                                  "Literal":  {
+                                                                                                                                  "Value":  "false"
+                                                                                                                              }
+                                                                                                              }
+                                                                                                 }
+                                                                           }
+                                                        }
+                                                    ],
+                                   "valueAxis":  [
+                                                     {
+                                                         "properties":  {
+                                                                            "showAxisTitle":  {
+                                                                                                  "expr":  {
+                                                                                                               "Literal":  {
+                                                                                                                               "Value":  "false"
+                                                                                                                           }
+                                                                                                           }
+                                                                                              }
+                                                                        }
+                                                     }
+                                                 ]
+                               },
+                   "visualContainerObjects":  {
+                                                  "title":  [
+                                                                {
+                                                                    "properties":  {
+                                                                                       "show":  {
+                                                                                                    "expr":  {
+                                                                                                                 "Literal":  {
+                                                                                                                                 "Value":  "true"
+                                                                                                                             }
+                                                                                                             }
+                                                                                                },
+                                                                                       "text":  {
+                                                                                                    "expr":  {
+                                                                                                                 "Literal":  {
+                                                                                                                                 "Value":  "\u0027Weekly earnings index (2019 = 100)\u0027"
+                                                                                                                             }
+                                                                                                             }
+                                                                                                }
+                                                                                   }
+                                                                }
+                                                            ]
+                                              }
+               }
 }

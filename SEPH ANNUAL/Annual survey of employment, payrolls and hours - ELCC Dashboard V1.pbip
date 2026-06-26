@@ -1,0 +1,13 @@
+﻿{
+  "version": "1.0",
+  "artifacts": [
+    {
+      "report": {
+        "path": "Annual survey of employment, payrolls and hours - ELCC Dashboard V1.Report"
+      }
+    }
+  ],
+  "settings": {
+    "enableAutoRecovery": true
+  }
+}
