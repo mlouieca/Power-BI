@@ -1,0 +1,139 @@
+﻿{
+    "$schema":  "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+    "name":  "20bbcf41608b4e5d6b70",
+    "position":  {
+                     "x":  0,
+                     "y":  104,
+                     "z":  3000,
+                     "height":  576,
+                     "width":  416,
+                     "tabOrder":  3000
+                 },
+    "visual":  {
+                   "visualType":  "lineChart",
+                   "query":  {
+                                 "queryState":  {
+                                                    "Category":  {
+                                                                     "projections":  [
+                                                                                         {
+                                                                                             "field":  {
+                                                                                                           "Column":  {
+                                                                                                                          "Expression":  {
+                                                                                                                                             "SourceRef":  {
+                                                                                                                                                               "Entity":  "Date"
+                                                                                                                                                           }
+                                                                                                                                         },
+                                                                                                                          "Property":  "Year"
+                                                                                                                      }
+                                                                                                       },
+                                                                                             "queryRef":  "Date.Year",
+                                                                                             "nativeQueryRef":  "Year",
+                                                                                             "active":  true
+                                                                                         }
+                                                                                     ]
+                                                                 },
+                                                    "Y":  {
+                                                              "projections":  [
+                                                                                  {
+                                                                                      "field":  {
+                                                                                                    "Measure":  {
+                                                                                                                    "Expression":  {
+                                                                                                                                       "SourceRef":  {
+                                                                                                                                                         "Entity":  "SEPH Employment"
+                                                                                                                                                     }
+                                                                                                                                   },
+                                                                                                                    "Property":  "Child Care Payroll Employment Index 2019"
+                                                                                                                }
+                                                                                                },
+                                                                                      "queryRef":  "SEPH Employment.Child Care Payroll Employment Index 2019",
+                                                                                      "nativeQueryRef":  "Child Care Payroll Employment Index 2019"
+                                                                                  },
+                                                                                  {
+                                                                                      "field":  {
+                                                                                                    "Measure":  {
+                                                                                                                    "Expression":  {
+                                                                                                                                       "SourceRef":  {
+                                                                                                                                                         "Entity":  "SEPH Employment"
+                                                                                                                                                     }
+                                                                                                                                   },
+                                                                                                                    "Property":  "All Industries Payroll Employment Index 2019"
+                                                                                                                }
+                                                                                                },
+                                                                                      "queryRef":  "SEPH Employment.All Industries Payroll Employment Index 2019",
+                                                                                      "nativeQueryRef":  "All Industries Payroll Employment Index 2019"
+                                                                                  }
+                                                                              ]
+                                                          }
+                                                },
+                                 "sortDefinition":  {
+                                                        "sort":  [
+                                                                     {
+                                                                         "field":  {
+                                                                                       "Column":  {
+                                                                                                      "Expression":  {
+                                                                                                                         "SourceRef":  {
+                                                                                                                                           "Entity":  "Date"
+                                                                                                                                       }
+                                                                                                                     },
+                                                                                                      "Property":  "Year"
+                                                                                                  }
+                                                                                   },
+                                                                         "direction":  "Ascending"
+                                                                     }
+                                                                 ],
+                                                        "isDefaultSort":  true
+                                                    }
+                             },
+                   "drillFilterOtherVisuals":  true,
+                   "visualContainerObjects":  {
+                                                  "title":  [
+                                                                {
+                                                                    "properties":  {
+                                                                                       "show":  {
+                                                                                                    "expr":  {
+                                                                                                                 "Literal":  {
+                                                                                                                                 "Value":  "true"
+                                                                                                                             }
+                                                                                                             }
+                                                                                                },
+                                                                                       "text":  {
+                                                                                                    "expr":  {
+                                                                                                                 "Literal":  {
+                                                                                                                                 "Value":  "\u0027Payroll employment index (2019 = 100)\u0027"
+                                                                                                                             }
+                                                                                                             }
+                                                                                                }
+                                                                                   }
+                                                                }
+                                                            ]
+                                              },
+                   "objects":  {
+                                   "categoryAxis":  [
+                                                        {
+                                                            "properties":  {
+                                                                               "showAxisTitle":  {
+                                                                                                     "expr":  {
+                                                                                                                  "Literal":  {
+                                                                                                                                  "Value":  "false"
+                                                                                                                              }
+                                                                                                              }
+                                                                                                 }
+                                                                           }
+                                                        }
+                                                    ],
+                                   "valueAxis":  [
+                                                     {
+                                                         "properties":  {
+                                                                            "showAxisTitle":  {
+                                                                                                  "expr":  {
+                                                                                                               "Literal":  {
+                                                                                                                               "Value":  "false"
+                                                                                                                           }
+                                                                                                           }
+                                                                                              }
+                                                                        }
+                                                     }
+                                                 ]
+                               }
+               }
+}

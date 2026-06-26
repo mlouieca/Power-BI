@@ -1,4 +1,4 @@
-table 'SEPH Weekly Earnings'
+﻿table 'SEPH Weekly Earnings'
 	lineageTag: 0dfc7f33-5f18-4e27-9a17-f681433f197f
 
 	measure 'Weekly Earnings Value' =
@@ -74,6 +74,31 @@ table 'SEPH Weekly Earnings'
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
+	measure 'Child Care Weekly Earnings YoY % Latest' =
+			
+			VAR LatestMonth = [Latest SEPH Month]
+			RETURN
+			    CALCULATE (
+			        [Child Care Weekly Earnings YoY %],
+			        FILTER (
+			            ALL ( 'Date'[Date] ),
+			            'Date'[Date] = LatestMonth
+			        )
+			    )
+		formatString: 0.0%;-0.0%;0.0%
+
+	measure 'All Industries Weekly Earnings YoY % Latest' =
+			
+			VAR LatestMonth = [Latest SEPH Month]
+			RETURN
+			    CALCULATE (
+			        [All Industries Weekly Earnings YoY %],
+			        FILTER (
+			            ALL ( 'Date'[Date] ),
+			            'Date'[Date] = LatestMonth
+			        )
+			    )
+		formatString: 0.0%;-0.0%;0.0%
 	measure 'Child Care Weekly Earnings Relative Latest' =
 			
 			VAR LatestMonth = [Latest SEPH Month]
@@ -137,21 +162,19 @@ table 'SEPH Weekly Earnings'
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 	measure 'Child Care Weekly Earnings Index 2019' =
-			100 =
 			DIVIDE (
 			    [Child Care Avg Weekly Earnings],
 			    [Child Care Weekly Earnings 2019 Avg]
 			) * 100
-		formatString: """TRUE"";""TRUE"";""FALSE"""
+		formatString: 0.0
 		lineageTag: 29860063-b4a5-46df-afa1-45e432df4d83
 
 	measure 'All Industries Weekly Earnings Index 2019' =
-			100 =
 			DIVIDE (
 			    [All Industries Avg Weekly Earnings],
 			    [All Industries Weekly Earnings 2019 Avg]
 			) * 100
-		formatString: """TRUE"";""TRUE"";""FALSE"""
+		formatString: 0.0
 		lineageTag: a095a8aa-7c39-4e68-a4c0-1b7d9eb5f63c
 
 	measure 'Child Care Avg Weekly Earnings 3MMA' =
@@ -248,4 +271,6 @@ table 'SEPH Weekly Earnings'
 	annotation PBI_NavigationStepName = Navigation
 
 	annotation PBI_ResultType = Table
+
+
 
