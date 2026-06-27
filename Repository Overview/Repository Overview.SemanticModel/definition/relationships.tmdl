@@ -1,0 +1,5 @@
+relationship e49002d5-18e4-44dc-9019-30691b0e6851
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Release Schedule'.NextReleaseDate
+	toColumn: LocalDateTable_8d47f1be-2b58-4eff-b098-73bc9dbc399f.Date
+

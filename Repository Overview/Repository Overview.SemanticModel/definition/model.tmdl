@@ -10,5 +10,11 @@ annotation __PBI_TimeIntelligenceEnabled = 1
 
 annotation PBI_ProTooling = ["DevMode"]
 
+annotation PBI_QueryOrder = ["Release Schedule"]
+
+ref table 'Release Schedule'
+ref table DateTableTemplate_2170e62f-959f-4179-9160-a8bb3d7bc01d
+ref table LocalDateTable_8d47f1be-2b58-4eff-b098-73bc9dbc399f
+
 ref cultureInfo en-CA
 
