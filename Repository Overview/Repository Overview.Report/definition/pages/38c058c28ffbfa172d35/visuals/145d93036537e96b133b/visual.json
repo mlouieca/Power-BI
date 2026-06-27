@@ -134,140 +134,180 @@
               {
                 "textRuns": [
                   {
-                    "value": "Statistics Canada (www150.statcan.gc.ca) — CSV table downloads"
+                    "value": "Statistics Canada (www150.statcan.gc.ca) — CSV table downloads",
+                    "textStyle": {},
+                    "url": "https://www150.statcan.gc.ca/"
                   }
                 ]
               },
               {
                 "textRuns": [
                   {
-                    "value": "13-10-0418 Fertility (annual) — Population"
+                    "value": "13-10-0418 Fertility (annual) — Population",
+                    "textStyle": {},
+                    "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1310041801"
                   }
                 ]
               },
               {
                 "textRuns": [
                   {
-                    "value": "14-10-0062 Gender wage gap — LFS Annual, ECE"
+                    "value": "14-10-0062 Gender wage gap — LFS Annual, ECE",
+                    "textStyle": {},
+                    "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410006201"
                   }
                 ]
               },
               {
                 "textRuns": [
                   {
-                    "value": "14-10-0194 Work absence — LFS Annual"
+                    "value": "14-10-0194 Work absence — LFS Annual",
+                    "textStyle": {},
+                    "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410019401"
                   }
                 ]
               },
               {
                 "textRuns": [
                   {
-                    "value": "14-10-0201 / 14-10-0202 Employment (SEPH monthly / annual)"
+                    "value": "14-10-0201 / 14-10-0202 Employment (SEPH monthly / annual)",
+                    "textStyle": {},
+                    "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410020101"
                   }
                 ]
               },
               {
                 "textRuns": [
                   {
-                    "value": "14-10-0203 / 14-10-0204 Weekly earnings (SEPH monthly / annual)"
+                    "value": "14-10-0203 / 14-10-0204 Weekly earnings (SEPH monthly / annual)",
+                    "textStyle": {},
+                    "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410020301"
                   }
                 ]
               },
               {
                 "textRuns": [
                   {
-                    "value": "14-10-0205 / 14-10-0206 Hourly earnings (SEPH monthly / annual)"
+                    "value": "14-10-0205 / 14-10-0206 Hourly earnings (SEPH monthly / annual)",
+                    "textStyle": {},
+                    "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410020501"
                   }
                 ]
               },
               {
                 "textRuns": [
                   {
-                    "value": "14-10-0287 Labour force headline (monthly) — LFS Monthly, ECE"
+                    "value": "14-10-0287 Labour force headline (monthly) — LFS Monthly, ECE",
+                    "textStyle": {},
+                    "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410028701"
                   }
                 ]
               },
               {
                 "textRuns": [
                   {
-                    "value": "14-10-0327 Labour force headline (annual) — LFS Annual"
+                    "value": "14-10-0327 Labour force headline (annual) — LFS Annual",
+                    "textStyle": {},
+                    "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410032701"
                   }
                 ]
               },
               {
                 "textRuns": [
                   {
-                    "value": "14-10-0396 / 14-10-0397 Family structure (annual / monthly) — LFS, USA comparison"
+                    "value": "14-10-0396 / 14-10-0397 Family structure (annual / monthly) — LFS, USA comparison",
+                    "textStyle": {},
+                    "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410039601"
                   }
                 ]
               },
               {
                 "textRuns": [
                   {
-                    "value": "14-10-0417 Annual LFS wage — ECE"
+                    "value": "14-10-0417 Annual LFS wage — ECE",
+                    "textStyle": {},
+                    "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410041701"
                   }
                 ]
               },
               {
                 "textRuns": [
                   {
-                    "value": "14-10-0421 Labour force by occupation — JVWS"
+                    "value": "14-10-0421 Labour force by occupation — JVWS",
+                    "textStyle": {},
+                    "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410042101"
                   }
                 ]
               },
               {
                 "textRuns": [
                   {
-                    "value": "14-10-0443 / 14-10-0444 Job vacancy characteristics and offered wages — JVWS"
+                    "value": "14-10-0443 / 14-10-0444 Job vacancy characteristics and offered wages — JVWS",
+                    "textStyle": {},
+                    "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410044301"
                   }
                 ]
               },
               {
                 "textRuns": [
                   {
-                    "value": "17-10-0005 Population by age and gender (annual)"
+                    "value": "17-10-0005 Population by age and gender (annual)",
+                    "textStyle": {},
+                    "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1710000501"
                   }
                 ]
               },
               {
                 "textRuns": [
                   {
-                    "value": "17-10-0009 Population (quarterly)"
+                    "value": "17-10-0009 Population (quarterly)",
+                    "textStyle": {},
+                    "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1710000901"
                   }
                 ]
               },
               {
                 "textRuns": [
                   {
-                    "value": "17-10-0040 Population estimates"
+                    "value": "17-10-0040 Population estimates",
+                    "textStyle": {},
+                    "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1710004001"
                   }
                 ]
               },
               {
                 "textRuns": [
                   {
-                    "value": "17-10-0057 / 17-10-0058 Population projections and components"
+                    "value": "17-10-0057 / 17-10-0058 Population projections and components",
+                    "textStyle": {},
+                    "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1710005701"
                   }
                 ]
               },
               {
                 "textRuns": [
                   {
-                    "value": "18-10-0004 / 18-10-0005 Consumer Price Index (monthly / annual) — CPI, ECE, USA comparison"
+                    "value": "18-10-0004 / 18-10-0005 Consumer Price Index (monthly / annual) — CPI, ECE, USA comparison",
+                    "textStyle": {},
+                    "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810000401"
                   }
                 ]
               },
               {
                 "textRuns": [
                   {
-                    "value": "18-10-0007 CPI weights — CPI"
+                    "value": "18-10-0007 CPI weights — CPI",
+                    "textStyle": {},
+                    "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810000701"
                   }
                 ]
               },
               {
                 "textRuns": [
                   {
-                    "value": "18-10-0289 Bank of Canada commodity price index (BCPI) — CPI"
+                    "value": "18-10-0289 Bank of Canada commodity price index (BCPI) — CPI",
+                    "textStyle": {},
+                    "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810028901"
                   }
                 ]
               },
@@ -281,7 +321,9 @@
               {
                 "textRuns": [
                   {
-                    "value": "US Census Bureau (api.census.gov) — Current Population Survey API, used in USA dashboard"
+                    "value": "US Census Bureau (api.census.gov) — Current Population Survey API, used in USA dashboard",
+                    "textStyle": {},
+                    "url": "https://api.census.gov"
                   }
                 ]
               },
