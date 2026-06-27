@@ -1,0 +1,316 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "145d93036537e96b133b",
+  "position": {
+    "x": 10,
+    "y": 10,
+    "z": 0,
+    "height": 700,
+    "width": 1260,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Repository Overview",
+                    "textStyle": {
+                      "fontWeight": "bold",
+                      "fontSize": "24pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Power BI dashboards in this repository and the data sources behind them."
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": ""
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "DASHBOARDS",
+                    "textStyle": {
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "CPI — Consumer Price Index, weights, and Bank of Canada commodity price index"
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "ECE — Early childhood educator employment, wages, and CPI context"
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "JVWS — Job vacancies and offered wages for ECEs"
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "LFS Annual — Annual labour force participation, family structure, gender wage gap, work absence"
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "LFS Monthly — Monthly labour force participation and family structure"
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Population — Population estimates, projections, fertility, and age/gender breakdown"
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "SEPH — Monthly employment, weekly and hourly earnings"
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "SEPH Annual — Annual employment, weekly and hourly earnings"
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "USA — US CPS labour force data, with Canada/US inflation and LFS comparisons"
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": ""
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "DATA SOURCES",
+                    "textStyle": {
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Statistics Canada (www150.statcan.gc.ca) — CSV table downloads"
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "13-10-0418 Fertility (annual) — Population"
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "14-10-0062 Gender wage gap — LFS Annual, ECE"
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "14-10-0194 Work absence — LFS Annual"
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "14-10-0201 / 14-10-0202 Employment (SEPH monthly / annual)"
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "14-10-0203 / 14-10-0204 Weekly earnings (SEPH monthly / annual)"
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "14-10-0205 / 14-10-0206 Hourly earnings (SEPH monthly / annual)"
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "14-10-0287 Labour force headline (monthly) — LFS Monthly, ECE"
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "14-10-0327 Labour force headline (annual) — LFS Annual"
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "14-10-0396 / 14-10-0397 Family structure (annual / monthly) — LFS, USA comparison"
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "14-10-0417 Annual LFS wage — ECE"
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "14-10-0421 Labour force by occupation — JVWS"
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "14-10-0443 / 14-10-0444 Job vacancy characteristics and offered wages — JVWS"
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "17-10-0005 Population by age and gender (annual)"
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "17-10-0009 Population (quarterly)"
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "17-10-0040 Population estimates"
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "17-10-0057 / 17-10-0058 Population projections and components"
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "18-10-0004 / 18-10-0005 Consumer Price Index (monthly / annual) — CPI, ECE, USA comparison"
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "18-10-0007 CPI weights — CPI"
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "18-10-0289 Bank of Canada commodity price index (BCPI) — CPI"
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": ""
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "US Census Bureau (api.census.gov) — Current Population Survey API, used in USA dashboard"
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": ""
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "NOTES"
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "This page is documentation only and has no live data behind it. To refresh figures in the dashboards above, open the relevant .pbip project in Power BI Desktop and refresh the model."
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}
