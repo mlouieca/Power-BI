@@ -1,0 +1,70 @@
+table 'Release Schedule'
+	lineageTag: dedce5d0-429b-4afa-6e2d-f383e57ac9f1
+
+	column Survey
+		dataType: string
+		lineageTag: 31291f53-1f21-ef19-8f23-785173d66790
+		summarizeBy: none
+		sourceColumn: Survey
+
+		annotation SummarizationSetBy = Automatic
+
+	column NextReleaseDate
+		dataType: dateTime
+		formatString: dddd\, mmmm dd\, yyyy
+		lineageTag: 4a5bae1b-a345-0f06-5052-cc54bf1d87c5
+		summarizeBy: none
+		sourceColumn: NextReleaseDate
+
+		variation Variation
+			isDefault
+			relationship: e49002d5-18e4-44dc-9019-30691b0e6851
+			defaultHierarchy: LocalDateTable_8d47f1be-2b58-4eff-b098-73bc9dbc399f.'Date Hierarchy'
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation PBI_FormatHint = {"isDateTimeCustom":true}
+
+	column ReferencePeriod
+		dataType: string
+		lineageTag: 74549669-a853-10fd-df44-d5eb77a249ed
+		summarizeBy: none
+		sourceColumn: ReferencePeriod
+
+		annotation SummarizationSetBy = Automatic
+
+	column ReleaseUrl
+		dataType: string
+		lineageTag: d23ad183-82e4-7142-3747-ff5604d0a49e
+		summarizeBy: none
+		sourceColumn: ReleaseUrl
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Release Schedule' = m
+		mode: import
+		source =
+				let
+					Source = Json.Document(Web.Contents("https://www150.statcan.gc.ca/n1/dai-quo/ssi/homepage/schedule-key_indicators-eng.json")),
+					#"Converted to Table" = Table.FromList(Source, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
+					#"Expanded Column1" = Table.ExpandRecordColumn(#"Converted to Table", "Column1", {"date", "title", "description", "url"}, {"date", "title", "description", "url"}),
+					#"Changed Type" = Table.TransformColumnTypes(#"Expanded Column1", {{"date", type datetime}}),
+					#"Filtered Surveys" = Table.SelectRows(#"Changed Type", each List.Contains({"Consumer Price Index", "Labour Force Survey", "Payroll employment, earnings and hours, and job vacancies"}, [title])),
+					#"Filtered Future" = Table.SelectRows(#"Filtered Surveys", each [date] >= DateTime.LocalNow()),
+					#"Grouped Rows" = Table.Group(#"Filtered Future", {"title"}, {{"Next", each Table.FirstN(Table.Sort(_, {{"date", Order.Ascending}}), 1)}}),
+					#"Expanded Next" = Table.ExpandTableColumn(#"Grouped Rows", "Next", {"date", "description", "url"}, {"NextReleaseDate", "ReferencePeriod", "RelativeUrl"}),
+					#"Added ReleaseUrl" = Table.AddColumn(#"Expanded Next", "ReleaseUrl", each "https://www150.statcan.gc.ca" & [RelativeUrl], type text),
+					#"Removed RelativeUrl" = Table.RemoveColumns(#"Added ReleaseUrl", {"RelativeUrl"}),
+					#"Renamed Columns" = Table.RenameColumns(#"Removed RelativeUrl", {{"title", "Survey"}}),
+					#"Sorted Rows" = Table.Sort(#"Renamed Columns", {{"NextReleaseDate", Order.Ascending}})
+				in
+					#"Sorted Rows"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
