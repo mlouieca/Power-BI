@@ -3,6 +3,7 @@ table 'Annual ECE Employment'
 
 	measure 'ECE Employment (Annual)' = ```
 			
+			1000 *
 			CALCULATE(
 			    SUM('Annual ECE Employment'[Value]),
 			    TREATAS(VALUES(DateTable[Year]), 'Annual ECE Employment'[Year]),
