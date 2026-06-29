@@ -31,10 +31,16 @@ table ECE
 
 	measure 'Estimate Value (YoY)' = ```
 			
-			[Estimate Value]
-			    - CALCULATE (
+			VAR _PreviousYearValue =
+			    CALCULATE (
 			        [Estimate Value],
 			        SAMEPERIODLASTYEAR ( DateTable[Date] )
+			    )
+			RETURN
+			    IF (
+			        ISBLANK ( _PreviousYearValue ),
+			        BLANK (),
+			        [Estimate Value] - _PreviousYearValue
 			    )
 			
 			```
@@ -44,10 +50,17 @@ table ECE
 
 	measure 'Estimate Value (YoY %)' = ```
 			
-			DIVIDE (
-			    [Estimate Value (YoY)],
-			    CALCULATE ( [Estimate Value], SAMEPERIODLASTYEAR ( DateTable[Date] ) )
-			)
+			VAR _PreviousYearValue =
+			    CALCULATE (
+			        [Estimate Value],
+			        SAMEPERIODLASTYEAR ( DateTable[Date] )
+			    )
+			RETURN
+			    IF (
+			        ISBLANK ( _PreviousYearValue ),
+			        BLANK (),
+			        DIVIDE ( [Estimate Value] - _PreviousYearValue, _PreviousYearValue )
+			    )
 			
 			```
 		lineageTag: cfb80744-2c0c-41f5-8de8-f8e0c73bf249
