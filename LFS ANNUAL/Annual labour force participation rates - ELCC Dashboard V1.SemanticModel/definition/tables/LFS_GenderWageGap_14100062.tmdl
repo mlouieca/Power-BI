@@ -31,7 +31,7 @@ table LFS_GenderWageGap_14100062
 			    LFS_GenderWageGap_14100062[Sex] = "Females",
 			    LFS_GenderWageGap_14100062[Type of work] = SELECTEDVALUE ( LFS_GenderWageGap_14100062[Type of work], "Both full- and part-time employees" ),
 			    LFS_GenderWageGap_14100062[Age group] = SELECTEDVALUE ( LFS_GenderWageGap_14100062[Age group], "25 to 54 years" ),
-			    LFS_GenderWageGap_14100062[Occupation] = SELECTEDVALUE ( LFS_GenderWageGap_14100062[Occupation], "Childcare and home support workers" ),
+			    LFS_GenderWageGap_14100062[Occupation] = SELECTEDVALUE ( LFS_GenderWageGap_14100062[Occupation], "Total employees, all occupations" ),
 			    LFS_GenderWageGap_14100062[GEO] = SELECTEDVALUE ( LFS_GenderWageGap_14100062[GEO], "Canada" )
 			)
 			
@@ -49,7 +49,7 @@ table LFS_GenderWageGap_14100062
 			    LFS_GenderWageGap_14100062[Sex] = "Males",
 			    LFS_GenderWageGap_14100062[Type of work] = SELECTEDVALUE ( LFS_GenderWageGap_14100062[Type of work], "Both full- and part-time employees" ),
 			    LFS_GenderWageGap_14100062[Age group] = SELECTEDVALUE ( LFS_GenderWageGap_14100062[Age group], "25 to 54 years" ),
-			    LFS_GenderWageGap_14100062[Occupation] = SELECTEDVALUE ( LFS_GenderWageGap_14100062[Occupation], "Childcare and home support workers" ),
+			    LFS_GenderWageGap_14100062[Occupation] = SELECTEDVALUE ( LFS_GenderWageGap_14100062[Occupation], "Total employees, all occupations" ),
 			    LFS_GenderWageGap_14100062[GEO] = SELECTEDVALUE ( LFS_GenderWageGap_14100062[GEO], "Canada" )
 			)
 			
@@ -69,7 +69,9 @@ table LFS_GenderWageGap_14100062
 
 	measure 'Gender Wage Gap (%)' = ```
 			
-			1 - [Gender Wage Ratio]
+			VAR Ratio = [Gender Wage Ratio]
+			RETURN
+			    IF ( ISBLANK ( Ratio ), BLANK (), 1 - Ratio )
 			
 			```
 		formatString: 0.0%;-0.0%;0.0%
@@ -77,7 +79,14 @@ table LFS_GenderWageGap_14100062
 
 	measure 'Hourly Wage Gap ($)' = ```
 			
-			[Male Hourly Wage] - [Female Hourly Wage]
+			VAR MaleWage = [Male Hourly Wage]
+			VAR FemaleWage = [Female Hourly Wage]
+			RETURN
+			    IF (
+			        OR ( ISBLANK ( MaleWage ), ISBLANK ( FemaleWage ) ),
+			        BLANK (),
+			        MaleWage - FemaleWage
+			    )
 			
 			```
 		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
@@ -232,16 +241,19 @@ table LFS_GenderWageGap_14100062
 		mode: import
 		source =
 				let
-				    Source = Web.Contents("https://www150.statcan.gc.ca/n1/tbl/csv/14100062-eng.zip"),
+				    Source = Web.Contents("https://www150.statcan.gc.ca/n1/tbl/csv/14100417-eng.zip"),
 				    Custom1 = Unzip(Source),
 				    Content = Custom1{0}[Content],
 				    #"Imported CSV" = Csv.Document(Content,[Delimiter=",", Columns=19, Encoding=65001, QuoteStyle=QuoteStyle.None]),
 				    #"Promoted Headers" = Table.PromoteHeaders(#"Imported CSV", [PromoteAllScalars=true]),
-				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"REF_DATE", Int64.Type}, {"GEO", type text}, {"DGUID", type text}, {"Wages", type text}, {"Type of work", type text}, {"National Occupational Classification for Statistics (NOC-S)", type text}, {"Sex", type text}, {"Age group", type text}, {"UOM", type text}, {"UOM_ID", Int64.Type}, {"SCALAR_FACTOR", type text}, {"SCALAR_ID", Int64.Type}, {"VECTOR", type text}, {"COORDINATE", type text}, {"VALUE", type number}, {"STATUS", type text}, {"SYMBOL", type text}, {"TERMINATED", type text}, {"DECIMALS", Int64.Type}}),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"REF_DATE", Int64.Type}, {"GEO", type text}, {"DGUID", type text}, {"Wages", type text}, {"Type of work", type text}, {"National Occupational Classification (NOC)", type text}, {"Gender", type text}, {"Age group", type text}, {"UOM", type text}, {"UOM_ID", Int64.Type}, {"SCALAR_FACTOR", type text}, {"SCALAR_ID", Int64.Type}, {"VECTOR", type text}, {"COORDINATE", type text}, {"VALUE", type number}, {"STATUS", type text}, {"SYMBOL", type text}, {"TERMINATED", type text}, {"DECIMALS", Int64.Type}}),
 				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"DGUID", "UOM_ID", "SCALAR_FACTOR", "SCALAR_ID", "VECTOR", "COORDINATE", "STATUS", "SYMBOL", "TERMINATED", "DECIMALS"}),
-				    #"Renamed Columns" = Table.RenameColumns(#"Removed Columns",{{"National Occupational Classification for Statistics (NOC-S)", "Occupation"}})
+				    #"Renamed Columns" = Table.RenameColumns(#"Removed Columns",{{"National Occupational Classification (NOC)", "Occupation"}, {"Gender", "Sex"}}),
+				    #"Normalized Sex" = Table.ReplaceValue(#"Renamed Columns","Women+","Females",Replacer.ReplaceValue,{"Sex"}),
+				    #"Normalized Sex1" = Table.ReplaceValue(#"Normalized Sex","Men+","Males",Replacer.ReplaceValue,{"Sex"}),
+				    #"Normalized Occupation" = Table.TransformColumns(#"Normalized Sex1", {{"Occupation", each try Text.Trim(Text.BeforeDelimiter(_, " [", {0, RelativePosition.FromEnd})) otherwise _, type text}})
 				in
-				    #"Renamed Columns"
+				    #"Normalized Occupation"
 
 	annotation PBI_NavigationStepName = Navigation
 
