@@ -2,7 +2,7 @@ table 'Labour Force Comparison'
 	lineageTag: 072de5bb-5e2e-4dd5-b8a3-20369f57c57f
 
 	measure 'Comparison Value' =
-			
+
 			MAX ( 'Labour Force Comparison'[Value] )
 		formatString: 0.0
 		lineageTag: b2a4d414-d27c-4368-89c8-a52f18882380
@@ -28,6 +28,48 @@ table 'Labour Force Comparison'
 			    )
 		formatString: 0.0
 		lineageTag: 2f7d06d1-395e-4376-b280-f4c118d1baf3
+
+	/// Year-over-year percentage point change for the selected labour force indicator and demographic, limited to the common Canada-U.S. comparison range.
+	measure 'Comparison YoY Change - Common Range (pp)' =
+			VAR CurrentMonth =
+			    MAX ( 'Date'[Date] )
+			RETURN
+			    IF (
+			        CurrentMonth < DATE ( 2011, 1, 1 ),
+			        BLANK (),
+			        [Comparison YoY Change (pp)]
+			    )
+		formatString: 0.0
+		lineageTag: f0a222f4-60fd-44cb-a06c-63d778ec2618
+
+	/// Percentage point gap between core-aged women with youngest child aged 0 to 5 and core-aged women without children under 18, by country.
+	measure 'Participation Gap - Women, Young Child vs No Child (pp)' =
+			VAR CurrentMonth =
+			    MAX ( 'Date'[Date] )
+			VAR YoungChildParticipation =
+			    CALCULATE (
+			        [Comparison Value],
+			        'Labour Force Comparison'[Indicator] = "Participation rate",
+			        'Labour Force Comparison'[Sex] = "Women",
+			        'Labour Force Comparison'[ChildStatus] = "Youngest child 0 to 5 years"
+			    )
+			VAR NoChildParticipation =
+			    CALCULATE (
+			        [Comparison Value],
+			        'Labour Force Comparison'[Indicator] = "Participation rate",
+			        'Labour Force Comparison'[Sex] = "Women",
+			        'Labour Force Comparison'[ChildStatus] = "No child under 18"
+			    )
+			RETURN
+			    IF (
+			        CurrentMonth < DATE ( 2010, 1, 1 )
+			            || ISBLANK ( YoungChildParticipation )
+			            || ISBLANK ( NoChildParticipation ),
+			        BLANK (),
+			        YoungChildParticipation - NoChildParticipation
+			    )
+		formatString: 0.0
+		lineageTag: ddb21f14-f847-4109-80cc-eb7e3adcc46f
 
 	column ReferenceMonth
 		dataType: dateTime

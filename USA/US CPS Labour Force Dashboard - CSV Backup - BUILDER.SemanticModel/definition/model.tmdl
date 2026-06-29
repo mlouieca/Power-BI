@@ -9,7 +9,7 @@ model Model
 
 annotation __PBI_TimeIntelligenceEnabled = 1
 
-annotation PBI_QueryOrder = ["fnGetCPSMonth","CPS Download Staging","CPS Raw Web","CPS Person Records","CPS Parent Links","CPS Core-Aged Adults","CPS Monthly Labour Summary","Unzip","Canada LFS Monthly","Inflation Comparison","pCensusApiKey"]
+annotation PBI_QueryOrder = ["CPS Monthly Labour Summary","Unzip","Canada LFS Monthly","Inflation Comparison"]
 
 annotation PBI_ProTooling = ["DevMode"]
 
