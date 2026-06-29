@@ -10,7 +10,6 @@ table 'Inflation Comparison'
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 	measure 'CPI YoY %' =
-			
 			VAR CurrentIndex =
 			    [CPI Index]
 			
@@ -21,12 +20,15 @@ table 'Inflation Comparison'
 			    )
 			
 			RETURN
-			    DIVIDE ( CurrentIndex - PriorYearIndex, PriorYearIndex )
+			    IF (
+			        ISBLANK ( CurrentIndex ) || ISBLANK ( PriorYearIndex ),
+			        BLANK (),
+			        DIVIDE ( CurrentIndex - PriorYearIndex, PriorYearIndex )
+			    )
 		formatString: 0.0%;-0.0%;0.0%
 		lineageTag: 26b1d75a-e285-49ef-a1a5-a2e03f7b5292
 
 	measure 'CPI MoM %' =
-			
 			VAR CurrentIndex =
 			    [CPI Index]
 			
@@ -37,7 +39,11 @@ table 'Inflation Comparison'
 			    )
 			
 			RETURN
-			    DIVIDE ( CurrentIndex - PriorMonthIndex, PriorMonthIndex )
+			    IF (
+			        ISBLANK ( CurrentIndex ) || ISBLANK ( PriorMonthIndex ),
+			        BLANK (),
+			        DIVIDE ( CurrentIndex - PriorMonthIndex, PriorMonthIndex )
+			    )
 		formatString: 0.0%;-0.0%;0.0%
 		lineageTag: d278cb4f-59a1-4f18-9849-36b2de976a35
 
@@ -92,9 +98,16 @@ table 'Inflation Comparison'
 				                {"CUUR0000SA0", "All-items"}
 				            }
 				        ),
-				    GetBlsSeries =
-				        (SeriesID as text, SeriesLabel as text) as table =>
+				    BlsChunkStarts =
+				        List.Generate(
+				            () => StartYear,
+				            each _ <= EndYear,
+				            each _ + 10
+				        ),
+				    GetBlsSeriesRange =
+				        (SeriesID as text, SeriesLabel as text, ChunkStartYear as number) as table =>
 				        let
+				            ChunkEndYear = List.Min({ChunkStartYear + 9, EndYear}),
 				            Response =
 				                Json.Document(
 				                    Web.Contents(
@@ -102,15 +115,26 @@ table 'Inflation Comparison'
 				                        [
 				                            RelativePath = "publicAPI/v2/timeseries/data/" & SeriesID,
 				                            Query = [
-				                                startyear = Text.From(StartYear),
-				                                endyear = Text.From(EndYear)
+				                                startyear = Text.From(ChunkStartYear),
+				                                endyear = Text.From(ChunkEndYear)
 				                            ],
 				                            Timeout = #duration(0, 0, 2, 0)
 				                        ]
 				                    )
 				                ),
-				            Data = Response[Results][series]{0}[data],
-				            DataTable = Table.FromRecords(Data),
+				            Data = try Response[Results][series]{0}[data] otherwise {},
+				            DataTable =
+				                if List.IsEmpty(Data) then
+				                    #table(
+				                        {"year", "period", "value"},
+				                        {}
+				                    )
+				                else
+				                    Table.FromRecords(
+				                        Data,
+				                        null,
+				                        MissingField.UseNull
+				                    ),
 				            FilteredRows =
 				                Table.SelectRows(
 				                    DataTable,
@@ -126,7 +150,8 @@ table 'Inflation Comparison'
 				            WithValue =
 				                Table.TransformColumnTypes(
 				                    WithReferenceMonth,
-				                    {{"value", type number}}
+				                    {{"value", type number}},
+				                    "en-US"
 				                ),
 				            WithCountry = Table.AddColumn(WithValue, "Country", each "United States", type text),
 				            WithSeries = Table.AddColumn(WithCountry, "Series", each SeriesLabel, type text),
@@ -138,6 +163,14 @@ table 'Inflation Comparison'
 				            RenamedColumns = Table.RenameColumns(SelectedColumns, {{"value", "Value"}})
 				        in
 				            RenamedColumns,
+				    GetBlsSeries =
+				        (SeriesID as text, SeriesLabel as text) as table =>
+				            Table.Combine(
+				                List.Transform(
+				                    BlsChunkStarts,
+				                    each GetBlsSeriesRange(SeriesID, SeriesLabel, _)
+				                )
+				            ),
 				    BlsTables =
 				        List.Transform(
 				            Table.ToRecords(BlsSeries),

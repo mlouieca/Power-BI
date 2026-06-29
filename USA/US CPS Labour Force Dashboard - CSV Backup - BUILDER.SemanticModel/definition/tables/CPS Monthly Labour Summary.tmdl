@@ -739,210 +739,49 @@ table 'CPS Monthly Labour Summary'
 		mode: import
 		source =
 				let
-				    Source =
-				        #"CPS Core-Aged Adults",
+				    Source = Csv.Document(
+				        File.Contents("C:\\Users\\MLOUI\\OneDrive\\Work\\PBI\\PBI DATA FILES\\CPS_Monthly_Labour_Summary_2010_to_2026_05.csv"),
+				        [
+				            Delimiter = ",",
+				            Columns = 16,
+				            Encoding = 65001,
+				            QuoteStyle = QuoteStyle.Csv
+				        ]
+				    ),
 				
-				    ValidLabourForceRecords =
-				        Table.SelectRows(
+				    PromotedHeaders =
+				        Table.PromoteHeaders(
 				            Source,
-				            each
-				                [pemlr] <> null
-				                and [pemlr] >= 1
-				                and [pemlr] <= 7
-				                and [LabourForceWeight] <> null
-				                and [LabourForceWeight] > 0
+				            [PromoteAllScalars = true]
 				        ),
 				
-				    // Create the overall benchmark population.
-				    AllCoreAgedAdults =
-				        Table.TransformColumns(
-				            ValidLabourForceRecords,
+				    Typed =
+				        Table.TransformColumnTypes(
+				            PromotedHeaders,
 				            {
-				                {
-				                    "ChildStatus",
-				                    each "All core-aged adults",
-				                    type text
-				                }
-				            }
-				        ),
-				
-				    // Retain the two direct comparison populations.
-				    ComparisonGroups =
-				        Table.SelectRows(
-				            ValidLabourForceRecords,
-				            each
-				                [ChildStatus] = "Co-resident child aged 0–5"
-				                or [ChildStatus] = "No co-resident child under 18"
-				        ),
-				
-				    DashboardPopulation =
-				        Table.Combine(
-				            {
-				                AllCoreAgedAdults,
-				                ComparisonGroups
-				            }
-				        ),
-				
-				    // Create weighted labour-force components before grouping.
-				    WithEmploymentWeight =
-				        Table.AddColumn(
-				            DashboardPopulation,
-				            "EmploymentWeight",
-				            each
-				                if [pemlr] >= 1 and [pemlr] <= 2 then
-				                    [LabourForceWeight]
-				                else
-				                    0,
-				            type number
-				        ),
-				
-				    WithUnemploymentWeight =
-				        Table.AddColumn(
-				            WithEmploymentWeight,
-				            "UnemploymentWeight",
-				            each
-				                if [pemlr] >= 3 and [pemlr] <= 4 then
-				                    [LabourForceWeight]
-				                else
-				                    0,
-				            type number
-				        ),
-				
-				    WithNILFWeight =
-				        Table.AddColumn(
-				            WithUnemploymentWeight,
-				            "NILFWeight",
-				            each
-				                if [pemlr] >= 5 and [pemlr] <= 7 then
-				                    [LabourForceWeight]
-				                else
-				                    0,
-				            type number
-				        ),
-				
-				    WithSexSort =
-				        Table.AddColumn(
-				            WithNILFWeight,
-				            "SexSort",
-				            each
-				                if [Sex] = "Women" then 1
-				                else if [Sex] = "Men" then 2
-				                else 99,
-				            Int64.Type
-				        ),
-				
-				    WithChildStatusSort =
-				        Table.AddColumn(
-				            WithSexSort,
-				            "ChildStatusSort",
-				            each
-				                if [ChildStatus] = "All core-aged adults" then 1
-				                else if [ChildStatus] = "Co-resident child aged 0–5" then 2
-				                else if [ChildStatus] = "No co-resident child under 18" then 3
-				                else 99,
-				            Int64.Type
-				        ),
-				
-				    Grouped =
-				        Table.Group(
-				            WithChildStatusSort,
-				            {
-				                "ReferenceMonth",
-				                "Sex",
-				                "ChildStatus",
-				                "SexSort",
-				                "ChildStatusSort"
+				                {"ReferenceMonth", type date},
+				                {"Sex", type text},
+				                {"ChildStatus", type text},
+				                {"GroupLabel", type text},
+				                {"SexSort", Int64.Type},
+				                {"ChildStatusSort", Int64.Type},
+				                {"UnweightedN", Int64.Type},
+				                {"Population", type number},
+				                {"Employment", type number},
+				                {"Unemployment", type number},
+				                {"NotInLabourForce", type number},
+				                {"LabourForce", type number},
+				                {"EmploymentRate", Percentage.Type},
+				                {"ParticipationRate", Percentage.Type},
+				                {"UnemploymentRate", Percentage.Type},
+				                {"CheckDifference", type number}
 				            },
-				            {
-				                {
-				                    "UnweightedN",
-				                    each Table.RowCount(_),
-				                    Int64.Type
-				                },
-				                {
-				                    "Population",
-				                    each List.Sum([LabourForceWeight]),
-				                    type number
-				                },
-				                {
-				                    "Employment",
-				                    each List.Sum([EmploymentWeight]),
-				                    type number
-				                },
-				                {
-				                    "Unemployment",
-				                    each List.Sum([UnemploymentWeight]),
-				                    type number
-				                },
-				                {
-				                    "NotInLabourForce",
-				                    each List.Sum([NILFWeight]),
-				                    type number
-				                }
-				            }
-				        ),
-				
-				    WithLabourForce =
-				        Table.AddColumn(
-				            Grouped,
-				            "LabourForce",
-				            each [Employment] + [Unemployment],
-				            type number
-				        ),
-				
-				    WithEmploymentRate =
-				        Table.AddColumn(
-				            WithLabourForce,
-				            "EmploymentRate",
-				            each
-				                if [Population] = 0 then null
-				                else [Employment] / [Population],
-				            Percentage.Type
-				        ),
-				
-				    WithParticipationRate =
-				        Table.AddColumn(
-				            WithEmploymentRate,
-				            "ParticipationRate",
-				            each
-				                if [Population] = 0 then null
-				                else [LabourForce] / [Population],
-				            Percentage.Type
-				        ),
-				
-				    WithUnemploymentRate =
-				        Table.AddColumn(
-				            WithParticipationRate,
-				            "UnemploymentRate",
-				            each
-				                if [LabourForce] = 0 then null
-				                else [Unemployment] / [LabourForce],
-				            Percentage.Type
-				        ),
-				
-				    WithGroupLabel =
-				        Table.AddColumn(
-				            WithUnemploymentRate,
-				            "GroupLabel",
-				            each [Sex] & " — " & [ChildStatus],
-				            type text
-				        ),
-				
-				    WithCheckDifference =
-				        Table.AddColumn(
-				            WithGroupLabel,
-				            "CheckDifference",
-				            each
-				                [Population]
-				                - [Employment]
-				                - [Unemployment]
-				                - [NotInLabourForce],
-				            type number
+				            "en-US"
 				        ),
 				
 				    Reordered =
 				        Table.ReorderColumns(
-				            WithCheckDifference,
+				            Typed,
 				            {
 				                "ReferenceMonth",
 				                "Sex",
