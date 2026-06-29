@@ -31,8 +31,24 @@ table Pop_Quarterly
 
 	measure 'Population (YoY Change)' = ```
 			
-			[Population (Quarterly)]
-			    - CALCULATE ( [Population (Quarterly)], DATEADD ( 'Date'[Date], -1, YEAR ) )
+			SUMX (
+			    VALUES ( Pop_Quarterly[Date] ),
+			    VAR CurrentDate =
+			        Pop_Quarterly[Date]
+			    VAR CurrentVal =
+			        [Population (Quarterly)]
+			    VAR PrevVal =
+			        CALCULATE (
+			            [Population (Quarterly)],
+			            REMOVEFILTERS ( 'Date' ),
+			            Pop_Quarterly[Date] = EDATE ( CurrentDate, -12 )
+			        )
+			    RETURN
+			        IF (
+			            NOT ISBLANK ( CurrentVal ) && NOT ISBLANK ( PrevVal ),
+			            CurrentVal - PrevVal
+			        )
+			)
 			
 			```
 		formatString: 0
@@ -58,7 +74,10 @@ table Pop_Quarterly
 			VAR PrevVal =
 			    CALCULATE ( [Population (Quarterly)], Pop_Quarterly[Date] = EDATE ( MaxDate, -12 ) )
 			RETURN
-			    CurrentVal - PrevVal
+			    IF (
+			        NOT ISBLANK ( CurrentVal ) && NOT ISBLANK ( PrevVal ),
+			        CurrentVal - PrevVal
+			    )
 			
 			```
 		formatString: 0
@@ -73,7 +92,10 @@ table Pop_Quarterly
 			VAR PrevVal =
 			    CALCULATE ( [Population (Quarterly)], Pop_Quarterly[Date] = EDATE ( MaxDate, -12 ) )
 			RETURN
-			    DIVIDE ( CurrentVal - PrevVal, PrevVal )
+			    IF (
+			        NOT ISBLANK ( CurrentVal ) && NOT ISBLANK ( PrevVal ),
+			        DIVIDE ( CurrentVal - PrevVal, PrevVal )
+			    )
 			
 			```
 		formatString: 0.00%;-0.00%;0.00%

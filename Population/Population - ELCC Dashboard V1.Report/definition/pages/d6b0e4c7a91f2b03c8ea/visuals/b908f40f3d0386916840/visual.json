@@ -26,8 +26,8 @@
                   "Property": "Date"
                 }
               },
-              "queryRef": "Date.Date.Variation.Date Hierarchy.Year",
-              "nativeQueryRef": "Date Year",
+              "queryRef": "Date.Date",
+              "nativeQueryRef": "Date",
               "active": true
             }
           ]
