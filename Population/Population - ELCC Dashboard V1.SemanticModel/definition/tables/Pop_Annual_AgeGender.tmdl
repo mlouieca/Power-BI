@@ -40,7 +40,10 @@ table Pop_Annual_AgeGender
 			VAR PrevVal =
 			    CALCULATE ( [Population (Annual)], Pop_Annual_AgeGender[Date] = EDATE ( MaxDate, -12 ) )
 			RETURN
-			    CurrentVal - PrevVal
+			    IF (
+			        NOT ISBLANK ( CurrentVal ) && NOT ISBLANK ( PrevVal ),
+			        CurrentVal - PrevVal
+			    )
 			
 			```
 		lineageTag: 93a7c965-82ea-4373-84e1-c45b8ebab5c0
@@ -56,7 +59,10 @@ table Pop_Annual_AgeGender
 			VAR PrevVal =
 			    CALCULATE ( [Population (Annual)], Pop_Annual_AgeGender[Date] = EDATE ( MaxDate, -12 ) )
 			RETURN
-			    DIVIDE ( CurrentVal - PrevVal, PrevVal )
+			    IF (
+			        NOT ISBLANK ( CurrentVal ) && NOT ISBLANK ( PrevVal ),
+			        DIVIDE ( CurrentVal - PrevVal, PrevVal )
+			    )
 			
 			```
 		formatString: 0.00%;-0.00%;0.00%
@@ -64,8 +70,24 @@ table Pop_Annual_AgeGender
 
 	measure 'Population (Annual YoY Change)' = ```
 			
-			[Population (Annual)]
-			    - CALCULATE ( [Population (Annual)], DATEADD ( 'Date'[Date], -1, YEAR ) )
+			SUMX (
+			    VALUES ( Pop_Annual_AgeGender[Date] ),
+			    VAR CurrentDate =
+			        Pop_Annual_AgeGender[Date]
+			    VAR CurrentVal =
+			        [Population (Annual)]
+			    VAR PrevVal =
+			        CALCULATE (
+			            [Population (Annual)],
+			            REMOVEFILTERS ( 'Date' ),
+			            Pop_Annual_AgeGender[Date] = EDATE ( CurrentDate, -12 )
+			        )
+			    RETURN
+			        IF (
+			            NOT ISBLANK ( CurrentVal ) && NOT ISBLANK ( PrevVal ),
+			            CurrentVal - PrevVal
+			        )
+			)
 			
 			```
 		lineageTag: 8a18ed1e-4cfb-44c3-9085-2f4cdf99f03d
