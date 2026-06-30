@@ -1,0 +1,820 @@
+table 'CPS Monthly Labour Summary'
+	lineageTag: 9474fde4-502c-4937-8d5a-4ae9a1fe4190
+
+	measure 'Population (Weighted)' =
+			
+			SUM ( 'CPS Monthly Labour Summary'[Population] )
+		formatString: #,0
+		lineageTag: 0b74e729-2f88-49e2-8664-d9af6997bccc
+
+	measure 'Employment (Weighted)' =
+			
+			SUM ( 'CPS Monthly Labour Summary'[Employment] )
+		formatString: #,0
+		lineageTag: 9db724ef-8601-499c-9a2d-0f1126f214c5
+
+	measure 'Unemployment (Weighted)' =
+			
+			SUM ( 'CPS Monthly Labour Summary'[Unemployment] )
+		formatString: 0
+		lineageTag: 28529237-8bb4-4ccd-b706-c9185f0c9bec
+
+	measure 'Not in Labour Force (Weighted)' =
+			
+			SUM ( 'CPS Monthly Labour Summary'[NotInLabourForce] )
+		formatString: #,0
+		lineageTag: 31a065fd-3705-4222-b9bf-a1d1ed55063c
+
+	measure 'Labour Force (Weighted)' =
+			
+			[Employment (Weighted)] + [Unemployment (Weighted)]
+		formatString: #,0
+		lineageTag: 44c845b1-4cfd-4a3c-9f1d-361cce57e5b1
+
+	measure 'Unweighted Sample Size' =
+			
+			SUM ( 'CPS Monthly Labour Summary'[UnweightedN] )
+		formatString: 0
+		lineageTag: e96e4dd4-9039-49a8-aa26-9c9d12152091
+
+	measure 'Employment Rate (Calculated)' =
+			
+			DIVIDE (
+			    [Employment (Weighted)],
+			    [Population (Weighted)]
+			)
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: c5efa187-7513-4877-818a-085ee7955306
+
+	measure 'Participation Rate (Calculated)' =
+			
+			DIVIDE (
+			    [Labour Force (Weighted)],
+			    [Population (Weighted)]
+			)
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 5ca0489b-8547-42b9-80c1-394e35a887c5
+
+	measure 'Unemployment Rate (Calculated)' =
+			
+			DIVIDE (
+			    [Unemployment (Weighted)],
+			    [Labour Force (Weighted)]
+			)
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 86ab8082-07fe-498b-8c81-fc9e743d4b1f
+
+	measure 'Participation Rate (3MMA)' =
+			
+			VAR LastMonth =
+			    MAX ( 'CPS Monthly Labour Summary'[ReferenceMonth] )
+			
+			VAR FirstMonth =
+			    EDATE ( LastMonth, -2 )
+			
+			VAR MonthsAvailable =
+			    CALCULATE (
+			        DISTINCTCOUNT ( 'CPS Monthly Labour Summary'[ReferenceMonth] ),
+			        REMOVEFILTERS ( 'Date' ),
+			        DATESBETWEEN ( 'Date'[Date], FirstMonth, LastMonth )
+			    )
+			
+			VAR LabourForce3M =
+			    CALCULATE (
+			        [Labour Force (Weighted)],
+			        REMOVEFILTERS ( 'Date' ),
+			        DATESBETWEEN ( 'Date'[Date], FirstMonth, LastMonth )
+			    )
+			
+			VAR Population3M =
+			    CALCULATE (
+			        [Population (Weighted)],
+			        REMOVEFILTERS ( 'Date' ),
+			        DATESBETWEEN ( 'Date'[Date], FirstMonth, LastMonth )
+			    )
+			
+			RETURN
+			    IF (
+			        ISBLANK ( LastMonth ) || MonthsAvailable < 3,
+			        BLANK (),
+			        DIVIDE ( LabourForce3M, Population3M )
+			    )
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 9fba5b5d-16ff-4443-bcea-36db349f5eae
+
+	measure 'Employment Rate (3MMA)' =
+			
+			VAR LastMonth =
+			    MAX ( 'CPS Monthly Labour Summary'[ReferenceMonth] )
+			
+			VAR FirstMonth =
+			    EDATE ( LastMonth, -2 )
+			
+			VAR MonthsAvailable =
+			    CALCULATE (
+			        DISTINCTCOUNT ( 'CPS Monthly Labour Summary'[ReferenceMonth] ),
+			        REMOVEFILTERS ( 'Date' ),
+			        DATESBETWEEN ( 'Date'[Date], FirstMonth, LastMonth )
+			    )
+			
+			VAR Employment3M =
+			    CALCULATE (
+			        [Employment (Weighted)],
+			        REMOVEFILTERS ( 'Date' ),
+			        DATESBETWEEN ( 'Date'[Date], FirstMonth, LastMonth )
+			    )
+			
+			VAR Population3M =
+			    CALCULATE (
+			        [Population (Weighted)],
+			        REMOVEFILTERS ( 'Date' ),
+			        DATESBETWEEN ( 'Date'[Date], FirstMonth, LastMonth )
+			    )
+			
+			RETURN
+			    IF (
+			        ISBLANK ( LastMonth ) || MonthsAvailable < 3,
+			        BLANK (),
+			        DIVIDE ( Employment3M, Population3M )
+			    )
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: da8c853d-e4c0-4f89-9f31-9baa04f7a9af
+
+	measure 'Unemployment Rate (3MMA)' =
+			
+			VAR LastMonth =
+			    MAX ( 'CPS Monthly Labour Summary'[ReferenceMonth] )
+			
+			VAR FirstMonth =
+			    EDATE ( LastMonth, -2 )
+			
+			VAR MonthsAvailable =
+			    CALCULATE (
+			        DISTINCTCOUNT ( 'CPS Monthly Labour Summary'[ReferenceMonth] ),
+			        REMOVEFILTERS ( 'Date' ),
+			        DATESBETWEEN ( 'Date'[Date], FirstMonth, LastMonth )
+			    )
+			
+			VAR Unemployment3M =
+			    CALCULATE (
+			        [Unemployment (Weighted)],
+			        REMOVEFILTERS ( 'Date' ),
+			        DATESBETWEEN ( 'Date'[Date], FirstMonth, LastMonth )
+			    )
+			
+			VAR LabourForce3M =
+			    CALCULATE (
+			        [Labour Force (Weighted)],
+			        REMOVEFILTERS ( 'Date' ),
+			        DATESBETWEEN ( 'Date'[Date], FirstMonth, LastMonth )
+			    )
+			
+			RETURN
+			    IF (
+			        ISBLANK ( LastMonth ) || MonthsAvailable < 3,
+			        BLANK (),
+			        DIVIDE ( Unemployment3M, LabourForce3M )
+			    )
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 67159b40-2502-4fd0-8b57-0ed76de46b55
+
+	measure 'Participation Rate YoY Change (pp)' =
+			
+			VAR CurrentRate =
+			    [Participation Rate (3MMA)]
+			
+			VAR PriorYearRate =
+			    CALCULATE (
+			        [Participation Rate (3MMA)],
+			        DATEADD ( 'Date'[Date], -1, YEAR )
+			    )
+			
+			RETURN
+			    IF (
+			        ISBLANK ( CurrentRate )
+			            || ISBLANK ( PriorYearRate ),
+			        BLANK (),
+			        ( CurrentRate - PriorYearRate ) * 100
+			    )
+		formatString: 0.0
+		lineageTag: a37ed7b6-175a-4a31-b526-1c5f8cac1256
+
+	measure 'Employment Rate YoY Change (pp)' =
+			
+			VAR CurrentRate =
+			    [Employment Rate (3MMA)]
+			
+			VAR PriorYearRate =
+			    CALCULATE (
+			        [Employment Rate (3MMA)],
+			        DATEADD ( 'Date'[Date], -1, YEAR )
+			    )
+			
+			RETURN
+			    IF (
+			        ISBLANK ( CurrentRate )
+			            || ISBLANK ( PriorYearRate ),
+			        BLANK (),
+			        ( CurrentRate - PriorYearRate ) * 100
+			    )
+		formatString: 0.0
+		lineageTag: 3400fe02-7009-4d68-9c9c-86d5daafcae5
+
+	measure 'Unemployment Rate YoY Change (pp)' =
+			
+			VAR CurrentRate =
+			    [Unemployment Rate (3MMA)]
+			
+			VAR PriorYearRate =
+			    CALCULATE (
+			        [Unemployment Rate (3MMA)],
+			        DATEADD ( 'Date'[Date], -1, YEAR )
+			    )
+			
+			RETURN
+			    IF (
+			        ISBLANK ( CurrentRate )
+			            || ISBLANK ( PriorYearRate ),
+			        BLANK (),
+			        ( CurrentRate - PriorYearRate ) * 100
+			    )
+		formatString: 0.0
+		lineageTag: 30dc6f23-04af-425d-9c4e-6856a44c61b9
+
+	measure 'Participation Rate YoY Change - Monthly (pp)' =
+			
+			VAR CurrentRate =
+			    [Participation Rate (Calculated)]
+			
+			VAR PriorYearRate =
+			    CALCULATE (
+			        [Participation Rate (Calculated)],
+			        DATEADD ( 'Date'[Date], -1, YEAR )
+			    )
+			
+			RETURN
+			    IF (
+			        ISBLANK ( CurrentRate )
+			            || ISBLANK ( PriorYearRate ),
+			        BLANK (),
+			        ( CurrentRate - PriorYearRate ) * 100
+			    )
+		formatString: 0.0
+		lineageTag: f4189793-9ec1-4358-81ef-fbe5f8d6e39c
+
+	measure 'Participation Rate Gap — Women vs Men, Young Child (pp)' =
+			
+			VAR WomenRate =
+			    CALCULATE (
+			        [Participation Rate (3MMA)],
+			        REMOVEFILTERS (
+			            'CPS Monthly Labour Summary'[Sex],
+			            'CPS Monthly Labour Summary'[ChildStatus],
+			            'CPS Monthly Labour Summary'[GroupLabel]
+			        ),
+			        'CPS Monthly Labour Summary'[Sex] = "Women",
+			        'CPS Monthly Labour Summary'[ChildStatus] = "Co-resident child aged 0–5"
+			    )
+			
+			VAR MenRate =
+			    CALCULATE (
+			        [Participation Rate (3MMA)],
+			        REMOVEFILTERS (
+			            'CPS Monthly Labour Summary'[Sex],
+			            'CPS Monthly Labour Summary'[ChildStatus],
+			            'CPS Monthly Labour Summary'[GroupLabel]
+			        ),
+			        'CPS Monthly Labour Summary'[Sex] = "Men",
+			        'CPS Monthly Labour Summary'[ChildStatus] = "Co-resident child aged 0–5"
+			    )
+			
+			RETURN
+			    ( WomenRate - MenRate ) * 100
+		formatString: 0.0
+		lineageTag: de30317e-41c1-4774-b617-4a0ea6d4563d
+
+	measure 'Participation Rate Gap — Women, Young Child vs No Child (pp)' =
+			
+			VAR YoungChildRate =
+			    CALCULATE (
+			        [Participation Rate (3MMA)],
+			        REMOVEFILTERS (
+			            'CPS Monthly Labour Summary'[Sex],
+			            'CPS Monthly Labour Summary'[ChildStatus],
+			            'CPS Monthly Labour Summary'[GroupLabel]
+			        ),
+			        'CPS Monthly Labour Summary'[Sex] = "Women",
+			        'CPS Monthly Labour Summary'[ChildStatus] = "Co-resident child aged 0–5"
+			    )
+			
+			VAR NoChildRate =
+			    CALCULATE (
+			        [Participation Rate (3MMA)],
+			        REMOVEFILTERS (
+			            'CPS Monthly Labour Summary'[Sex],
+			            'CPS Monthly Labour Summary'[ChildStatus],
+			            'CPS Monthly Labour Summary'[GroupLabel]
+			        ),
+			        'CPS Monthly Labour Summary'[Sex] = "Women",
+			        'CPS Monthly Labour Summary'[ChildStatus] = "No co-resident child under 18"
+			    )
+			
+			RETURN
+			    ( YoungChildRate - NoChildRate ) * 100
+		formatString: 0.0
+		lineageTag: 14a3baaa-b35b-4475-a664-8132085fcbbe
+
+	measure 'Participation Rate Gap — Men, Young Child vs No Child (pp)' =
+			
+			VAR YoungChildRate =
+			    CALCULATE (
+			        [Participation Rate (3MMA)],
+			        REMOVEFILTERS (
+			            'CPS Monthly Labour Summary'[Sex],
+			            'CPS Monthly Labour Summary'[ChildStatus],
+			            'CPS Monthly Labour Summary'[GroupLabel]
+			        ),
+			        'CPS Monthly Labour Summary'[Sex] = "Men",
+			        'CPS Monthly Labour Summary'[ChildStatus] = "Co-resident child aged 0–5"
+			    )
+			
+			VAR NoChildRate =
+			    CALCULATE (
+			        [Participation Rate (3MMA)],
+			        REMOVEFILTERS (
+			            'CPS Monthly Labour Summary'[Sex],
+			            'CPS Monthly Labour Summary'[ChildStatus],
+			            'CPS Monthly Labour Summary'[GroupLabel]
+			        ),
+			        'CPS Monthly Labour Summary'[Sex] = "Men",
+			        'CPS Monthly Labour Summary'[ChildStatus] = "No co-resident child under 18"
+			    )
+			
+			RETURN
+			    ( YoungChildRate - NoChildRate ) * 100
+		formatString: 0.0
+		lineageTag: 7b30ac2f-20ab-46c3-b9d3-4c168a92a3e8
+
+	measure 'Employment Rate Gap — Women vs Men, Young Child (pp)' =
+			
+			VAR WomenRate =
+			    CALCULATE (
+			        [Employment Rate (3MMA)],
+			        REMOVEFILTERS (
+			            'CPS Monthly Labour Summary'[Sex],
+			            'CPS Monthly Labour Summary'[ChildStatus],
+			            'CPS Monthly Labour Summary'[GroupLabel]
+			        ),
+			        'CPS Monthly Labour Summary'[Sex] = "Women",
+			        'CPS Monthly Labour Summary'[ChildStatus] = "Co-resident child aged 0–5"
+			    )
+			
+			VAR MenRate =
+			    CALCULATE (
+			        [Employment Rate (3MMA)],
+			        REMOVEFILTERS (
+			            'CPS Monthly Labour Summary'[Sex],
+			            'CPS Monthly Labour Summary'[ChildStatus],
+			            'CPS Monthly Labour Summary'[GroupLabel]
+			        ),
+			        'CPS Monthly Labour Summary'[Sex] = "Men",
+			        'CPS Monthly Labour Summary'[ChildStatus] = "Co-resident child aged 0–5"
+			    )
+			
+			RETURN
+			    ( WomenRate - MenRate ) * 100
+		formatString: 0.0
+		lineageTag: bf684f4f-0d0e-4198-9ff9-1f6167144caf
+
+	measure 'Employment Rate Gap — Women, Young Child vs No Child (pp)' =
+			
+			VAR YoungChildRate =
+			    CALCULATE (
+			        [Employment Rate (3MMA)],
+			        REMOVEFILTERS (
+			            'CPS Monthly Labour Summary'[Sex],
+			            'CPS Monthly Labour Summary'[ChildStatus],
+			            'CPS Monthly Labour Summary'[GroupLabel]
+			        ),
+			        'CPS Monthly Labour Summary'[Sex] = "Women",
+			        'CPS Monthly Labour Summary'[ChildStatus] = "Co-resident child aged 0–5"
+			    )
+			
+			VAR NoChildRate =
+			    CALCULATE (
+			        [Employment Rate (3MMA)],
+			        REMOVEFILTERS (
+			            'CPS Monthly Labour Summary'[Sex],
+			            'CPS Monthly Labour Summary'[ChildStatus],
+			            'CPS Monthly Labour Summary'[GroupLabel]
+			        ),
+			        'CPS Monthly Labour Summary'[Sex] = "Women",
+			        'CPS Monthly Labour Summary'[ChildStatus] = "No co-resident child under 18"
+			    )
+			
+			RETURN
+			    ( YoungChildRate - NoChildRate ) * 100
+		formatString: 0.0
+		lineageTag: e562c1f2-5627-4e9a-b15d-f47150d1ad81
+
+	measure 'Employment Rate Gap — Men, Young Child vs No Child (pp)' =
+			
+			VAR YoungChildRate =
+			    CALCULATE (
+			        [Employment Rate (3MMA)],
+			        REMOVEFILTERS (
+			            'CPS Monthly Labour Summary'[Sex],
+			            'CPS Monthly Labour Summary'[ChildStatus],
+			            'CPS Monthly Labour Summary'[GroupLabel]
+			        ),
+			        'CPS Monthly Labour Summary'[Sex] = "Men",
+			        'CPS Monthly Labour Summary'[ChildStatus] = "Co-resident child aged 0–5"
+			    )
+			
+			VAR NoChildRate =
+			    CALCULATE (
+			        [Employment Rate (3MMA)],
+			        REMOVEFILTERS (
+			            'CPS Monthly Labour Summary'[Sex],
+			            'CPS Monthly Labour Summary'[ChildStatus],
+			            'CPS Monthly Labour Summary'[GroupLabel]
+			        ),
+			        'CPS Monthly Labour Summary'[Sex] = "Men",
+			        'CPS Monthly Labour Summary'[ChildStatus] = "No co-resident child under 18"
+			    )
+			
+			RETURN
+			    ( YoungChildRate - NoChildRate ) * 100
+		formatString: 0.0
+		lineageTag: 9e1d09ff-9540-45b6-8577-4b03e8ffb5ad
+
+	measure 'Unemployment Rate Gap — Women vs Men, Young Child (pp)' =
+			
+			VAR WomenRate =
+			    CALCULATE (
+			        [Unemployment Rate (3MMA)],
+			        REMOVEFILTERS (
+			            'CPS Monthly Labour Summary'[Sex],
+			            'CPS Monthly Labour Summary'[ChildStatus],
+			            'CPS Monthly Labour Summary'[GroupLabel]
+			        ),
+			        'CPS Monthly Labour Summary'[Sex] = "Women",
+			        'CPS Monthly Labour Summary'[ChildStatus] = "Co-resident child aged 0–5"
+			    )
+			
+			VAR MenRate =
+			    CALCULATE (
+			        [Unemployment Rate (3MMA)],
+			        REMOVEFILTERS (
+			            'CPS Monthly Labour Summary'[Sex],
+			            'CPS Monthly Labour Summary'[ChildStatus],
+			            'CPS Monthly Labour Summary'[GroupLabel]
+			        ),
+			        'CPS Monthly Labour Summary'[Sex] = "Men",
+			        'CPS Monthly Labour Summary'[ChildStatus] = "Co-resident child aged 0–5"
+			    )
+			
+			RETURN
+			    ( WomenRate - MenRate ) * 100
+		formatString: 0.0
+		lineageTag: 2bdfe8f9-8d6a-4c79-a7e7-39f72e332793
+
+	measure 'Unemployment Rate Gap — Women, Young Child vs No Child (pp)' =
+			
+			VAR YoungChildRate =
+			    CALCULATE (
+			        [Unemployment Rate (3MMA)],
+			        REMOVEFILTERS (
+			            'CPS Monthly Labour Summary'[Sex],
+			            'CPS Monthly Labour Summary'[ChildStatus],
+			            'CPS Monthly Labour Summary'[GroupLabel]
+			        ),
+			        'CPS Monthly Labour Summary'[Sex] = "Women",
+			        'CPS Monthly Labour Summary'[ChildStatus] = "Co-resident child aged 0–5"
+			    )
+			
+			VAR NoChildRate =
+			    CALCULATE (
+			        [Unemployment Rate (3MMA)],
+			        REMOVEFILTERS (
+			            'CPS Monthly Labour Summary'[Sex],
+			            'CPS Monthly Labour Summary'[ChildStatus],
+			            'CPS Monthly Labour Summary'[GroupLabel]
+			        ),
+			        'CPS Monthly Labour Summary'[Sex] = "Women",
+			        'CPS Monthly Labour Summary'[ChildStatus] = "No co-resident child under 18"
+			    )
+			
+			RETURN
+			    ( YoungChildRate - NoChildRate ) * 100
+		formatString: 0.0
+		lineageTag: 8667db68-8de4-4396-9fbd-ac8c196951f6
+
+	measure 'Unemployment Rate Gap — Men, Young Child vs No Child (pp)' =
+			
+			VAR YoungChildRate =
+			    CALCULATE (
+			        [Unemployment Rate (3MMA)],
+			        REMOVEFILTERS (
+			            'CPS Monthly Labour Summary'[Sex],
+			            'CPS Monthly Labour Summary'[ChildStatus],
+			            'CPS Monthly Labour Summary'[GroupLabel]
+			        ),
+			        'CPS Monthly Labour Summary'[Sex] = "Men",
+			        'CPS Monthly Labour Summary'[ChildStatus] = "Co-resident child aged 0–5"
+			    )
+			
+			VAR NoChildRate =
+			    CALCULATE (
+			        [Unemployment Rate (3MMA)],
+			        REMOVEFILTERS (
+			            'CPS Monthly Labour Summary'[Sex],
+			            'CPS Monthly Labour Summary'[ChildStatus],
+			            'CPS Monthly Labour Summary'[GroupLabel]
+			        ),
+			        'CPS Monthly Labour Summary'[Sex] = "Men",
+			        'CPS Monthly Labour Summary'[ChildStatus] = "No co-resident child under 18"
+			    )
+			
+			RETURN
+			    ( YoungChildRate - NoChildRate ) * 100
+		formatString: 0.0
+		lineageTag: 32ce65f9-a620-4aba-9f2b-cb020b12c16d
+
+	column ReferenceMonth
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: ba731d36-b85f-4c05-a243-20d2f0e943de
+		summarizeBy: none
+		sourceColumn: ReferenceMonth
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Sex
+		dataType: string
+		lineageTag: f3242778-45fb-4f64-8feb-28c561937893
+		summarizeBy: none
+		sourceColumn: Sex
+		sortByColumn: SexSort
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column ChildStatus
+		dataType: string
+		lineageTag: 5ca37323-4467-46dc-b570-d7ea758882df
+		summarizeBy: none
+		sourceColumn: ChildStatus
+		sortByColumn: ChildStatusSort
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column GroupLabel
+		dataType: string
+		lineageTag: 463b074a-780c-457e-babb-7b19dc44d5b2
+		summarizeBy: none
+		sourceColumn: GroupLabel
+
+		annotation SummarizationSetBy = Automatic
+
+	column SexSort
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 0a48b0c4-9588-43ff-9439-91e098749f2f
+		summarizeBy: sum
+		sourceColumn: SexSort
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column ChildStatusSort
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: bd891083-baa5-485c-86f1-80513350440d
+		summarizeBy: sum
+		sourceColumn: ChildStatusSort
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column UnweightedN
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: bb48a71f-f4ad-45d9-9eaf-cb635b3310a4
+		summarizeBy: sum
+		sourceColumn: UnweightedN
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Population
+		dataType: double
+		isHidden
+		lineageTag: cb715854-623a-459a-ba72-5e6a2e369916
+		summarizeBy: sum
+		sourceColumn: Population
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Employment
+		dataType: double
+		isHidden
+		lineageTag: 162f9a82-ca8e-4405-9ee0-a630efbca29a
+		summarizeBy: sum
+		sourceColumn: Employment
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Unemployment
+		dataType: double
+		isHidden
+		lineageTag: 61e1025c-ba14-40d2-bc8d-ea4680ede49f
+		summarizeBy: sum
+		sourceColumn: Unemployment
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column NotInLabourForce
+		dataType: double
+		isHidden
+		lineageTag: 2855f39c-2b3f-4e9c-b443-03702fef6cec
+		summarizeBy: sum
+		sourceColumn: NotInLabourForce
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column LabourForce
+		dataType: double
+		isHidden
+		lineageTag: 1d738310-e29a-4cfe-a1ca-dcf060bd17ee
+		summarizeBy: sum
+		sourceColumn: LabourForce
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column EmploymentRate
+		dataType: double
+		isHidden
+		lineageTag: 5b3bc02c-9010-46a5-bdc8-100eb84408b5
+		summarizeBy: sum
+		sourceColumn: EmploymentRate
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ParticipationRate
+		dataType: double
+		isHidden
+		lineageTag: ff9ce793-d3f7-43e2-b5c7-325a9dd63c44
+		summarizeBy: sum
+		sourceColumn: ParticipationRate
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column UnemploymentRate
+		dataType: double
+		isHidden
+		lineageTag: bb103765-a105-4166-8532-1ce9580778d2
+		summarizeBy: sum
+		sourceColumn: UnemploymentRate
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column CheckDifference
+		dataType: double
+		isHidden
+		lineageTag: d5014741-249c-4344-85d7-7ae465fb8e37
+		summarizeBy: sum
+		sourceColumn: CheckDifference
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition 'CPS Monthly Labour Summary' = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(
+				        File.Contents("C:\\Users\\MLOUI\\OneDrive\\Work\\PBI\\PBI DATA FILES\\CPS_Monthly_Labour_Summary_2010_to_2026_05.csv"),
+				        [
+				            Delimiter = ",",
+				            Columns = 16,
+				            Encoding = 65001,
+				            QuoteStyle = QuoteStyle.Csv
+				        ]
+				    ),
+				
+				    PromotedHeaders =
+				        Table.PromoteHeaders(
+				            Source,
+				            [PromoteAllScalars = true]
+				        ),
+				
+				    Typed =
+				        Table.TransformColumnTypes(
+				            PromotedHeaders,
+				            {
+				                {"ReferenceMonth", type date},
+				                {"Sex", type text},
+				                {"ChildStatus", type text},
+				                {"GroupLabel", type text},
+				                {"SexSort", Int64.Type},
+				                {"ChildStatusSort", Int64.Type},
+				                {"UnweightedN", Int64.Type},
+				                {"Population", type number},
+				                {"Employment", type number},
+				                {"Unemployment", type number},
+				                {"NotInLabourForce", type number},
+				                {"LabourForce", type number},
+				                {"EmploymentRate", Percentage.Type},
+				                {"ParticipationRate", Percentage.Type},
+				                {"UnemploymentRate", Percentage.Type},
+				                {"CheckDifference", type number}
+				            },
+				            "en-US"
+				        ),
+				
+				    Reordered =
+				        Table.ReorderColumns(
+				            Typed,
+				            {
+				                "ReferenceMonth",
+				                "Sex",
+				                "ChildStatus",
+				                "GroupLabel",
+				                "SexSort",
+				                "ChildStatusSort",
+				                "UnweightedN",
+				                "Population",
+				                "Employment",
+				                "Unemployment",
+				                "NotInLabourForce",
+				                "LabourForce",
+				                "EmploymentRate",
+				                "ParticipationRate",
+				                "UnemploymentRate",
+				                "CheckDifference"
+				            }
+				        ),
+				
+				    Sorted =
+				        Table.Sort(
+				            Reordered,
+				            {
+				                {"ReferenceMonth", Order.Ascending},
+				                {"SexSort", Order.Ascending},
+				                {"ChildStatusSort", Order.Ascending}
+				            }
+				        )
+				in
+				    Sorted
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

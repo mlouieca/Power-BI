@@ -1,0 +1,33 @@
+model Model
+	culture: en-CA
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-CA
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["ECE","Unzip","14100287-eng","14100062-eng","Annual ECE","Annual LFS Wage","CPI Annual","ECE Seasonally Adjusted","Unzip (2)"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table ECE
+ref table DateTable
+ref table DateTableTemplate_8e705fce-1122-4310-918a-619b6d2ada2e
+ref table LocalDateTable_d9728940-8e1d-488b-9220-13893d8edc4f
+ref table 14100287-eng
+ref table LocalDateTable_b1e015a8-6fa8-4a43-871d-66a9ae3e3537
+ref table 14100062-eng
+ref table 'Annual ECE'
+ref table DimGeography
+ref table DimOccupation
+ref table DimCharacteristic
+ref table DimYear
+ref table LocalDateTable_13a87db4-2be7-449e-bfbf-68d9916c0e71
+ref table 'Annual LFS Wage'
+ref table 'CPI Annual'
+ref table 'ECE Seasonally Adjusted'
+
+ref cultureInfo en-CA
+

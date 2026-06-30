@@ -1,0 +1,123 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "29a6f9c1a031e56a66bc",
+  "position": {
+    "x": 0,
+    "y": 152,
+    "z": 0,
+    "height": 352.00000000000006,
+    "width": 816,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "lineChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CPI Annual"
+                    }
+                  },
+                  "Property": "REF_DATE"
+                }
+              },
+              "queryRef": "CPI Annual.REF_DATE",
+              "nativeQueryRef": "REF_DATE",
+              "active": true
+            }
+          ]
+        },
+        "Series": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CPI Annual"
+                    }
+                  },
+                  "Property": "Products and product groups"
+                }
+              },
+              "queryRef": "CPI Annual.Products and product groups",
+              "nativeQueryRef": "Products and product groups"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CPI Annual"
+                    }
+                  },
+                  "Property": "CPI Annual Index"
+                }
+              },
+              "queryRef": "CPI Annual.CPI Annual Index",
+              "nativeQueryRef": "CPI Annual Index"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "CPI Annual"
+                  }
+                },
+                "Property": "CPI Annual Index"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "objects": {
+      "categoryAxis": [
+        {
+          "properties": {
+            "titleText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Year'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Annual CPI'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

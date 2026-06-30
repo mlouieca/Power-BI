@@ -1,0 +1,224 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "d06c96e7b8d08e0d8285",
+  "position": {
+    "x": 0,
+    "y": 496,
+    "z": 1000,
+    "height": 224,
+    "width": 896,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "pivotTable",
+    "query": {
+      "queryState": {
+        "Rows": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ECE"
+                    }
+                  },
+                  "Property": "Occupation"
+                }
+              },
+              "queryRef": "ECE.Occupation",
+              "nativeQueryRef": "Occupation",
+              "active": true
+            }
+          ]
+        },
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ECE"
+                    }
+                  },
+                  "Property": "Estimate Value (Latest)"
+                }
+              },
+              "queryRef": "ECE.Estimate Value (Latest)",
+              "nativeQueryRef": "Estimate Value (Latest)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ECE"
+                    }
+                  },
+                  "Property": "Estimate Value (Latest MoM)"
+                }
+              },
+              "queryRef": "ECE.Estimate Value (Latest MoM)",
+              "nativeQueryRef": "Estimate Value (Latest MoM)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ECE"
+                    }
+                  },
+                  "Property": "Estimate Value (Latest MoM %)"
+                }
+              },
+              "queryRef": "ECE.Estimate Value (Latest MoM %)",
+              "nativeQueryRef": "Estimate Value (Latest MoM %)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ECE"
+                    }
+                  },
+                  "Property": "Estimate Value (Latest YoY)"
+                }
+              },
+              "queryRef": "ECE.Estimate Value (Latest YoY)",
+              "nativeQueryRef": "Estimate Value (Latest YoY)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ECE"
+                    }
+                  },
+                  "Property": "Estimate Value (Latest YoY %)"
+                }
+              },
+              "queryRef": "ECE.Estimate Value (Latest YoY %)",
+              "nativeQueryRef": "Estimate Value (Latest YoY %)"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "ECE"
+                  }
+                },
+                "Property": "Occupation"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ]
+      }
+    },
+    "objects": {
+      "columnWidth": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "148.9259131874819D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "ECE.Occupation"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "119.95059663962611D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "ECE.Estimate Value (Latest MoM %)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "114.61772432343255D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "ECE.Estimate Value (Latest YoY)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "124.61772501220197D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "ECE.Estimate Value (Latest MoM)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "118.78416769996721D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "ECE.Estimate Value (Latest YoY %)"
+          }
+        }
+      ],
+      "columnHeaders": [
+        {
+          "properties": {}
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "stylePreset": [
+        {
+          "properties": {
+            "name": {
+              "expr": {
+                "Literal": {
+                  "Value": "'FlashyRows'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

@@ -1,0 +1,44 @@
+table DimOccupation
+	lineageTag: c381721e-1563-46f0-a5fd-81556128e7d1
+
+	column NOC
+		lineageTag: f0f0d3ae-24e3-4697-9519-1b316cd06164
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [NOC]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Occupation Name'
+		lineageTag: b1d543a0-1fa0-4941-8f2d-427c28ec43d1
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Occupation Name]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Occupation
+		lineageTag: 2533e3e9-efad-4862-8679-886892d16340
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Occupation]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimOccupation = calculated
+		mode: import
+		source = ```
+						
+						DISTINCT (
+						    SELECTCOLUMNS (
+						        'Annual ECE',
+						        "NOC", 'Annual ECE'[NOC],
+						        "Occupation Name", 'Annual ECE'[Occupation_Name],
+						        "Occupation", 'Annual ECE'[Occupation]
+						    )
+						)
+				
+				```
+
+	annotation PBI_Id = 7b204e3418954743a6b70c7e136e7250
+

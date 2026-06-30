@@ -1,0 +1,78 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "3c4d5e6f7081920a1b2c",
+  "position": {
+    "x": 0,
+    "y": 560,
+    "z": 0,
+    "height": 120,
+    "width": 392,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CPI Weights"
+                    }
+                  },
+                  "Property": "Child Care CPI Weight % (Latest)"
+                }
+              },
+              "queryRef": "CPI Weights.Child Care CPI Weight % (Latest)",
+              "nativeQueryRef": "Child Care CPI Weight % (Latest)"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Latest basket weight'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "fadf352412c9de88a0a6",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "CPI Weights"
+              }
+            },
+            "Property": "Child Care CPI Weight % (Latest)"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
+  }
+}

@@ -1,0 +1,23 @@
+model Model
+	culture: en-CA
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-CA
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["Unzip","LFS_FamilyStructure_14100396_Annual","LFS_Headline_14100327_Annual","LFS_GenderWageGap_14100062","Work Absence"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table LFS_FamilyStructure_14100396_Annual
+ref table YearTable
+ref table 'Annual Metric Selector'
+ref table 'Work Absence'
+ref table LFS_Headline_14100327_Annual
+ref table LFS_GenderWageGap_14100062
+
+ref cultureInfo en-CA
+

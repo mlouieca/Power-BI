@@ -1,0 +1,112 @@
+table 'Annual LFS Wage'
+	lineageTag: 17b713cf-5b71-4d52-a5b3-8b56dae66755
+
+	measure 'All Occupations Hourly Wage' =
+			
+			CALCULATE (
+			    SUM ( 'Annual LFS Wage'[Value] ),
+			    'Annual LFS Wage'[Wages] = "Average hourly wage rate",
+			    'Annual LFS Wage'[Type of work] = "Both full- and part-time employees",
+			    'Annual LFS Wage'[Gender] = "Total - Gender",
+			    'Annual LFS Wage'[Age group] = "15 years and over",
+			    'Annual LFS Wage'[LFS Occupation] = "Total employees, all occupations [00-95]"
+			)
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: a9ab8c2f-de3e-45af-860c-50c7759befb7
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: 41b9613d-761c-4a2e-92b5-d819fcec0078
+		summarizeBy: none
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column Geography
+		dataType: string
+		lineageTag: 89c838d6-f7ba-4b87-aef3-c26297d43460
+		summarizeBy: none
+		sourceColumn: Geography
+
+		annotation SummarizationSetBy = Automatic
+
+	column Wages
+		dataType: string
+		lineageTag: 8683ede2-f253-4c1f-b118-d644f2548424
+		summarizeBy: none
+		sourceColumn: Wages
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Type of work'
+		dataType: string
+		lineageTag: 60aa0a96-23a7-44aa-8666-c4db147bb96c
+		summarizeBy: none
+		sourceColumn: Type of work
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'LFS Occupation'
+		dataType: string
+		lineageTag: 7a97fccd-e7e4-4aa1-b81f-3bccb8e1a70c
+		summarizeBy: none
+		sourceColumn: LFS Occupation
+
+		annotation SummarizationSetBy = Automatic
+
+	column Gender
+		dataType: string
+		lineageTag: 8e11e47b-457d-4ef0-a1c3-ca235656d9ad
+		summarizeBy: none
+		sourceColumn: Gender
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Age group'
+		dataType: string
+		lineageTag: e19f2cec-e5e8-40f3-aecf-4838b0f517c5
+		summarizeBy: none
+		sourceColumn: Age group
+
+		annotation SummarizationSetBy = Automatic
+
+	column UOM
+		dataType: string
+		lineageTag: 521edca2-3f99-44f5-98db-3751c2ba16fd
+		summarizeBy: none
+		sourceColumn: UOM
+
+		annotation SummarizationSetBy = Automatic
+
+	column Value
+		dataType: double
+		lineageTag: ff76ac6d-08ed-4b26-aa4a-4492301a1000
+		summarizeBy: sum
+		sourceColumn: Value
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition 'Annual LFS Wage' = m
+		mode: import
+		source =
+				let
+				  Source = Web.Contents("https://www150.statcan.gc.ca/n1/tbl/csv/14100417-eng.zip"),
+				    Custom1 = Unzip(Source),
+				    Content = Custom1{0}[Content],
+				    #"Imported CSV" = Csv.Document(Content,[Delimiter=",", Columns=19, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Imported CSV", [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"REF_DATE", Int64.Type}, {"GEO", type text}, {"DGUID", type text}, {"Wages", type text}, {"Type of work", type text}, {"National Occupational Classification (NOC)", type text}, {"Gender", type text}, {"Age group", type text}, {"UOM", type text}, {"UOM_ID", Int64.Type}, {"SCALAR_FACTOR", type text}, {"SCALAR_ID", Int64.Type}, {"VECTOR", type text}, {"COORDINATE", type text}, {"VALUE", type number}, {"STATUS", type text}, {"SYMBOL", type text}, {"TERMINATED", type text}, {"DECIMALS", Int64.Type}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"TERMINATED", "SYMBOL", "STATUS", "UOM_ID", "SCALAR_FACTOR", "SCALAR_ID", "VECTOR", "COORDINATE", "DECIMALS", "DGUID"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Removed Columns",{{"REF_DATE", "Year"}, {"GEO", "Geography"}, {"VALUE", "Value"}, {"National Occupational Classification (NOC)", "LFS Occupation"}})
+				in
+				  #"Renamed Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

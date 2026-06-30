@@ -1,0 +1,465 @@
+table LFS_FamilyStructure_14100397
+	lineageTag: 13457261-f798-47c8-9144-122a56375a50
+
+	measure 'Base Value' = ```
+			
+			SUM ( 'LFS_FamilyStructure_14100397'[VALUE] )
+			
+			```
+		lineageTag: db3bd5ce-6bfc-4c1e-a8cc-6d2c9ca28f40
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Latest Date' = ```
+			
+			CALCULATE (
+			    MAX ( DateTable[Date] ),
+			    REMOVEFILTERS ( DateTable )
+			)
+			
+			```
+		formatString: General Date
+		lineageTag: e73f6de8-a7f1-49d0-a223-b27a2c3e601e
+
+	measure 'Participation Rate (Latest)' = ```
+			
+			VAR d = [Latest Date]
+			RETURN
+			CALCULATE (
+			    [Base Value],
+			    DateTable[Date] = d
+			)
+			
+			```
+		lineageTag: 89fcd771-b148-443a-8db7-2ca6b79bfccd
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Participation Rate YoY (pp)' = ```
+			
+			VAR d = [Latest Date]
+			RETURN
+			CALCULATE([Base Value], DateTable[Date] = d)
+			-
+			CALCULATE([Base Value], DateTable[Date] = EDATE(d, -12))
+			
+			```
+		lineageTag: 9d058000-ae2a-4ef1-87a1-619f2199e36a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Participation Rate vs Dec2019 (pp)' = ```
+			
+			VAR d = [Latest Date]
+			VAR baseDate = DATE(2019,12,1)
+			RETURN
+			CALCULATE([Base Value], DateTable[Date] = d)
+			-
+			CALCULATE([Base Value], DateTable[Date] = baseDate)
+			
+			```
+		lineageTag: d643dbba-0ff7-4bf9-afc0-4261788e3588
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Unemployment Rate (Latest)' = ```
+			
+			VAR d = [Latest Date]
+			RETURN
+			CALCULATE (
+			    [Base Value],
+			    DateTable[Date] = d
+			)
+			
+			```
+		lineageTag: 69c39572-acdb-43b3-8ecb-a0f0696d5d0b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Motherhood Gap (pp)' = ```
+			
+			VAR d = [Latest Date]
+			VAR Mothers =
+			    CALCULATE (
+			        [Base Value],
+			        DateTable[Date] = d,
+			        'LFS_FamilyStructure_14100397'[Family age composition] = "Youngest child 0 to 5 years"
+			    )
+			VAR NoKidsUnder18 =
+			    CALCULATE (
+			        [Base Value],
+			        DateTable[Date] = d,
+			        'LFS_FamilyStructure_14100397'[Family age composition] = "Without children less than 18 years"
+			    )
+			RETURN
+			NoKidsUnder18 - Mothers
+			
+			```
+		lineageTag: 83ee327a-f6ce-4b77-be21-5685e901c621
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'LFPR Mothers (Canada)' = ```
+			
+			CALCULATE(
+			    [Base Value],
+			    'LFS_FamilyStructure_14100397'[GEO] = "Canada",
+			    'LFS_FamilyStructure_14100397'[Age] = "25 to 54 years",
+			    'LFS_FamilyStructure_14100397'[Gender] = "Women+",
+			    'LFS_FamilyStructure_14100397'[Family age composition] = "Youngest child 0 to 5 years",
+			    'LFS_FamilyStructure_14100397'[Labour force characteristics] = "Participation rate"
+			)
+			
+			```
+		lineageTag: 7735ad8c-2963-4151-b91a-3525713dec0a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'LFPR Women Without Children<18 (Canada)' = ```
+			
+			CALCULATE(
+			    [Base Value],
+			    'LFS_FamilyStructure_14100397'[GEO] = "Canada",
+			    'LFS_FamilyStructure_14100397'[Age] = "25 to 54 years",
+			    'LFS_FamilyStructure_14100397'[Gender] = "Women+",
+			    'LFS_FamilyStructure_14100397'[Family age composition] = "Without children less than 18 years",
+			    'LFS_FamilyStructure_14100397'[Labour force characteristics] = "Participation rate"
+			)
+			
+			```
+		lineageTag: 6ac8de74-b324-4bff-bb7c-af85be27fbad
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'LFPR Mothers (Quebec)' = ```
+			
+			CALCULATE(
+			    [Base Value],
+			    'LFS_FamilyStructure_14100397'[GEO] = "Quebec",
+			    'LFS_FamilyStructure_14100397'[Age] = "25 to 54 years",
+			    'LFS_FamilyStructure_14100397'[Gender] = "Women+",
+			    'LFS_FamilyStructure_14100397'[Family age composition] = "Youngest child 0 to 5 years",
+			    'LFS_FamilyStructure_14100397'[Labour force characteristics] = "Participation rate"
+			)
+			
+			```
+		lineageTag: 1209e052-b0dc-44d2-8408-0b928f07280a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Participation Rate vs Same Month 2019 (pp)' = ```
+			
+			VAR d = [Latest Date]
+			VAR baseDate = DATE(2019, MONTH(d), 1)
+			RETURN
+			CALCULATE([Base Value], DateTable[Date] = d)
+			-
+			CALCULATE([Base Value], DateTable[Date] = baseDate)
+			
+			```
+		lineageTag: b2207115-e33c-4526-80bc-448514f0ec6a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Unemployment Rate YoY (pp)' = ```
+			
+			VAR d = [Latest Date]
+			RETURN
+			CALCULATE([Base Value], DateTable[Date] = d)
+			-
+			CALCULATE([Base Value], DateTable[Date] = EDATE(d, -12))
+			
+			```
+		lineageTag: 4737df43-b998-47dc-ac8d-20ac666a0b3b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Unemployment Rate vs Same Month 2019 (pp)' = ```
+			
+			VAR d = [Latest Date]
+			VAR baseDate = DATE(2019, MONTH(d), 1)
+			RETURN
+			CALCULATE([Base Value], DateTable[Date] = d)
+			-
+			CALCULATE([Base Value], DateTable[Date] = baseDate)
+			
+			```
+		lineageTag: 52467bba-2511-4059-a1d6-7ba12ff0145e
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Motherhood Gap (pp) - Over Time' = ```
+			
+			VAR d = MAX(DateTable[Date])
+			VAR Mothers =
+			    CALCULATE(
+			        [Base Value],
+			        DateTable[Date] = d,
+			        'LFS_FamilyStructure_14100397'[Family age composition] = "Youngest child 0 to 5 years"
+			    )
+			VAR NoKidsUnder18 =
+			    CALCULATE(
+			        [Base Value],
+			        DateTable[Date] = d,
+			        'LFS_FamilyStructure_14100397'[Family age composition] = "Without children less than 18 years"
+			    )
+			RETURN
+			NoKidsUnder18 - Mothers
+			
+			```
+		lineageTag: 8bf29b95-cb71-4bc7-9502-ac389480aeb2
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Motherhood Gap (pp) - Latest' = ```
+			
+			VAR d = [Latest Date]
+			RETURN
+			CALCULATE(
+			    [Motherhood Gap (pp) - Over Time],
+			    DateTable[Date] = d
+			)
+			
+			```
+		lineageTag: b8cd1bc3-fad3-463d-a36f-6362e6a186a5
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Motherhood Gap YoY (pp)' = ```
+			
+			VAR d = [Latest Date]
+			RETURN
+			CALCULATE([Motherhood Gap (pp) - Over Time], DateTable[Date] = d)
+			-
+			CALCULATE([Motherhood Gap (pp) - Over Time], DateTable[Date] = EDATE(d, -12))
+			
+			```
+		lineageTag: 98453004-d3e0-4648-85c0-04ac8d4d59b8
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Motherhood Gap vs Same Month 2019 (pp)' = ```
+			
+			VAR d = [Latest Date]
+			VAR baseDate = DATE(2019, MONTH(d), 1)
+			RETURN
+			CALCULATE([Motherhood Gap (pp) - Over Time], DateTable[Date] = d)
+			-
+			CALCULATE([Motherhood Gap (pp) - Over Time], DateTable[Date] = baseDate)
+			
+			```
+		lineageTag: 6fd94bd9-0d9f-4263-8cbb-c5c8c59b52b7
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Metric - Participation Rate (Mothers)' = ```
+			
+			CALCULATE(
+			    [Base Value],
+			    'LFS_FamilyStructure_14100397'[GEO] = "Canada",
+			    'LFS_FamilyStructure_14100397'[Age] = "25 to 54 years",
+			    'LFS_FamilyStructure_14100397'[Gender] = "Women+",
+			    'LFS_FamilyStructure_14100397'[Family age composition] = "Youngest child 0 to 5 years",
+			    'LFS_FamilyStructure_14100397'[Labour force characteristics] = "Participation rate"
+			)
+			
+			```
+		lineageTag: d5095578-a567-4839-8968-6a6d5c145c97
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Metric - Unemployment Rate (Mothers)' = ```
+			
+			CALCULATE(
+			    [Base Value],
+			    'LFS_FamilyStructure_14100397'[GEO] = "Canada",
+			    'LFS_FamilyStructure_14100397'[Age] = "25 to 54 years",
+			    'LFS_FamilyStructure_14100397'[Gender] = "Women+",
+			    'LFS_FamilyStructure_14100397'[Family age composition] = "Youngest child 0 to 5 years",
+			    'LFS_FamilyStructure_14100397'[Labour force characteristics] = "Unemployment rate"
+			)
+			
+			```
+		lineageTag: 045edad7-46ce-4b94-89cf-a20e2c90d372
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Metric - Motherhood Gap (pp)' = ```
+			
+			VAR Mothers =
+			    CALCULATE(
+			        [Base Value],
+			        'LFS_FamilyStructure_14100397'[GEO] = "Canada",
+			        'LFS_FamilyStructure_14100397'[Age] = "25 to 54 years",
+			        'LFS_FamilyStructure_14100397'[Gender] = "Women+",
+			        'LFS_FamilyStructure_14100397'[Family age composition] = "Youngest child 0 to 5 years",
+			        'LFS_FamilyStructure_14100397'[Labour force characteristics] = "Participation rate"
+			    )
+			VAR NoKidsUnder18 =
+			    CALCULATE(
+			        [Base Value],
+			        'LFS_FamilyStructure_14100397'[GEO] = "Canada",
+			        'LFS_FamilyStructure_14100397'[Age] = "25 to 54 years",
+			        'LFS_FamilyStructure_14100397'[Gender] = "Women+",
+			        'LFS_FamilyStructure_14100397'[Family age composition] = "Without children less than 18 years",
+			        'LFS_FamilyStructure_14100397'[Labour force characteristics] = "Participation rate"
+			    )
+			RETURN
+			NoKidsUnder18 - Mothers
+			
+			```
+		lineageTag: 2d9980e9-dc10-4c6c-954c-14d262b17200
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Series Value (Monthly)' =
+			
+			MAX ( 'LFS_FamilyStructure_14100397'[VALUE] )
+		lineageTag: aabb2f20-44cd-4be5-8e18-8fa1a1971f89
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Participation Rate (Monthly)' =
+			
+			CALCULATE(
+			    [Series Value (Monthly)],
+			    KEEPFILTERS(
+			        'LFS_FamilyStructure_14100397'[Labour force characteristics] = "Participation rate"
+			    )
+			)
+		lineageTag: 4f10a875-d5b7-4173-b268-eda63d1fa0e0
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Participation Rate YoY (p.p.)' =
+			
+			VAR CurrentPR =
+			    [Participation Rate (Monthly)]
+			VAR PreviousYearPR =
+			    CALCULATE(
+			        [Participation Rate (Monthly)],
+			        DATEADD(DateTable[Date], -1, YEAR)
+			    )
+			RETURN
+			IF(
+			    ISBLANK(CurrentPR) || ISBLANK(PreviousYearPR),
+			    BLANK(),
+			    CurrentPR - PreviousYearPR
+			)
+		lineageTag: 05f58f29-e7ae-449d-bad9-f19167394186
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Selected LFS Value (Monthly)' =
+			
+			MAX ( 'LFS_FamilyStructure_14100397'[VALUE] )
+		lineageTag: c2b416d0-fefb-49ad-8943-b55f56d4633c
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Selected LFS Value YoY Change' =
+			
+			VAR CurrentValue =
+			    [Selected LFS Value (Monthly)]
+			VAR PreviousYearValue =
+			    CALCULATE(
+			        [Selected LFS Value (Monthly)],
+			        DATEADD(DateTable[Date], -1, YEAR)
+			    )
+			RETURN
+			IF(
+			    ISBLANK(CurrentValue) || ISBLANK(PreviousYearValue),
+			    BLANK(),
+			    CurrentValue - PreviousYearValue
+			)
+		lineageTag: d46ccc74-e3bb-4511-90d7-71a67a4e14b0
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column GEO
+		dataType: string
+		lineageTag: 9d22c6a7-4525-4163-b8dd-811db123b796
+		summarizeBy: none
+		sourceColumn: GEO
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Labour force characteristics'
+		dataType: string
+		lineageTag: be386f61-d917-4c58-ab2c-7b84622b54f2
+		summarizeBy: none
+		sourceColumn: Labour force characteristics
+
+		annotation SummarizationSetBy = Automatic
+
+	column Age
+		dataType: string
+		lineageTag: 6cc50170-49a2-4e63-8536-6aa1821b432e
+		summarizeBy: none
+		sourceColumn: Age
+
+		annotation SummarizationSetBy = Automatic
+
+	column Gender
+		dataType: string
+		lineageTag: 6101ddb0-346a-4796-9d99-df009f7a7ccc
+		summarizeBy: none
+		sourceColumn: Gender
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Family type'
+		dataType: string
+		lineageTag: ce1f1867-d20e-44cd-934f-2cf0968daa4f
+		summarizeBy: none
+		sourceColumn: Family type
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Family age composition'
+		dataType: string
+		lineageTag: 218a8477-7387-4603-a83d-65f45bb7f65b
+		summarizeBy: none
+		sourceColumn: Family age composition
+
+		annotation SummarizationSetBy = Automatic
+
+	column VALUE
+		dataType: double
+		lineageTag: e2ed3fb2-ba11-4e18-a85b-3b4ee24b2e07
+		summarizeBy: sum
+		sourceColumn: VALUE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column REF_DATE
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: a767ffe2-2664-45d0-87b8-0afbe82d2f08
+		summarizeBy: none
+		sourceColumn: REF_DATE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition LFS_FamilyStructure_14100397 = m
+		mode: import
+		source =
+				let
+				    Source = Web.Contents("https://www150.statcan.gc.ca/n1/tbl/csv/14100397-eng.zip"),
+				    Custom1 = Unzip(Source),
+				    Content = Custom1{0}[Content],
+				    #"Imported CSV" = Csv.Document(Content,[Delimiter=",", Columns=19, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Imported CSV", [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"REF_DATE", type date}, {"GEO", type text}, {"DGUID", type text}, {"Labour force characteristics", type text}, {"Age", type text}, {"Gender", type text}, {"Family type", type text}, {"Family age composition", type text}, {"UOM", type text}, {"UOM_ID", Int64.Type}, {"SCALAR_FACTOR", type text}, {"SCALAR_ID", Int64.Type}, {"VECTOR", type text}, {"COORDINATE", type text}, {"VALUE", type number}, {"STATUS", type text}, {"SYMBOL", type text}, {"TERMINATED", type text}, {"DECIMALS", Int64.Type}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"DGUID", "UOM", "UOM_ID", "SCALAR_FACTOR", "SCALAR_ID", "VECTOR", "COORDINATE", "STATUS", "SYMBOL", "TERMINATED", "DECIMALS"})
+				in
+				    #"Removed Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,44 @@
+table DimCharacteristic
+	lineageTag: aa11844b-7a07-47c7-bdb6-99c4ab8e2d1c
+
+	column Characteristic
+		lineageTag: 9b3cd408-0d4f-4719-b555-230960aaeb90
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Characteristic]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Selected Characteristic'
+		lineageTag: 2e2fc5a8-f2b4-4e1c-9d5b-87b98e1f844c
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Selected Characteristic]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Unit
+		lineageTag: b41fb7c0-3eb0-4774-8d36-aa1453a9aa2e
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Unit]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimCharacteristic = calculated
+		mode: import
+		source = ```
+						
+						DISTINCT (
+						    SELECTCOLUMNS (
+						        'Annual ECE',
+						        "Characteristic", 'Annual ECE'[Characteristic],
+						        "Selected Characteristic", 'Annual ECE'[Selected_charac],
+						        "Unit", 'Annual ECE'[Unit]
+						    )
+						)
+				
+				```
+
+	annotation PBI_Id = 86d3cf57e2ce4d989ab07172a0b4210a
+

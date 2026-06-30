@@ -1,0 +1,268 @@
+table 'Labour Force Comparison'
+	lineageTag: 072de5bb-5e2e-4dd5-b8a3-20369f57c57f
+
+	measure 'Comparison Value' =
+			
+			MAX ( 'Labour Force Comparison'[Value] )
+		formatString: 0.0
+		lineageTag: b2a4d414-d27c-4368-89c8-a52f18882380
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Comparison YoY Change (pp)' =
+			
+			VAR CurrentValue =
+			    [Comparison Value]
+			
+			VAR PriorYearValue =
+			    CALCULATE (
+			        [Comparison Value],
+			        DATEADD ( 'Date'[Date], -1, YEAR )
+			    )
+			
+			RETURN
+			    IF (
+			        ISBLANK ( CurrentValue ) || ISBLANK ( PriorYearValue ),
+			        BLANK (),
+			        CurrentValue - PriorYearValue
+			    )
+		formatString: 0.0
+		lineageTag: 2f7d06d1-395e-4376-b280-f4c118d1baf3
+
+	/// Year-over-year percentage point change for the selected labour force indicator and demographic, limited to the common Canada-U.S. comparison range.
+	measure 'Comparison YoY Change - Common Range (pp)' =
+			VAR CurrentMonth =
+			    MAX ( 'Date'[Date] )
+			RETURN
+			    IF (
+			        CurrentMonth < DATE ( 2011, 1, 1 ),
+			        BLANK (),
+			        [Comparison YoY Change (pp)]
+			    )
+		formatString: 0.0
+		lineageTag: f0a222f4-60fd-44cb-a06c-63d778ec2618
+
+	/// Positive percentage point gap between core-aged women without children under 18 and core-aged women with youngest child aged 0 to 5, by country.
+	measure 'Participation Gap - Women, Young Child vs No Child (pp)' =
+			
+			VAR CurrentMonth =
+			    MAX ( 'Date'[Date] )
+			VAR YoungChildParticipation =
+			    CALCULATE (
+			        [Comparison Value],
+			        'Labour Force Comparison'[Indicator] = "Participation rate",
+			        'Labour Force Comparison'[Sex] = "Women",
+			        'Labour Force Comparison'[ChildStatus] = "Youngest child 0 to 5 years"
+			    )
+			VAR NoChildParticipation =
+			    CALCULATE (
+			        [Comparison Value],
+			        'Labour Force Comparison'[Indicator] = "Participation rate",
+			        'Labour Force Comparison'[Sex] = "Women",
+			        'Labour Force Comparison'[ChildStatus] = "No child under 18"
+			    )
+			RETURN
+			    IF (
+			        CurrentMonth < DATE ( 2010, 1, 1 )
+			            || ISBLANK ( YoungChildParticipation )
+			            || ISBLANK ( NoChildParticipation ),
+			        BLANK (),
+			        NoChildParticipation - YoungChildParticipation
+			    )
+		formatString: 0.0
+		lineageTag: ddb21f14-f847-4109-80cc-eb7e3adcc46f
+
+	/// Annual average positive percentage point gap between core-aged women without children under 18 and core-aged women with youngest child aged 0 to 5, by country.
+	measure 'Participation Gap - Women, Young Child vs No Child Annual Avg (pp)' =
+			
+			VAR _MonthsWithGap =
+			    VALUES ( 'Labour Force Comparison'[ReferenceMonth] )
+			RETURN
+			    AVERAGEX (
+			        _MonthsWithGap,
+			        [Participation Gap - Women, Young Child vs No Child (pp)]
+			    )
+		formatString: 0.0
+		lineageTag: fa1f8033-42f7-427a-b00c-681f5ea4f079
+
+	/// Annual average year-over-year percentage point change for the selected labour force indicator and demographic, limited to the common Canada-U.S. comparison range.
+	measure 'Comparison YoY Change - Common Range Annual Avg (pp)' =
+			AVERAGEX (
+			    VALUES ( 'Date'[Date] ),
+			    [Comparison YoY Change - Common Range (pp)]
+			)
+		formatString: 0.0
+		lineageTag: b71737d8-9567-4ade-9a03-0922c7aad96d
+
+	column ReferenceMonth
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: bdfeb195-4711-43dd-8b4b-f964fefb739b
+		summarizeBy: none
+		sourceColumn: [ReferenceMonth]
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Country
+		dataType: string
+		lineageTag: a8eda60c-99d1-4fe1-9c2c-bb5d6fdef181
+		summarizeBy: none
+		sourceColumn: [Country]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Sex
+		dataType: string
+		lineageTag: 53d06b1e-949a-46b3-a4d7-87e3c2d3436d
+		summarizeBy: none
+		sourceColumn: [Sex]
+
+		annotation SummarizationSetBy = Automatic
+
+	column ChildStatus
+		dataType: string
+		lineageTag: 021c0127-ca81-4b60-9782-3e1e49bece1b
+		summarizeBy: none
+		sourceColumn: [ChildStatus]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Indicator
+		dataType: string
+		lineageTag: bc2a739e-a3da-4292-9f80-fc5756f0ec80
+		summarizeBy: none
+		sourceColumn: [Indicator]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Value
+		dataType: double
+		lineageTag: 6af84be8-dfb4-427a-8f69-2ccbeba81a33
+		summarizeBy: sum
+		sourceColumn: [Value]
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column SeriesLabel
+		dataType: string
+		lineageTag: f564dd39-dbce-41a2-b41a-fc68438c2437
+		summarizeBy: none
+		sourceColumn: [SeriesLabel]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Labour Force Comparison' = calculated
+		mode: import
+		source = ```
+						
+						VAR UsRows =
+						    FILTER (
+						        'CPS Monthly Labour Summary',
+						        NOT CONTAINSSTRING ( 'CPS Monthly Labour Summary'[ChildStatus], "6" )
+						    )
+						
+						VAR UsParticipation =
+						    SELECTCOLUMNS (
+						        UsRows,
+						        "ReferenceMonth", 'CPS Monthly Labour Summary'[ReferenceMonth],
+						        "Country", "United States",
+						        "Sex", 'CPS Monthly Labour Summary'[Sex],
+						        "ChildStatus",
+						            SWITCH (
+						                TRUE (),
+						                'CPS Monthly Labour Summary'[ChildStatus] = "All core-aged adults", "All core-aged adults",
+						                'CPS Monthly Labour Summary'[ChildStatus] = "No co-resident child under 18", "No child under 18",
+						                "Youngest child 0 to 5 years"
+						            ),
+						        "Indicator", "Participation rate",
+						        "Value", 'CPS Monthly Labour Summary'[ParticipationRate] * 100,
+						        "SeriesLabel",
+						            "United States - " & 'CPS Monthly Labour Summary'[Sex] & " - "
+						                & SWITCH (
+						                    TRUE (),
+						                    'CPS Monthly Labour Summary'[ChildStatus] = "All core-aged adults", "All core-aged adults",
+						                    'CPS Monthly Labour Summary'[ChildStatus] = "No co-resident child under 18", "No child under 18",
+						                    "Youngest child 0 to 5 years"
+						                )
+						    )
+						
+						VAR UsEmployment =
+						    SELECTCOLUMNS (
+						        UsRows,
+						        "ReferenceMonth", 'CPS Monthly Labour Summary'[ReferenceMonth],
+						        "Country", "United States",
+						        "Sex", 'CPS Monthly Labour Summary'[Sex],
+						        "ChildStatus",
+						            SWITCH (
+						                TRUE (),
+						                'CPS Monthly Labour Summary'[ChildStatus] = "All core-aged adults", "All core-aged adults",
+						                'CPS Monthly Labour Summary'[ChildStatus] = "No co-resident child under 18", "No child under 18",
+						                "Youngest child 0 to 5 years"
+						            ),
+						        "Indicator", "Employment rate",
+						        "Value", 'CPS Monthly Labour Summary'[EmploymentRate] * 100,
+						        "SeriesLabel",
+						            "United States - " & 'CPS Monthly Labour Summary'[Sex] & " - "
+						                & SWITCH (
+						                    TRUE (),
+						                    'CPS Monthly Labour Summary'[ChildStatus] = "All core-aged adults", "All core-aged adults",
+						                    'CPS Monthly Labour Summary'[ChildStatus] = "No co-resident child under 18", "No child under 18",
+						                    "Youngest child 0 to 5 years"
+						                )
+						    )
+						
+						VAR UsUnemployment =
+						    SELECTCOLUMNS (
+						        UsRows,
+						        "ReferenceMonth", 'CPS Monthly Labour Summary'[ReferenceMonth],
+						        "Country", "United States",
+						        "Sex", 'CPS Monthly Labour Summary'[Sex],
+						        "ChildStatus",
+						            SWITCH (
+						                TRUE (),
+						                'CPS Monthly Labour Summary'[ChildStatus] = "All core-aged adults", "All core-aged adults",
+						                'CPS Monthly Labour Summary'[ChildStatus] = "No co-resident child under 18", "No child under 18",
+						                "Youngest child 0 to 5 years"
+						            ),
+						        "Indicator", "Unemployment rate",
+						        "Value", 'CPS Monthly Labour Summary'[UnemploymentRate] * 100,
+						        "SeriesLabel",
+						            "United States - " & 'CPS Monthly Labour Summary'[Sex] & " - "
+						                & SWITCH (
+						                    TRUE (),
+						                    'CPS Monthly Labour Summary'[ChildStatus] = "All core-aged adults", "All core-aged adults",
+						                    'CPS Monthly Labour Summary'[ChildStatus] = "No co-resident child under 18", "No child under 18",
+						                    "Youngest child 0 to 5 years"
+						                )
+						    )
+						
+						VAR CanadaRows =
+						    SELECTCOLUMNS (
+						        'Canada LFS Monthly',
+						        "ReferenceMonth", 'Canada LFS Monthly'[ReferenceMonth],
+						        "Country", 'Canada LFS Monthly'[Country],
+						        "Sex", 'Canada LFS Monthly'[Sex],
+						        "ChildStatus", 'Canada LFS Monthly'[ChildStatus],
+						        "Indicator", 'Canada LFS Monthly'[Indicator],
+						        "Value", 'Canada LFS Monthly'[Value],
+						        "SeriesLabel",
+						            'Canada LFS Monthly'[Country] & " - " & 'Canada LFS Monthly'[Sex] & " - "
+						                & 'Canada LFS Monthly'[ChildStatus]
+						    )
+						
+						RETURN
+						    UNION (
+						        UsParticipation,
+						        UsEmployment,
+						        UsUnemployment,
+						        CanadaRows
+						    )
+				
+				```
+
+	annotation PBI_Id = 8ad7b6d90f7f4e1e83a7cb723db60e03
+

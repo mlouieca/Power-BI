@@ -1,0 +1,51 @@
+table 'Metric Selector'
+	lineageTag: 64acb95d-7713-4e2c-a043-a10bcf90fb89
+
+	column 'Metric Selector'
+		lineageTag: c89fb83f-e99b-4fb0-b7b5-08ab44d01018
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Metric Selector Order'
+
+		relatedColumnDetails
+			groupByColumn: 'Metric Selector Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Metric Selector Fields'
+		isHidden
+		lineageTag: 4571f379-58cc-4327-8ea1-300216c59588
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'Metric Selector Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Metric Selector Order'
+		isHidden
+		formatString: 0
+		lineageTag: b5b8b1c4-c611-4e5f-bab3-55ded518a65d
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Metric Selector' = calculated
+		mode: import
+		source = ```
+						{
+						    ("Metric - Motherhood Gap (pp)", NAMEOF('LFS_FamilyStructure_14100397'[Metric - Motherhood Gap (pp)]), 0),
+						    ("Metric - Participation Rate (Mothers)", NAMEOF('LFS_FamilyStructure_14100397'[Metric - Participation Rate (Mothers)]), 1),
+						    ("Metric - Unemployment Rate (Mothers)", NAMEOF('LFS_FamilyStructure_14100397'[Metric - Unemployment Rate (Mothers)]), 2)
+						}
+				
+				```
+
+	annotation PBI_Id = f18ba0d0fbb848c4b4eb37753a9e7336
+

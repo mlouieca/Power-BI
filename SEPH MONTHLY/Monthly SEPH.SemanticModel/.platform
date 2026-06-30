@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "Monthly SEPH"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "74b27b9a-243a-4ff0-92c0-6142494785be"
+  }
+}

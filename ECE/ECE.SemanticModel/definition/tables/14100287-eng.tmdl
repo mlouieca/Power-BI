@@ -1,0 +1,88 @@
+table 14100287-eng
+	lineageTag: b0fd201e-062f-4965-9e20-b76f865d479f
+
+	column REF_DATE
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 2aa507fc-faf5-495b-9fa9-ca17b16ecc61
+		summarizeBy: none
+		sourceColumn: REF_DATE
+
+		variation Variation
+			isDefault
+			relationship: dac92ba1-6800-4d48-a296-b9e6b066c489
+			defaultHierarchy: LocalDateTable_b1e015a8-6fa8-4a43-871d-66a9ae3e3537.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column GEO
+		dataType: string
+		lineageTag: 085d5671-155e-4868-be6f-fcefcf715582
+		summarizeBy: none
+		sourceColumn: GEO
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Labour force characteristics'
+		dataType: string
+		lineageTag: fd0aa669-2af5-43b6-92b5-d73f901f5304
+		summarizeBy: none
+		sourceColumn: Labour force characteristics
+
+		annotation SummarizationSetBy = Automatic
+
+	column Gender
+		dataType: string
+		lineageTag: 50078ec1-f24a-4a70-9cdf-0f958293fddb
+		summarizeBy: none
+		sourceColumn: Gender
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Age group'
+		dataType: string
+		lineageTag: f277de31-1dc5-409a-af5d-350981387004
+		summarizeBy: none
+		sourceColumn: Age group
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Data type'
+		dataType: string
+		lineageTag: ba05d906-2f46-4b6b-951a-81361613be07
+		summarizeBy: none
+		sourceColumn: Data type
+
+		annotation SummarizationSetBy = Automatic
+
+	column VALUE
+		dataType: double
+		lineageTag: ef54d17a-25c5-4e9e-b8e9-028694da4886
+		summarizeBy: sum
+		sourceColumn: VALUE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition 14100287-eng = m
+		mode: import
+		source =
+				let
+				    Source = Web.Contents("https://www150.statcan.gc.ca/n1/tbl/csv/14100287-eng.zip "),
+				    Custom1 = Unzip(Source),
+				    Content = Custom1{0}[Content],
+				    #"Imported CSV" = Csv.Document(Content,[Delimiter=",", Columns=19, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Imported CSV", [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"REF_DATE", type date}, {"GEO", type text}, {"DGUID", type text}, {"Labour force characteristics", type text}, {"Gender", type text}, {"Age group", type text}, {"Statistics", type text}, {"Data type", type text}, {"UOM", type text}, {"UOM_ID", Int64.Type}, {"SCALAR_FACTOR", type text}, {"SCALAR_ID", Int64.Type}, {"VECTOR", type text}, {"COORDINATE", type text}, {"VALUE", type number}, {"STATUS", type text}, {"SYMBOL", type text}, {"TERMINATED", type text}, {"DECIMALS", Int64.Type}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"UOM", "UOM_ID", "SCALAR_FACTOR", "SCALAR_ID", "VECTOR", "COORDINATE", "STATUS", "SYMBOL", "TERMINATED", "DECIMALS", "DGUID", "Statistics"}),
+				    #"Filtered Rows" = Table.SelectRows(#"Removed Columns", each ([Gender] = "Total - Gender"))
+				in
+				    #"Filtered Rows"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

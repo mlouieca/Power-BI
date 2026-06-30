@@ -1,0 +1,22 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-CA
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["SEPH Employment","SEPH Weekly Earnings","SEPH Hourly Earnings","Unzip"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table 'SEPH Hourly Earnings'
+ref table 'SEPH Employment'
+ref table 'SEPH Weekly Earnings'
+ref table Date
+ref table Geography
+
+ref cultureInfo en-US
+

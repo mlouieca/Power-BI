@@ -1,0 +1,108 @@
+table Date
+	lineageTag: 91771945-735c-463b-a7fb-5a633a64779f
+	dataCategory: Time
+
+	column Date
+		isKey
+		formatString: General Date
+		lineageTag: e7f8cbcc-9ecc-4018-b150-3e013619ad49
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year
+		formatString: 0
+		lineageTag: b3ba7e84-bf7c-4d81-8429-c50dcc175fe3
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Year]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Number'
+		formatString: 0
+		lineageTag: 94fae5d3-94e7-4741-892b-259e6d9d8b32
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month Number]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Year'
+		lineageTag: 6e0b188b-b6cb-4e6a-b848-c6c6cace2949
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month Year]
+		sortByColumn: 'Month Sort'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Sort'
+		formatString: 0
+		lineageTag: ae1e5ec2-06df-4c0f-9893-5752f3b5ea18
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month Sort]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Quarter Number'
+		formatString: 0
+		lineageTag: f1411616-1203-4083-90e6-6133859a8719
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Quarter Number]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quarter
+		lineageTag: 830649e1-98c5-42be-aadc-2407fed0f6b3
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Quarter]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Quarter Year'
+		lineageTag: d5523ce8-918d-4518-8b7a-6941ccda9248
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Quarter Year]
+		sortByColumn: 'Quarter Sort'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Quarter Sort'
+		formatString: 0
+		lineageTag: a16ffabd-f04c-4a6e-8007-5d23b067833e
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Quarter Sort]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Date = calculated
+		mode: import
+		source = ```
+						
+						ADDCOLUMNS (
+						    CALENDAR (
+						        DATE ( 2010, 1, 1 ),
+						        EOMONTH ( TODAY (), 0 )
+						    ),
+						    "Year", YEAR ( [Date] ),
+						    "Month Number", MONTH ( [Date] ),
+						    "Month Year", FORMAT ( [Date], "MMM yyyy" ),
+						    "Month Sort", YEAR ( [Date] ) * 100 + MONTH ( [Date] ),
+						    "Quarter Number", QUARTER ( [Date] ),
+						    "Quarter", "Q" & QUARTER ( [Date] ),
+						    "Quarter Year", "Q" & QUARTER ( [Date] ) & " " & YEAR ( [Date] ),
+						    "Quarter Sort", YEAR ( [Date] ) * 10 + QUARTER ( [Date] )
+						)
+				
+				```
+
+	annotation PBI_Id = c15c50553e744b27afb8ae448ac865fa
+

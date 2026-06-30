@@ -1,0 +1,43 @@
+table DimYear
+	lineageTag: 0c5715e6-35dc-4892-8d9a-d8f9fd19d2d2
+
+	column Year
+		formatString: 0
+		lineageTag: 663d53ee-c2c1-4876-b096-b3032ae274c4
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Year]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Year Date'
+		formatString: General Date
+		lineageTag: e62ad5b8-96a9-4aa7-b6ae-ea01806e2e7f
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Year Date]
+
+		variation Variation
+			isDefault
+			relationship: 12fc6936-b000-4ca6-9a75-ff64cf459499
+			defaultHierarchy: LocalDateTable_13a87db4-2be7-449e-bfbf-68d9916c0e71.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimYear = calculated
+		mode: import
+		source = ```
+						
+						VAR MinYear = MIN ( 'Annual ECE'[Year] )
+						VAR MaxYear = MAX ( 'Annual ECE'[Year] )
+						RETURN
+						    SELECTCOLUMNS (
+						        GENERATESERIES ( MinYear, MaxYear, 1 ),
+						        "Year", [Value],
+						        "Year Date", DATE ( [Value], 1, 1 )
+						    )
+				
+				```
+
+	annotation PBI_Id = 1d8a89d7b97749c38537ea46e77171cf
+
