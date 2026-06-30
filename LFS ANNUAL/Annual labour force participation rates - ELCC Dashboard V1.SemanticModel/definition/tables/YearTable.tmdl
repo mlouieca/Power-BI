@@ -1,15 +1,6 @@
 table YearTable
 	lineageTag: 03916c35-0bfb-49cf-8f8d-6cc68eed8dbd
 
-	column REF_DATE
-		formatString: 0
-		lineageTag: 499b19eb-eb5e-41ba-aa5a-f2d68d9f941d
-		summarizeBy: none
-		isNameInferred
-		sourceColumn: [REF_DATE]
-
-		annotation SummarizationSetBy = Automatic
-
 	column Year
 		formatString: 0
 		lineageTag: 03da8710-00e6-4698-8187-365cd99d298f
@@ -24,6 +15,15 @@ table YearTable
 		summarizeBy: none
 		isNameInferred
 		sourceColumn: [YearLabel]
+
+		annotation SummarizationSetBy = Automatic
+
+	column REF_DATE
+		formatString: 0
+		lineageTag: 499b19eb-eb5e-41ba-aa5a-f2d68d9f941d
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [REF_DATE]
 
 		annotation SummarizationSetBy = Automatic
 

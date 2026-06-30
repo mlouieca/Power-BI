@@ -13,11 +13,11 @@ annotation PBI_QueryOrder = ["Unzip","LFS_FamilyStructure_14100396_Annual","LFS_
 annotation PBI_ProTooling = ["DevMode"]
 
 ref table LFS_FamilyStructure_14100396_Annual
-ref table LFS_Headline_14100327_Annual
-ref table LFS_GenderWageGap_14100062
 ref table YearTable
 ref table 'Annual Metric Selector'
 ref table 'Work Absence'
+ref table LFS_Headline_14100327_Annual
+ref table LFS_GenderWageGap_14100062
 
 ref cultureInfo en-CA
 

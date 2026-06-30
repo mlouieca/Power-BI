@@ -11,14 +11,14 @@ annotation __PBI_TimeIntelligenceEnabled = 1
 
 annotation PBI_QueryOrder = ["CPS Monthly Labour Summary","Unzip","Canada LFS Monthly","Inflation Comparison"]
 
-annotation PBI_ProTooling = ["DevMode"]
+annotation PBI_ProTooling = ["DevMode","MCP-PBIModeling"]
 
 ref table 'CPS Monthly Labour Summary'
+ref table Date
+ref table 'Labour Force Indicator'
 ref table 'Canada LFS Monthly'
 ref table 'Labour Force Comparison'
 ref table 'Inflation Comparison'
-ref table Date
-ref table 'Labour Force Indicator'
 
 ref cultureInfo en-US
 

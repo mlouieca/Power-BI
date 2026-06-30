@@ -2,7 +2,7 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "0123456789abcdef0123",
   "position": {
-    "x": 592,
+    "x": 584,
     "y": 136,
     "z": 7000,
     "height": 96,
@@ -110,5 +110,23 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "9f8fdcda2bcf4c8dc9de",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "LFS_Headline_14100287"
+              }
+            },
+            "Property": "Data type"
+          }
+        },
+        "type": "Categorical"
+      }
+    ]
   }
 }

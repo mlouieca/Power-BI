@@ -98,6 +98,13 @@
                   "Value": "'Month'"
                 }
               }
+            },
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
             }
           }
         }
@@ -157,6 +164,34 @@
             }
           ]
         }
+      },
+      {
+        "name": "9120085d27f0d4c51100",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "CPI"
+              }
+            },
+            "Property": "REF_DATE"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "42d04fc97a24f15f60b6",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "CPI"
+              }
+            },
+            "Property": "CPI YoY %"
+          }
+        },
+        "type": "Advanced"
       }
     ]
   }

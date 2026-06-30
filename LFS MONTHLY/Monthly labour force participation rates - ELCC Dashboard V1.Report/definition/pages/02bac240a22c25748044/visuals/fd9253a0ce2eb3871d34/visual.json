@@ -440,6 +440,34 @@
           ]
         },
         "howCreated": "User"
+      },
+      {
+        "name": "72529ee168fe2c511fab",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "DateTable"
+              }
+            },
+            "Property": "Date"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "ba2d6c1a967bc7613fc7",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "LFS_FamilyStructure_14100397"
+              }
+            },
+            "Property": "Motherhood Gap (pp) - Over Time"
+          }
+        },
+        "type": "Advanced"
       }
     ]
   }

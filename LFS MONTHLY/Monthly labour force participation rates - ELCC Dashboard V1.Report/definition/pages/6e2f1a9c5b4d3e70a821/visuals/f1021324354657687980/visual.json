@@ -2,7 +2,7 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "f1021324354657687980",
   "position": {
-    "x": 296,
+    "x": 288,
     "y": 136,
     "z": 6000,
     "height": 96,
@@ -110,23 +110,5 @@
       ]
     },
     "drillFilterOtherVisuals": true
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "01c9161073336c0dbb9e",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "LFS_Headline_14100287"
-              }
-            },
-            "Property": "Labour force characteristics"
-          }
-        },
-        "type": "Categorical"
-      }
-    ]
   }
 }

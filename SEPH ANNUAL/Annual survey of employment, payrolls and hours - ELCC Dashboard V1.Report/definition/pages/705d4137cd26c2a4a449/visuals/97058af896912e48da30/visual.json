@@ -88,29 +88,6 @@
         "isDefaultSort": true
       }
     },
-    "drillFilterOtherVisuals": true,
-    "visualContainerObjects": {
-      "title": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "text": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Payroll employment by industry'"
-                }
-              }
-            }
-          }
-        }
-      ]
-    },
     "objects": {
       "categoryAxis": [
         {
@@ -138,6 +115,75 @@
           }
         }
       ]
-    }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Payroll employment by industry'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "c515ff0c8177ce70d90a",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Date"
+              }
+            },
+            "Property": "Year"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "a296dec81e68de0cdb80",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "SEPH Employment"
+              }
+            },
+            "Property": "NAICS"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "5022813601bd01a65549",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "SEPH Employment"
+              }
+            },
+            "Property": "Employment Value"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
   }
 }

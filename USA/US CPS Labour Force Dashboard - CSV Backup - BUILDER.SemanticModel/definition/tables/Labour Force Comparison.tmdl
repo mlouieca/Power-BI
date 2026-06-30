@@ -2,7 +2,7 @@ table 'Labour Force Comparison'
 	lineageTag: 072de5bb-5e2e-4dd5-b8a3-20369f57c57f
 
 	measure 'Comparison Value' =
-
+			
 			MAX ( 'Labour Force Comparison'[Value] )
 		formatString: 0.0
 		lineageTag: b2a4d414-d27c-4368-89c8-a52f18882380
@@ -42,8 +42,9 @@ table 'Labour Force Comparison'
 		formatString: 0.0
 		lineageTag: f0a222f4-60fd-44cb-a06c-63d778ec2618
 
-	/// Percentage point gap between core-aged women with youngest child aged 0 to 5 and core-aged women without children under 18, by country.
+	/// Positive percentage point gap between core-aged women without children under 18 and core-aged women with youngest child aged 0 to 5, by country.
 	measure 'Participation Gap - Women, Young Child vs No Child (pp)' =
+			
 			VAR CurrentMonth =
 			    MAX ( 'Date'[Date] )
 			VAR YoungChildParticipation =
@@ -66,10 +67,32 @@ table 'Labour Force Comparison'
 			            || ISBLANK ( YoungChildParticipation )
 			            || ISBLANK ( NoChildParticipation ),
 			        BLANK (),
-			        YoungChildParticipation - NoChildParticipation
+			        NoChildParticipation - YoungChildParticipation
 			    )
 		formatString: 0.0
 		lineageTag: ddb21f14-f847-4109-80cc-eb7e3adcc46f
+
+	/// Annual average positive percentage point gap between core-aged women without children under 18 and core-aged women with youngest child aged 0 to 5, by country.
+	measure 'Participation Gap - Women, Young Child vs No Child Annual Avg (pp)' =
+			
+			VAR _MonthsWithGap =
+			    VALUES ( 'Labour Force Comparison'[ReferenceMonth] )
+			RETURN
+			    AVERAGEX (
+			        _MonthsWithGap,
+			        [Participation Gap - Women, Young Child vs No Child (pp)]
+			    )
+		formatString: 0.0
+		lineageTag: fa1f8033-42f7-427a-b00c-681f5ea4f079
+
+	/// Annual average year-over-year percentage point change for the selected labour force indicator and demographic, limited to the common Canada-U.S. comparison range.
+	measure 'Comparison YoY Change - Common Range Annual Avg (pp)' =
+			AVERAGEX (
+			    VALUES ( 'Date'[Date] ),
+			    [Comparison YoY Change - Common Range (pp)]
+			)
+		formatString: 0.0
+		lineageTag: b71737d8-9567-4ade-9a03-0922c7aad96d
 
 	column ReferenceMonth
 		dataType: dateTime

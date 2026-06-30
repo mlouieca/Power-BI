@@ -334,6 +334,20 @@
           ]
         },
         "howCreated": "User"
+      },
+      {
+        "name": "0ea83bc28d6a4abd20ed",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "CPI Annual"
+              }
+            },
+            "Property": "CPI Annual YoY % (Latest)"
+          }
+        },
+        "type": "Advanced"
       }
     ]
   }

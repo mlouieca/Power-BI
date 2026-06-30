@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "d1111111111111111111",
   "position": {
-    "x": 24,
-    "y": 24,
+    "x": 656,
+    "y": 40,
     "z": 0,
-    "height": 320,
-    "width": 1232,
+    "height": 304,
+    "width": 608,
     "tabOrder": 0
   },
   "visual": {
@@ -23,11 +23,11 @@
                       "Entity": "Date"
                     }
                   },
-                  "Property": "Date"
+                  "Property": "Year"
                 }
               },
-              "queryRef": "Date.Date",
-              "nativeQueryRef": "Date",
+              "queryRef": "Date.Year",
+              "nativeQueryRef": "Year",
               "active": true
             }
           ]
@@ -60,11 +60,11 @@
                       "Entity": "Labour Force Comparison"
                     }
                   },
-                  "Property": "Comparison YoY Change - Common Range (pp)"
+                  "Property": "Comparison YoY Change - Common Range Annual Avg (pp)"
                 }
               },
-              "queryRef": "Labour Force Comparison.Comparison YoY Change - Common Range (pp)",
-              "nativeQueryRef": "YoY change (pp)"
+              "queryRef": "Labour Force Comparison.Comparison YoY Change - Common Range Annual Avg (pp)",
+              "nativeQueryRef": "Annual average YoY change (pp)"
             }
           ]
         }
@@ -79,7 +79,7 @@
                     "Entity": "Date"
                   }
                 },
-                "Property": "Date"
+                "Property": "Year"
               }
             },
             "direction": "Ascending"
@@ -95,7 +95,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'YoY change by country'"
+                  "Value": "'YoY change by country: annual average'"
                 }
               }
             }
@@ -104,5 +104,51 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "ba6e52d4da1e0478e73d",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Date"
+              }
+            },
+            "Property": "Year"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "0abe3ac7e8f2a847ab35",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Labour Force Comparison"
+              }
+            },
+            "Property": "Country"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "9bb57ed667f8da64198f",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Labour Force Comparison"
+              }
+            },
+            "Property": "Comparison YoY Change - Common Range Annual Avg (pp)"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
   }
 }

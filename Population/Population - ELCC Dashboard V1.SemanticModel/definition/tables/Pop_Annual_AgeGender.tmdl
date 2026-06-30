@@ -68,32 +68,6 @@ table Pop_Annual_AgeGender
 		formatString: 0.00%;-0.00%;0.00%
 		lineageTag: 6ec56cd6-6f3f-44e7-8732-0440c652cd30
 
-	measure 'Population (Annual YoY Change)' = ```
-			
-			SUMX (
-			    VALUES ( Pop_Annual_AgeGender[Date] ),
-			    VAR CurrentDate =
-			        Pop_Annual_AgeGender[Date]
-			    VAR CurrentVal =
-			        [Population (Annual)]
-			    VAR PrevVal =
-			        CALCULATE (
-			            [Population (Annual)],
-			            REMOVEFILTERS ( 'Date' ),
-			            Pop_Annual_AgeGender[Date] = EDATE ( CurrentDate, -12 )
-			        )
-			    RETURN
-			        IF (
-			            NOT ISBLANK ( CurrentVal ) && NOT ISBLANK ( PrevVal ),
-			            CurrentVal - PrevVal
-			        )
-			)
-			
-			```
-		lineageTag: 8a18ed1e-4cfb-44c3-9085-2f4cdf99f03d
-
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
-
 	measure 'Max Date - Pop Annual' = ```
 			
 			CALCULATE ( MAX ( Pop_Annual_AgeGender[Date] ), ALL ( Pop_Annual_AgeGender ) )
@@ -125,6 +99,32 @@ table Pop_Annual_AgeGender
 			
 			```
 		lineageTag: 09b9aa0d-cea9-4d56-9363-373e321bf1f9
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Population (Annual YoY Change)' = ```
+			
+			SUMX (
+			    VALUES ( Pop_Annual_AgeGender[Date] ),
+			    VAR CurrentDate =
+			        Pop_Annual_AgeGender[Date]
+			    VAR CurrentVal =
+			        [Population (Annual)]
+			    VAR PrevVal =
+			        CALCULATE (
+			            [Population (Annual)],
+			            REMOVEFILTERS ( 'Date' ),
+			            Pop_Annual_AgeGender[Date] = EDATE ( CurrentDate, -12 )
+			        )
+			    RETURN
+			        IF (
+			            NOT ISBLANK ( CurrentVal ) && NOT ISBLANK ( PrevVal ),
+			            CurrentVal - PrevVal
+			        )
+			)
+			
+			```
+		lineageTag: 8a18ed1e-4cfb-44c3-9085-2f4cdf99f03d
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 

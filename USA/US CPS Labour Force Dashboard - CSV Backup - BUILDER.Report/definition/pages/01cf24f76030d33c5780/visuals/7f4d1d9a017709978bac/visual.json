@@ -60,12 +60,12 @@
                       "Entity": "CPS Monthly Labour Summary"
                     }
                   },
-                  "Property": "Employment Rate (Calculated)"
+                  "Property": "Participation Rate (Calculated)"
                 }
               },
-              "queryRef": "CPS Monthly Labour Summary.Employment Rate (Calculated)",
-              "nativeQueryRef": "Employment Rate (Calculated)",
-              "displayName": "Employment Rate (Calculated)"
+              "queryRef": "CPS Monthly Labour Summary.Participation Rate (Calculated)",
+              "nativeQueryRef": "Participation Rate (Calculated)",
+              "displayName": "Participation Rate (Calculated)"
             }
           ],
           "fieldParameters": [

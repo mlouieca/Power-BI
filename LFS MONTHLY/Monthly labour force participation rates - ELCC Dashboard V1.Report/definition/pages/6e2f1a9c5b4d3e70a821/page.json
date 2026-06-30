@@ -1,7 +1,7 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
   "name": "6e2f1a9c5b4d3e70a821",
-  "displayName": "Monthly Labour Market Headlines",
+  "displayName": "Monthly LFS Headlines",
   "displayOption": "FitToPage",
   "height": 720,
   "width": 1280

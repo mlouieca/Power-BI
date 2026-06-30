@@ -39,12 +39,13 @@ table 'Annual Metric Selector'
 	partition 'Annual Metric Selector' = calculated
 		mode: import
 		source = ```
-				{
-				    ("Annual Metric - Motherhood Gap (pp)", NAMEOF('LFS_FamilyStructure_14100396_Annual'[Annual Motherhood Gap (pp)]), 0),
-				    ("Annual Metric - Participation Rate (Mothers)", NAMEOF('LFS_FamilyStructure_14100396_Annual'[Annual Metric - Participation Rate (Mothers)]), 1),
-				    ("Annual Metric - Unemployment Rate (Mothers)", NAMEOF('LFS_FamilyStructure_14100396_Annual'[Annual Metric - Unemployment Rate (Mothers)]), 2)
-				}
+						{
+						    ("Annual Metric - Motherhood Gap (pp)", NAMEOF('LFS_FamilyStructure_14100396_Annual'[Annual Motherhood Gap (pp)]), 0),
+						    ("Annual Metric - Participation Rate (Mothers)", NAMEOF('LFS_FamilyStructure_14100396_Annual'[Annual Metric - Participation Rate (Mothers)]), 1),
+						    ("Annual Metric - Unemployment Rate (Mothers)", NAMEOF('LFS_FamilyStructure_14100396_Annual'[Annual Metric - Unemployment Rate (Mothers)]), 2)
+						}
+				
+				```
 
-		```
 	annotation PBI_Id = 930f7a47d34f479184063a7308276cbd
 

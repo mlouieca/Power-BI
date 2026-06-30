@@ -13,10 +13,10 @@ annotation PBI_QueryOrder = ["Unzip","JVWS","JVWS Characteristics","LFS Labour F
 annotation PBI_ProTooling = ["DevMode"]
 
 ref table JVWS
+ref table DateTable
 ref table 'JVWS Characteristics'
 ref table 'LFS Labour Force Occupation'
 ref table 'Annual ECE Employment'
-ref table DateTable
 
 ref cultureInfo en-CA
 

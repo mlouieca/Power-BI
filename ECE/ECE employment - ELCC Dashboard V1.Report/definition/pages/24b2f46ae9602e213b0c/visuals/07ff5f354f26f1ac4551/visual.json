@@ -6,7 +6,7 @@
     "y": 496,
     "z": 1000,
     "height": 224,
-    "width": 896,
+    "width": 976,
     "tabOrder": 1000
   },
   "visual": {
@@ -149,5 +149,93 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "5145352839e0568b76bd",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "ECE Seasonally Adjusted"
+              }
+            },
+            "Property": "Occupation"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "fe1ebc80d05e98c96c1a",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "ECE Seasonally Adjusted"
+              }
+            },
+            "Property": "NSA Employment"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "08fae2770fea48ef9b5d",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "ECE Seasonally Adjusted"
+              }
+            },
+            "Property": "Seasonally Adjusted Employment"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "33a91ef9acef55c6b770",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "ECE Seasonally Adjusted"
+              }
+            },
+            "Property": "SA YoY Change"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "0374df74f7f3eb366618",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "ECE Seasonally Adjusted"
+              }
+            },
+            "Property": "SA YoY %"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "276bacac1408a47655a0",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "ECE Seasonally Adjusted"
+              }
+            },
+            "Property": "Seasonal Factor"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
   }
 }

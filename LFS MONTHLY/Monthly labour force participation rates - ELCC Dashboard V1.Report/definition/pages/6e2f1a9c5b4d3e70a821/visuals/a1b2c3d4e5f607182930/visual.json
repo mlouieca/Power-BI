@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "a1b2c3d4e5f607182930",
   "position": {
-    "x": 0,
-    "y": 0,
+    "x": 1016,
+    "y": 272,
     "z": 1000,
-    "height": 120,
-    "width": 880,
+    "height": 424.00000000000006,
+    "width": 264,
     "tabOrder": 1000
   },
   "visual": {
@@ -146,135 +146,5 @@
       }
     },
     "drillFilterOtherVisuals": true
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "9251f3e8b31bc0c0ca70",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "LFS_Headline_14100287"
-              }
-            },
-            "Property": "Latest Headline Date (Monthly)"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "46a9dc328d235757b7c8",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "LFS_Headline_14100287"
-              }
-            },
-            "Property": "Overall Unemployment Rate (Monthly Latest)"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "903293eb8475dff31d8d",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "LFS_Headline_14100287"
-              }
-            },
-            "Property": "Overall Unemployment Rate YoY (Monthly pp)"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "5d65073c57029d374e88",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "LFS_Headline_14100287"
-              }
-            },
-            "Property": "Youth Unemployment Rate (Monthly Latest)"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "29d5e47337eb6e7c8784",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "LFS_Headline_14100287"
-              }
-            },
-            "Property": "Youth Unemployment Rate YoY (Monthly pp)"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "41bf485a7aea83d1c8ab",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "LFS_Headline_14100287"
-              }
-            },
-            "Property": "Participation Rate (Monthly Latest)"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "0b81f5cb1af6bb8123e9",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "LFS_Headline_14100287"
-              }
-            },
-            "Property": "Participation Rate YoY (Monthly pp)"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "706820cc6beacdf60e09",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "LFS_Headline_14100287"
-              }
-            },
-            "Property": "Employment Rate (Monthly Latest)"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "80e382bb343edfbda6ba",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "LFS_Headline_14100287"
-              }
-            },
-            "Property": "Employment Rate YoY (Monthly pp)"
-          }
-        },
-        "type": "Advanced"
-      }
-    ]
   }
 }

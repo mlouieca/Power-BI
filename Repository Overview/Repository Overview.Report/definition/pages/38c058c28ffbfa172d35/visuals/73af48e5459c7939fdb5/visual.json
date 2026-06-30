@@ -95,7 +95,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Pulled live from Statistics Canada''s release calendar feed — refresh the model to update'"
+                  "Value": "'Pulled live from Statistics Canada''s release calendar feed — scheduled updates enabled'"
                 }
               }
             }

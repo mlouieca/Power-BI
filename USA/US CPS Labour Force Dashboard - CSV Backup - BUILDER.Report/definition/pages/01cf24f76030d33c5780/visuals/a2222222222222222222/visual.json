@@ -34,6 +34,31 @@
         }
       }
     },
+    "objects": {
+      "general": [
+        {
+          "properties": {}
+        }
+      ]
+    },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "f99fc64dae249d3e7be6",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "CPS Monthly Labour Summary"
+              }
+            },
+            "Property": "ChildStatus"
+          }
+        },
+        "type": "Categorical"
+      }
+    ]
   }
 }

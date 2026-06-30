@@ -6,7 +6,7 @@
     "y": 248,
     "z": 8000,
     "height": 472,
-    "width": 1280,
+    "width": 968,
     "tabOrder": 8000
   },
   "visual": {
@@ -71,37 +71,5 @@
       }
     },
     "drillFilterOtherVisuals": true
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "9db1aef1ab8235d91f3a",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "DateTable"
-              }
-            },
-            "Property": "Date"
-          }
-        },
-        "type": "Categorical"
-      },
-      {
-        "name": "8c8439202658117c3f19",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "LFS_Headline_14100287"
-              }
-            },
-            "Property": "Selected Headline Value (Monthly)"
-          }
-        },
-        "type": "Advanced"
-      }
-    ]
   }
 }

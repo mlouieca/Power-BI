@@ -2,8 +2,8 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "d1e2f304152637485960",
   "position": {
-    "x": 1096,
-    "y": 88,
+    "x": 648,
+    "y": 0,
     "z": 4000,
     "height": 80,
     "width": 184,
@@ -94,7 +94,7 @@
                           [
                             {
                               "Literal": {
-                                "Value": "'Men+'"
+                                "Value": "'Total - Gender'"
                               }
                             }
                           ]

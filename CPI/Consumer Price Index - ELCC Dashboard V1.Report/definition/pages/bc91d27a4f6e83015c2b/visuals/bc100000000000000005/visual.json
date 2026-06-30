@@ -98,6 +98,13 @@
                   "Value": "'Quarter'"
                 }
               }
+            },
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
             }
           }
         }
@@ -110,7 +117,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Building Construction Price Index'"
+                  "Value": "'Quarterly Building Construction Price Index'"
                 }
               }
             },
@@ -126,5 +133,51 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "51bde08741843fbf32a2",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "BCPI"
+              }
+            },
+            "Property": "REF_DATE"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "e4b06b7a8c61b7c29b54",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "BCPI"
+              }
+            },
+            "Property": "Type of building"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "d4b8db26253b649d5ff9",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "BCPI"
+              }
+            },
+            "Property": "BCPI Index"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
   }
 }

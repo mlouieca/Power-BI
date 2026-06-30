@@ -2,8 +2,8 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "c1d2e3f4051627384950",
   "position": {
-    "x": 896,
-    "y": 88,
+    "x": 424.00000000000006,
+    "y": 0,
     "z": 3000,
     "height": 80,
     "width": 184,
@@ -94,7 +94,7 @@
                           [
                             {
                               "Literal": {
-                                "Value": "'Alberta'"
+                                "Value": "'Canada'"
                               }
                             }
                           ]

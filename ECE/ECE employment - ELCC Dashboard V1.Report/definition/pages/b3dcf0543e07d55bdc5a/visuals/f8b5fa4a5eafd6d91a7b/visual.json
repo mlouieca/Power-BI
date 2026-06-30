@@ -73,7 +73,6 @@
         "isDefaultSort": true
       }
     },
-    "drillFilterOtherVisuals": true,
     "visualContainerObjects": {
       "title": [
         {
@@ -95,6 +94,39 @@
           }
         }
       ]
-    }
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "fe9e672f5e12715a4d64",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "DimYear"
+              }
+            },
+            "Property": "Year"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "6c620c4e509e5bfdc4a5",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Annual ECE"
+              }
+            },
+            "Property": "Real ECE Hourly Wage"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
   }
 }
