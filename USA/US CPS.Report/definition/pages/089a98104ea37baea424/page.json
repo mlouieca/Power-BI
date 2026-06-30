@@ -1,0 +1,8 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "089a98104ea37baea424",
+  "displayName": "Canada-U.S. Comparison",
+  "displayOption": "FitToPage",
+  "height": 720,
+  "width": 1280
+}

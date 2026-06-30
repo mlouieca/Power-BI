@@ -1,0 +1,110 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "7f4d1d9a017709978bac",
+  "position": {
+    "x": 20,
+    "y": 20,
+    "z": 0,
+    "height": 520,
+    "width": 900,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "lineChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Date"
+                    }
+                  },
+                  "Property": "Date"
+                }
+              },
+              "queryRef": "Date.Date",
+              "nativeQueryRef": "Date",
+              "active": true
+            }
+          ]
+        },
+        "Series": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CPS Monthly Labour Summary"
+                    }
+                  },
+                  "Property": "GroupLabel"
+                }
+              },
+              "queryRef": "CPS Monthly Labour Summary.GroupLabel",
+              "nativeQueryRef": "GroupLabel"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CPS Monthly Labour Summary"
+                    }
+                  },
+                  "Property": "Participation Rate (Calculated)"
+                }
+              },
+              "queryRef": "CPS Monthly Labour Summary.Participation Rate (Calculated)",
+              "nativeQueryRef": "Participation Rate (Calculated)",
+              "displayName": "Participation Rate (Calculated)"
+            }
+          ],
+          "fieldParameters": [
+            {
+              "parameterExpr": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Labour Force Indicator"
+                    }
+                  },
+                  "Property": "Labour Force Indicator"
+                }
+              },
+              "index": 0,
+              "length": 1
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Date"
+                  }
+                },
+                "Property": "Date"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

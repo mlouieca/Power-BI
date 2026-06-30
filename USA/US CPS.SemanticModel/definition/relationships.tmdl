@@ -1,0 +1,16 @@
+relationship c76ff554-78f5-968f-bdac-02dd937cd184
+	fromColumn: 'CPS Monthly Labour Summary'.ReferenceMonth
+	toColumn: Date.Date
+
+relationship 5f1fdee3-bbe5-4103-afd1-708a63fdcbf4
+	fromColumn: 'Canada LFS Monthly'.ReferenceMonth
+	toColumn: Date.Date
+
+relationship a18c8882-75b5-4a8f-b4ae-cbb7af01d643
+	fromColumn: 'Labour Force Comparison'.ReferenceMonth
+	toColumn: Date.Date
+
+relationship eee374ab-3727-45e4-b4e8-3ab5b02752c1
+	fromColumn: 'Inflation Comparison'.ReferenceMonth
+	toColumn: Date.Date
+

@@ -1,0 +1,142 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "bed88c2ec4bd82c78986",
+  "position": {
+    "x": 0,
+    "y": 520,
+    "z": 2000,
+    "height": 112,
+    "width": 864,
+    "tabOrder": 2000
+  },
+  "visual": {
+    "visualType": "cardVisual",
+    "query": {
+      "queryState": {
+        "Data": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "LFS_FamilyStructure_14100396_Annual"
+                    }
+                  },
+                  "Property": "Annual PR Mothers (Latest)"
+                }
+              },
+              "queryRef": "LFS_FamilyStructure_14100396_Annual.Annual PR Mothers (Latest)",
+              "nativeQueryRef": "Annual PR Mothers (Latest)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "LFS_FamilyStructure_14100396_Annual"
+                    }
+                  },
+                  "Property": "Annual PR Mothers YoY (pp)"
+                }
+              },
+              "queryRef": "LFS_FamilyStructure_14100396_Annual.Annual PR Mothers YoY (pp)",
+              "nativeQueryRef": "Annual PR Mothers YoY (pp)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "LFS_FamilyStructure_14100396_Annual"
+                    }
+                  },
+                  "Property": "Annual PR Mothers vs 2019 (pp)"
+                }
+              },
+              "queryRef": "LFS_FamilyStructure_14100396_Annual.Annual PR Mothers vs 2019 (pp)",
+              "nativeQueryRef": "Annual PR Mothers vs 2019 (pp)"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "LFS_FamilyStructure_14100396_Annual"
+                  }
+                },
+                "Property": "Annual PR Mothers (Latest)"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "c8b970c439b391a50596",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "LFS_FamilyStructure_14100396_Annual"
+              }
+            },
+            "Property": "Family type"
+          }
+        },
+        "type": "Categorical",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "l",
+              "Entity": "LFS_FamilyStructure_14100396_Annual",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "In": {
+                  "Expressions": [
+                    {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Source": "l"
+                          }
+                        },
+                        "Property": "Family type"
+                      }
+                    }
+                  ],
+                  "Values": [
+                    [
+                      {
+                        "Literal": {
+                          "Value": "'Total, all reference persons and their spouses'"
+                        }
+                      }
+                    ]
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "howCreated": "User"
+      }
+    ]
+  }
+}

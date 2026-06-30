@@ -1,0 +1,261 @@
+table LFS_GenderWageGap_14100062
+	lineageTag: 1f092260-42f5-4b2d-bd34-84f6ec19d1c1
+
+	measure 'Wage Value' =
+			
+			MAX ( LFS_GenderWageGap_14100062[VALUE] )
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: cb1c6f8e-cdb0-4ac0-bc74-75ce2588df51
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Latest Wage Gap Year' = ```
+			
+			MAXX (
+			    FILTER (
+			        ALL ( YearTable[Year] ),
+			        NOT ISBLANK ( CALCULATE ( [Gender Wage Ratio] ) )
+			    ),
+			    YearTable[Year]
+			)
+			
+			```
+		formatString: 0
+		lineageTag: 875d63f4-f845-4708-87db-34cb42b45f68
+
+	measure 'Female Hourly Wage' = ```
+			
+			CALCULATE (
+			    [Wage Value],
+			    LFS_GenderWageGap_14100062[Wages] = "Average hourly wage rate",
+			    LFS_GenderWageGap_14100062[Sex] = "Females",
+			    LFS_GenderWageGap_14100062[Type of work] = SELECTEDVALUE ( LFS_GenderWageGap_14100062[Type of work], "Both full- and part-time employees" ),
+			    LFS_GenderWageGap_14100062[Age group] = SELECTEDVALUE ( LFS_GenderWageGap_14100062[Age group], "25 to 54 years" ),
+			    LFS_GenderWageGap_14100062[Occupation] = SELECTEDVALUE ( LFS_GenderWageGap_14100062[Occupation], "Total employees, all occupations" ),
+			    LFS_GenderWageGap_14100062[GEO] = SELECTEDVALUE ( LFS_GenderWageGap_14100062[GEO], "Canada" )
+			)
+			
+			```
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 87f1dadc-74dc-44d9-9882-6342d2e5ba41
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Male Hourly Wage' = ```
+			
+			CALCULATE (
+			    [Wage Value],
+			    LFS_GenderWageGap_14100062[Wages] = "Average hourly wage rate",
+			    LFS_GenderWageGap_14100062[Sex] = "Males",
+			    LFS_GenderWageGap_14100062[Type of work] = SELECTEDVALUE ( LFS_GenderWageGap_14100062[Type of work], "Both full- and part-time employees" ),
+			    LFS_GenderWageGap_14100062[Age group] = SELECTEDVALUE ( LFS_GenderWageGap_14100062[Age group], "25 to 54 years" ),
+			    LFS_GenderWageGap_14100062[Occupation] = SELECTEDVALUE ( LFS_GenderWageGap_14100062[Occupation], "Total employees, all occupations" ),
+			    LFS_GenderWageGap_14100062[GEO] = SELECTEDVALUE ( LFS_GenderWageGap_14100062[GEO], "Canada" )
+			)
+			
+			```
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 5cd58dd0-d0c2-4b49-8a95-b05f97c4e2e1
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Gender Wage Ratio' = ```
+			
+			DIVIDE ( [Female Hourly Wage], [Male Hourly Wage] )
+			
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 1e97f50b-cbc0-48dc-8cd3-154d12cf2f96
+
+	measure 'Gender Wage Gap (%)' = ```
+			
+			VAR Ratio = [Gender Wage Ratio]
+			RETURN
+			    IF ( ISBLANK ( Ratio ), BLANK (), 1 - Ratio )
+			
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 04e0c175-8b0e-441d-97c4-6f852ef4e62f
+
+	measure 'Hourly Wage Gap ($)' = ```
+			
+			VAR MaleWage = [Male Hourly Wage]
+			VAR FemaleWage = [Female Hourly Wage]
+			RETURN
+			    IF (
+			        OR ( ISBLANK ( MaleWage ), ISBLANK ( FemaleWage ) ),
+			        BLANK (),
+			        MaleWage - FemaleWage
+			    )
+			
+			```
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 0b370fc9-ef5d-41da-9ed5-061ef09f472c
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Latest Female Hourly Wage' = ```
+			
+			VAR y = [Latest Wage Gap Year]
+			RETURN
+			CALCULATE ( [Female Hourly Wage], YearTable[Year] = y )
+			
+			```
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: b6b9190a-943a-4fc1-a638-e146bd132fb9
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Latest Male Hourly Wage' = ```
+			
+			VAR y = [Latest Wage Gap Year]
+			RETURN
+			CALCULATE ( [Male Hourly Wage], YearTable[Year] = y )
+			
+			```
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 8ed417c5-3a0a-4929-9a74-75c00cf77194
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Latest Gender Wage Ratio' = ```
+			
+			VAR y = [Latest Wage Gap Year]
+			RETURN
+			CALCULATE ( [Gender Wage Ratio], YearTable[Year] = y )
+			
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: dfc93523-0427-4a2f-a47e-29348602dfb0
+
+	measure 'Latest Gender Wage Gap (%)' = ```
+			
+			VAR y = [Latest Wage Gap Year]
+			RETURN
+			CALCULATE ( [Gender Wage Gap (%)], YearTable[Year] = y )
+			
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: ae4dc7b3-2df8-4ce6-8725-4f68115cd6d8
+
+	measure 'Latest Hourly Wage Gap ($)' = ```
+			
+			VAR y = [Latest Wage Gap Year]
+			RETURN
+			CALCULATE ( [Hourly Wage Gap ($)], YearTable[Year] = y )
+			
+			```
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: ac4e0914-3c2a-4435-90ea-4078cfc02dc9
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'All Occupations Gender Wage Gap (%)' = ```
+			
+			    CALCULATE (
+			        [Gender Wage Gap (%)],
+			    LFS_GenderWageGap_14100062[Occupation] = "Total employees, all occupations"
+			)
+			
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: bf527875-5d72-4db0-8f0e-201ddfd25c77
+
+	column REF_DATE
+		dataType: int64
+		formatString: 0
+		lineageTag: e1e17788-1de5-42e8-99c7-56fe428201ee
+		summarizeBy: none
+		sourceColumn: REF_DATE
+
+		annotation SummarizationSetBy = Automatic
+
+	column GEO
+		dataType: string
+		lineageTag: d097a507-96fa-495a-9c64-e7520c6a7f7a
+		summarizeBy: none
+		sourceColumn: GEO
+
+		annotation SummarizationSetBy = Automatic
+
+	column Wages
+		dataType: string
+		lineageTag: 784b60f6-54f2-4dc3-9488-ff708d09ac85
+		summarizeBy: none
+		sourceColumn: Wages
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Type of work'
+		dataType: string
+		lineageTag: b2c9f146-e783-4e1f-8166-a6f8430e2ce2
+		summarizeBy: none
+		sourceColumn: Type of work
+
+		annotation SummarizationSetBy = Automatic
+
+	column Occupation
+		dataType: string
+		lineageTag: 20700a4f-ec45-4680-86d1-b44bdcb516b2
+		summarizeBy: none
+		sourceColumn: Occupation
+
+		annotation SummarizationSetBy = Automatic
+
+	column Sex
+		dataType: string
+		lineageTag: 3449d261-694e-4df9-a745-7321050657bd
+		summarizeBy: none
+		sourceColumn: Sex
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Age group'
+		dataType: string
+		lineageTag: abfc7538-4dd2-4b40-9648-725a10e6559b
+		summarizeBy: none
+		sourceColumn: Age group
+
+		annotation SummarizationSetBy = Automatic
+
+	column VALUE
+		dataType: double
+		formatString: 0.00
+		lineageTag: 9bc38b87-8d31-4fde-80c5-d6bf39d5bc2b
+		summarizeBy: sum
+		sourceColumn: VALUE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column UOM
+		dataType: string
+		lineageTag: 267214b4-8dbd-45bf-9f95-1815c9505d0e
+		summarizeBy: none
+		sourceColumn: UOM
+
+		annotation SummarizationSetBy = Automatic
+
+	partition LFS_GenderWageGap_14100062 = m
+		mode: import
+		source =
+				let
+				    Source = Web.Contents("https://www150.statcan.gc.ca/n1/tbl/csv/14100417-eng.zip"),
+				    Custom1 = Unzip(Source),
+				    Content = Custom1{0}[Content],
+				    #"Imported CSV" = Csv.Document(Content,[Delimiter=",", Columns=19, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Imported CSV", [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"REF_DATE", Int64.Type}, {"GEO", type text}, {"DGUID", type text}, {"Wages", type text}, {"Type of work", type text}, {"National Occupational Classification (NOC)", type text}, {"Gender", type text}, {"Age group", type text}, {"UOM", type text}, {"UOM_ID", Int64.Type}, {"SCALAR_FACTOR", type text}, {"SCALAR_ID", Int64.Type}, {"VECTOR", type text}, {"COORDINATE", type text}, {"VALUE", type number}, {"STATUS", type text}, {"SYMBOL", type text}, {"TERMINATED", type text}, {"DECIMALS", Int64.Type}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"DGUID", "UOM_ID", "SCALAR_FACTOR", "SCALAR_ID", "VECTOR", "COORDINATE", "STATUS", "SYMBOL", "TERMINATED", "DECIMALS"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Removed Columns",{{"National Occupational Classification (NOC)", "Occupation"}, {"Gender", "Sex"}}),
+				    #"Normalized Sex" = Table.ReplaceValue(#"Renamed Columns","Women+","Females",Replacer.ReplaceValue,{"Sex"}),
+				    #"Normalized Sex1" = Table.ReplaceValue(#"Normalized Sex","Men+","Males",Replacer.ReplaceValue,{"Sex"}),
+				    #"Normalized Occupation" = Table.TransformColumns(#"Normalized Sex1", {{"Occupation", each try Text.Trim(Text.BeforeDelimiter(_, " [", {0, RelativePosition.FromEnd})) otherwise _, type text}})
+				in
+				    #"Normalized Occupation"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

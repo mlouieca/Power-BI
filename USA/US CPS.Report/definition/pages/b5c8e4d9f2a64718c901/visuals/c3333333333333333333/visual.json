@@ -1,0 +1,64 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "c3333333333333333333",
+  "position": {
+    "x": 20,
+    "y": 545,
+    "z": 1000,
+    "height": 155,
+    "width": 300,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "slicer",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Inflation Comparison"
+                    }
+                  },
+                  "Property": "Series"
+                }
+              },
+              "queryRef": "Inflation Comparison.Series",
+              "nativeQueryRef": "Series",
+              "active": true
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "general": [
+        {
+          "properties": {}
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "eba56edb72b3195966f8",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Inflation Comparison"
+              }
+            },
+            "Property": "Series"
+          }
+        },
+        "type": "Categorical"
+      }
+    ]
+  }
+}

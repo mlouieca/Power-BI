@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "Annual LFS"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "97f2d039-91fb-4cdf-9973-d22031c6266b"
+  }
+}

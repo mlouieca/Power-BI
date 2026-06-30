@@ -1,0 +1,212 @@
+table 'JVWS Characteristics'
+	lineageTag: 18dc06b6-e4e5-40b2-a577-eb750208820c
+
+	measure 'Characteristic Job Vacancies' = ```
+			
+			CALCULATE(
+			    SUM('JVWS Characteristics'[VALUE]),
+			    'JVWS Characteristics'[Statistics] = "Job vacancies"
+			)
+			
+			```
+		lineageTag: a9a8e715-03b8-462b-88a0-3bc065c7e2ea
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Characteristic Job Vacancies (Latest)' = ```
+			
+			VAR _LatestDate = [Characteristic Latest Month]
+			RETURN
+			CALCULATE(
+			    [Characteristic Job Vacancies],
+			    TREATAS({_LatestDate}, DateTable[Date])
+			)
+			
+			```
+		lineageTag: 2c7d6d32-6c25-42ea-8ac8-7fc88cf6778f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Characteristic Proportion of Vacancies' = ```
+			
+			CALCULATE(
+			    AVERAGE('JVWS Characteristics'[VALUE]),
+			    'JVWS Characteristics'[Statistics] = "Proportion of job vacancies"
+			)
+			
+			```
+		formatString: 0.0
+		lineageTag: 1926ec86-2df9-4b4e-83e4-09de65c786c4
+
+	measure 'Characteristic Proportion of Vacancies (Latest)' = ```
+			
+			VAR _LatestDate = [Characteristic Latest Month]
+			RETURN
+			CALCULATE(
+			    [Characteristic Proportion of Vacancies],
+			    TREATAS({_LatestDate}, DateTable[Date])
+			)
+			
+			```
+		formatString: 0.0
+		lineageTag: 7252aa49-5d1f-45b1-9ae9-96b68d423e32
+
+	measure 'Characteristic Latest Month' = ```
+			
+			CALCULATE(
+			    MAX('JVWS Characteristics'[Date]),
+			    REMOVEFILTERS(DateTable)
+			)
+			
+			```
+		formatString: General Date
+		lineageTag: e2b85071-f5b8-4def-8db3-4a2977ebd858
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 195cca63-cae0-4a45-92ec-86787b584c44
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column GEO
+		dataType: string
+		lineageTag: c08716eb-428a-456f-ba54-762e110c4ae7
+		summarizeBy: none
+		sourceColumn: GEO
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'National Occupational Classification'
+		dataType: string
+		lineageTag: b34632c6-ac3e-45a5-812d-8b0ae3b18825
+		summarizeBy: none
+		sourceColumn: National Occupational Classification
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Job vacancy characteristics'
+		dataType: string
+		lineageTag: ea5442bd-020c-45e2-99bc-b30938ed1c93
+		summarizeBy: none
+		sourceColumn: Job vacancy characteristics
+		sortByColumn: 'Characteristic Sort'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Characteristic Group'
+		dataType: string
+		lineageTag: 01117e16-c1be-4141-a42e-79383f997f90
+		summarizeBy: none
+		sourceColumn: Characteristic Group
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Characteristic Sort'
+		dataType: int64
+		formatString: 0
+		lineageTag: 0cd983fc-cc9d-43a1-9f08-fbd957811cff
+		summarizeBy: none
+		sourceColumn: Characteristic Sort
+
+		annotation SummarizationSetBy = Automatic
+
+	column Statistics
+		dataType: string
+		lineageTag: 875ef96e-3012-44aa-81c0-178ebaa3c2ae
+		summarizeBy: none
+		sourceColumn: Statistics
+
+		annotation SummarizationSetBy = Automatic
+
+	column VALUE
+		dataType: double
+		lineageTag: cf9aebee-2253-4d0f-a32a-c32b2657359f
+		summarizeBy: sum
+		sourceColumn: VALUE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column NOC_5
+		dataType: string
+		lineageTag: 03241f90-b8ae-4776-8cdd-5e0a594160c7
+		summarizeBy: none
+		sourceColumn: NOC_5
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Occupation Label'
+		dataType: string
+		lineageTag: 469f99e1-5425-4769-8b9e-da3f79f0c103
+		summarizeBy: none
+		sourceColumn: Occupation Label
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'JVWS Characteristics' = m
+		mode: import
+		source =
+				let
+				    Source = Web.Contents("https://www150.statcan.gc.ca/n1/tbl/csv/14100443-eng.zip"),
+				    Custom1 = Unzip(Source),
+				    Content = Custom1{0}[Content],
+				    #"Imported CSV" = Csv.Document(Content,[Delimiter=",", Columns=17, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Imported CSV", [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"REF_DATE", type date}, {"GEO", type text}, {"DGUID", type text}, {"National Occupational Classification", type text}, {"Job vacancy characteristics", type text}, {"Statistics", type text}, {"UOM", type text}, {"UOM_ID", Int64.Type}, {"SCALAR_FACTOR", type text}, {"SCALAR_ID", Int64.Type}, {"VECTOR", type text}, {"COORDINATE", type text}, {"VALUE", type number}, {"STATUS", type text}, {"SYMBOL", type text}, {"TERMINATED", type text}, {"DECIMALS", Int64.Type}}),
+				    #"Filtered Characteristics" = Table.SelectRows(#"Changed Type", each List.Contains({
+				        "Full-time",
+				        "Part-time",
+				        "Less than 1 year",
+				        "1 year to less than 3 years",
+				        "3 years to less than 5 years",
+				        "5 years to less than 8 years",
+				        "8 years or more",
+				        "Less than 15 days",
+				        "15 to 29 days",
+				        "30 to 59 days",
+				        "60 to 89 days",
+				        "90 to 119 days",
+				        "120 days or more"
+				    }, [Job vacancy characteristics])),
+				    #"Removed Columns" = Table.RemoveColumns(#"Filtered Characteristics",{"UOM", "UOM_ID", "SCALAR_FACTOR", "SCALAR_ID", "VECTOR", "COORDINATE", "STATUS", "SYMBOL", "TERMINATED", "DECIMALS", "DGUID"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Removed Columns",{{"REF_DATE", "Date"}}),
+				    #"Inserted Text Between Delimiters" = Table.AddColumn(#"Renamed Columns", "NOC_5", each try Text.BetweenDelimiters([National Occupational Classification], "[", "]") otherwise null, type text),
+				    #"Filtered Occupation" = Table.SelectRows(#"Inserted Text Between Delimiters", each [NOC_5] = "42202"),
+				    #"Added Occupation Label" = Table.AddColumn(#"Filtered Occupation", "Occupation Label", each Text.BeforeDelimiter([National Occupational Classification], " [") & " (" & [NOC_5] & ")", type text),
+				    #"Added Characteristic Group" = Table.AddColumn(#"Added Occupation Label", "Characteristic Group", each
+				        if List.Contains({"Full-time", "Part-time"}, [Job vacancy characteristics]) then "Full-time or part-time"
+				        else if List.Contains({"Less than 15 days", "15 to 29 days", "30 to 59 days", "60 to 89 days", "90 to 119 days", "120 days or more"}, [Job vacancy characteristics]) then "Duration of job vacancy"
+				        else if List.Contains({"Less than 1 year", "1 year to less than 3 years", "3 years to less than 5 years", "5 years to less than 8 years", "8 years or more"}, [Job vacancy characteristics]) then "Minimum experience level sought"
+				        else "Other",
+				        type text
+				    ),
+				    #"Added Characteristic Sort" = Table.AddColumn(#"Added Characteristic Group", "Characteristic Sort", each
+				        if [Job vacancy characteristics] = "Full-time" then 1
+				        else if [Job vacancy characteristics] = "Part-time" then 2
+				        else if [Job vacancy characteristics] = "Less than 1 year" then 11
+				        else if [Job vacancy characteristics] = "1 year to less than 3 years" then 12
+				        else if [Job vacancy characteristics] = "3 years to less than 5 years" then 13
+				        else if [Job vacancy characteristics] = "5 years to less than 8 years" then 14
+				        else if [Job vacancy characteristics] = "8 years or more" then 15
+				        else if [Job vacancy characteristics] = "Less than 15 days" then 21
+				        else if [Job vacancy characteristics] = "15 to 29 days" then 22
+				        else if [Job vacancy characteristics] = "30 to 59 days" then 23
+				        else if [Job vacancy characteristics] = "60 to 89 days" then 24
+				        else if [Job vacancy characteristics] = "90 to 119 days" then 25
+				        else if [Job vacancy characteristics] = "120 days or more" then 26
+				        else 99,
+				        Int64.Type
+				    )
+				in
+				    #"Added Characteristic Sort"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

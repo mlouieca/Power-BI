@@ -1,0 +1,93 @@
+table Date
+	lineageTag: 13c4935c-abb3-4033-ac45-ef8e0e779960
+	dataCategory: Time
+
+	measure 'Latest SEPH Month' =
+			
+			CALCULATE (
+			    MAX ( 'Date'[Date] ),
+			    FILTER (
+			        ALL ( 'Date'[Date] ),
+			        NOT ISBLANK ( [Child Care Payroll Employment] )
+			    )
+			)
+		formatString: General Date
+		lineageTag: b5dd9399-edf5-4558-99f9-cb849b7acd6e
+
+	column Date
+		isKey
+		formatString: General Date
+		lineageTag: e987b094-041d-4205-9055-681007024d9d
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year
+		formatString: 0
+		lineageTag: 265f9f12-6e3d-49e2-926b-97eab9a7352c
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Year]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month No'
+		formatString: 0
+		lineageTag: fb2a8996-02c0-4ee0-9a64-545836838931
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Month No]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Month
+		lineageTag: f708b4c3-b5b8-4674-946c-bc11283f5bb2
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year-Month
+		lineageTag: d89428b2-a81d-440f-92a3-db31f7594ebd
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Year-Month]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Year-Month Label'
+		lineageTag: f7c2d999-b5b9-4b24-bc1d-ad7a04ceb424
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Year-Month Label]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Date = calculated
+		mode: import
+		source = ```
+						
+						VAR AllDates =
+						    UNION (
+						        SELECTCOLUMNS ( 'SEPH Employment', "D", 'SEPH Employment'[Date] ),
+						        SELECTCOLUMNS ( 'SEPH Weekly Earnings', "D", 'SEPH Weekly Earnings'[Date] ),
+						        SELECTCOLUMNS ( 'SEPH Hourly Earnings', "D", 'SEPH Hourly Earnings'[Date] )
+						    )
+						VAR MinDate = MINX ( AllDates, [D] )
+						VAR MaxDate = MAXX ( AllDates, [D] )
+						RETURN
+						    ADDCOLUMNS (
+						        CALENDAR ( MinDate, MaxDate ),
+						        "Year", YEAR ( [Date] ),
+						        "Month No", MONTH ( [Date] ),
+						        "Month", FORMAT ( [Date], "mmm" ),
+						        "Year-Month", FORMAT ( [Date], "yyyy-MM" ),
+						        "Year-Month Label", FORMAT ( [Date], "mmm yyyy" )
+						    )
+				```
+
+	annotation PBI_Id = aba93490ff1e42fda9ab16e35c0f0a41
+

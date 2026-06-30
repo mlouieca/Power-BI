@@ -1,0 +1,80 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "b3333333333333333333",
+  "position": {
+    "x": 20,
+    "y": 545,
+    "z": 1003,
+    "height": 155,
+    "width": 900,
+    "tabOrder": 1003
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Labour Force Comparison"
+                    }
+                  },
+                  "Property": "Country"
+                }
+              },
+              "queryRef": "Labour Force Comparison.Country",
+              "nativeQueryRef": "Country"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Labour Force Comparison"
+                    }
+                  },
+                  "Property": "SeriesLabel"
+                }
+              },
+              "queryRef": "Labour Force Comparison.SeriesLabel",
+              "nativeQueryRef": "SeriesLabel"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Labour Force Comparison"
+                    }
+                  },
+                  "Property": "Comparison Value"
+                }
+              },
+              "queryRef": "Labour Force Comparison.Comparison Value",
+              "nativeQueryRef": "Comparison Value"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Labour Force Comparison"
+                    }
+                  },
+                  "Property": "Comparison YoY Change (pp)"
+                }
+              },
+              "queryRef": "Labour Force Comparison.Comparison YoY Change (pp)",
+              "nativeQueryRef": "Comparison YoY Change (pp)"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

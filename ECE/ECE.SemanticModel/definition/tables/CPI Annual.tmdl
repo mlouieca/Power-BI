@@ -1,0 +1,124 @@
+table 'CPI Annual'
+	lineageTag: 0b899aff-7acb-4185-b83d-2163a007eb0c
+
+	measure 'CPI Annual Index' = ```
+			
+			VAR _SelectedGeography =
+			    SELECTEDVALUE ( DimGeography[Geography], "Canada" )
+			RETURN
+			    CALCULATE (
+			        AVERAGE ( 'CPI Annual'[VALUE] ),
+			        'CPI Annual'[Products and product groups] = "All-items",
+			        TREATAS ( { _SelectedGeography }, 'CPI Annual'[GEO] )
+			    )
+			
+			```
+		lineageTag: 528cbbdb-1c5d-4d76-b5be-ab50a3b9ea3c
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'CPI Annual Index Latest Selected' = ```
+			
+			VAR _LatestYear =
+			    MAXX (
+			        FILTER (
+			            ALLSELECTED ( DimYear[Year] ),
+			            NOT ISBLANK ( CALCULATE ( [CPI Annual Index] ) )
+			        ),
+			        DimYear[Year]
+			    )
+			RETURN
+			    CALCULATE (
+			        [CPI Annual Index],
+			        FILTER ( ALL ( DimYear[Year] ), DimYear[Year] = _LatestYear )
+			    )
+			
+			```
+		lineageTag: 73998fc0-5ad5-42c3-a0d2-80748bfe6555
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'CPI Annual YoY %' = ```
+			
+			VAR _CurrentYear =
+			    MAX ( DimYear[Year] )
+			VAR _PreviousYearCPI =
+			    CALCULATE (
+			        [CPI Annual Index],
+			        FILTER ( ALL ( DimYear[Year] ), DimYear[Year] = _CurrentYear - 1 )
+			    )
+			RETURN
+			    DIVIDE ( [CPI Annual Index] - _PreviousYearCPI, _PreviousYearCPI )
+			
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: e1dab29f-e532-4c38-aec5-7f42e4415dde
+
+	column REF_DATE
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 5bdc2654-7a54-448c-a0ea-85ceda0beeda
+		summarizeBy: none
+		sourceColumn: REF_DATE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column GEO
+		dataType: string
+		lineageTag: 684fcfad-e3f2-4413-a809-8d1ead8accd5
+		summarizeBy: none
+		sourceColumn: GEO
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Products and product groups'
+		dataType: string
+		lineageTag: d67bb3bb-4dba-4fce-883a-928130edef00
+		summarizeBy: none
+		sourceColumn: Products and product groups
+
+		annotation SummarizationSetBy = Automatic
+
+	column UOM
+		dataType: string
+		lineageTag: 4a699257-d9c9-48b9-bed7-170dcba643cf
+		summarizeBy: none
+		sourceColumn: UOM
+
+		annotation SummarizationSetBy = Automatic
+
+	column VALUE
+		dataType: double
+		lineageTag: 1acb2635-d6e9-47dd-b26e-f6719ae15f77
+		summarizeBy: sum
+		sourceColumn: VALUE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition 'CPI Annual' = m
+		mode: import
+		source =
+				let
+				    Source = Web.Contents("https://www150.statcan.gc.ca/n1/tbl/csv/18100005-eng.zip"),
+				    Custom1 = Unzip(Source),
+				    Content = Custom1{0}[Content],
+				    #"Imported CSV" = Csv.Document(Content, [Delimiter = ",", Columns = 15, Encoding = 65001, QuoteStyle = QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Imported CSV", [PromoteAllScalars = true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers", {{"REF_DATE", Int64.Type}, {"GEO", type text}, {"DGUID", type text}, {"Products and product groups", type text}, {"UOM", type text}, {"UOM_ID", Int64.Type}, {"SCALAR_FACTOR", type text}, {"SCALAR_ID", Int64.Type}, {"VECTOR", type text}, {"COORDINATE", type number}, {"VALUE", type number}, {"STATUS", type text}, {"SYMBOL", type text}, {"TERMINATED", type text}, {"DECIMALS", Int64.Type}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type", {"DECIMALS", "TERMINATED", "SYMBOL", "STATUS", "COORDINATE", "VECTOR", "DGUID", "UOM_ID", "SCALAR_ID", "SCALAR_FACTOR"}),
+				    #"Filtered Rows" = Table.SelectRows(#"Removed Columns", each [REF_DATE] > 2001),
+				    #"Added REF_DATE Date" = Table.AddColumn(#"Filtered Rows", "REF_DATE_Date", each #date(Number.From([REF_DATE]), 1, 1)),
+				    #"Removed REF_DATE" = Table.RemoveColumns(#"Added REF_DATE Date", {"REF_DATE"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Removed REF_DATE", {{"REF_DATE_Date", "REF_DATE"}}),
+				    #"Changed Date Type" = Table.TransformColumnTypes(#"Renamed Columns", {{"REF_DATE", type date}})
+				in
+				    #"Changed Date Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

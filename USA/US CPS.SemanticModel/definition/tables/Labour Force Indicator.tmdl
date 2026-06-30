@@ -1,0 +1,51 @@
+table 'Labour Force Indicator'
+	lineageTag: bc5e11b3-67bf-441a-8781-9d4f8c1a4f3d
+
+	column 'Labour Force Indicator'
+		lineageTag: d0021f9f-c942-40b4-a06c-da1fcd239bf1
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Labour Force Indicator Order'
+
+		relatedColumnDetails
+			groupByColumn: 'Labour Force Indicator Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Labour Force Indicator Fields'
+		isHidden
+		lineageTag: 123b7628-3137-41e6-a239-3f48bfd3ee92
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'Labour Force Indicator Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Labour Force Indicator Order'
+		isHidden
+		formatString: 0
+		lineageTag: b56f36f8-1171-4c9d-b11e-d4b29b3b1fc2
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Labour Force Indicator' = calculated
+		mode: import
+		source = ```
+						{
+						    ("Employment Rate (Calculated)", NAMEOF('CPS Monthly Labour Summary'[Employment Rate (Calculated)]), 0),
+						    ("Participation Rate (Calculated)", NAMEOF('CPS Monthly Labour Summary'[Participation Rate (Calculated)]), 1),
+						    ("Unemployment Rate (Calculated)", NAMEOF('CPS Monthly Labour Summary'[Unemployment Rate (Calculated)]), 2)
+						}
+				
+				```
+
+	annotation PBI_Id = 086d87be29b2499b835e809e225e072f
+

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "US CPS"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "7120ac53-0508-419d-8330-59cae060dac1"
+  }
+}

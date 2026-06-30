@@ -1,0 +1,243 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "a2cd915dcd571698a60c",
+  "position": {
+    "x": 0,
+    "y": 528,
+    "z": 3000,
+    "height": 192,
+    "width": 832,
+    "tabOrder": 3000
+  },
+  "visual": {
+    "visualType": "pivotTable",
+    "query": {
+      "queryState": {
+        "Rows": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CPI"
+                    }
+                  },
+                  "Property": "Products and product groups"
+                }
+              },
+              "queryRef": "CPI.Products and product groups",
+              "nativeQueryRef": "Products and product groups",
+              "active": true
+            }
+          ]
+        },
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CPI"
+                    }
+                  },
+                  "Property": "CPI Index (Latest)"
+                }
+              },
+              "queryRef": "CPI.CPI Index (Latest)",
+              "nativeQueryRef": "CPI Index (Latest)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CPI"
+                    }
+                  },
+                  "Property": "CPI MoM % (Latest)"
+                }
+              },
+              "queryRef": "CPI.CPI MoM % (Latest)",
+              "nativeQueryRef": "CPI MoM % (Latest)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CPI"
+                    }
+                  },
+                  "Property": "CPI MoM Abs (Latest)"
+                }
+              },
+              "queryRef": "CPI.CPI MoM Abs (Latest)",
+              "nativeQueryRef": "CPI MoM Abs (Latest)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CPI"
+                    }
+                  },
+                  "Property": "CPI YoY % (Latest)"
+                }
+              },
+              "queryRef": "CPI.CPI YoY % (Latest)",
+              "nativeQueryRef": "CPI YoY % (Latest)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CPI"
+                    }
+                  },
+                  "Property": "CPI YoY Abs (Latest)"
+                }
+              },
+              "queryRef": "CPI.CPI YoY Abs (Latest)",
+              "nativeQueryRef": "CPI YoY Abs (Latest)"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "CPI"
+                  }
+                },
+                "Property": "Products and product groups"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ]
+      }
+    },
+    "objects": {
+      "columnWidth": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "135.56936281304058D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "CPI.Products and product groups"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "84.64841374418475D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "CPI.CPI Index (Latest)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "83.26145626145626D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "CPI.CPI MoM % (Latest)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "92.6074965489158D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "CPI.CPI MoM Abs (Latest)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "85.75656068238912D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "CPI.CPI YoY % (Latest)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "87.91540256593015D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "CPI.CPI YoY Abs (Latest)"
+          }
+        }
+      ],
+      "subTotals": [
+        {
+          "properties": {
+            "columnSubtotals": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "rowSubtotals": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "columnHeaders": [
+        {
+          "properties": {}
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}
