@@ -1,8 +1,0 @@
-{
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
-  "name": "f70fd2278099b1308345",
-  "displayName": "Annual ECE Export 2",
-  "displayOption": "FitToPage",
-  "height": 720,
-  "width": 1280
-}

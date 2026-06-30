@@ -1,8 +1,0 @@
-{
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
-  "name": "02bac240a22c25748044",
-  "displayName": "Monthly LFS 2",
-  "displayOption": "FitToPage",
-  "height": 720,
-  "width": 1280
-}

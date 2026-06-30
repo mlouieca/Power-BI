@@ -1,8 +1,0 @@
-{
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
-  "name": "fee891aa3b0d286cb170",
-  "displayName": "Annual SEPH Index",
-  "displayOption": "FitToPage",
-  "height": 720,
-  "width": 1280
-}

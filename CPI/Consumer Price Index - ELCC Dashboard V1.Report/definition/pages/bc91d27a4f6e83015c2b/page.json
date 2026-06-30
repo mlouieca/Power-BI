@@ -1,8 +1,0 @@
-{
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
-  "name": "bc91d27a4f6e83015c2b",
-  "displayName": "BCPI",
-  "displayOption": "FitToPage",
-  "height": 720,
-  "width": 1280
-}

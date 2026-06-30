@@ -1,8 +1,0 @@
-{
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
-  "name": "f12e07da0ec9c1b94d74",
-  "displayName": "Monthly CPI Export",
-  "displayOption": "FitToPage",
-  "height": 720,
-  "width": 1280
-}

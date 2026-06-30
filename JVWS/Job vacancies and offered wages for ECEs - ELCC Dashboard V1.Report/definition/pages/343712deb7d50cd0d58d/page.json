@@ -1,8 +1,0 @@
-{
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
-  "name": "343712deb7d50cd0d58d",
-  "displayName": "JVWS Export 3",
-  "displayOption": "FitToPage",
-  "height": 720,
-  "width": 1280
-}

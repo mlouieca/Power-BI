@@ -1,8 +1,0 @@
-{
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
-  "name": "cb146768d3e01216a51e",
-  "displayName": "(3MA) Monthly ECE Export",
-  "displayOption": "FitToPage",
-  "height": 720,
-  "width": 1280
-}

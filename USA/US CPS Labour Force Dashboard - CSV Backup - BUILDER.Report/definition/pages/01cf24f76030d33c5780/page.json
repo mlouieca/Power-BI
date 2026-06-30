@@ -1,8 +1,0 @@
-{
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
-  "name": "01cf24f76030d33c5780",
-  "displayName": "U.S. CPS 1",
-  "displayOption": "FitToPage",
-  "height": 720,
-  "width": 1280
-}

@@ -1,8 +1,0 @@
-{
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
-  "name": "ec98fb288411b532d004",
-  "displayName": "Annual CPI 1",
-  "displayOption": "FitToPage",
-  "height": 720,
-  "width": 1280
-}

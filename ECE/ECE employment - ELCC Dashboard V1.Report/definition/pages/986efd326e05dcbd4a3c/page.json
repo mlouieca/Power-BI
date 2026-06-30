@@ -1,8 +1,0 @@
-{
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
-  "name": "986efd326e05dcbd4a3c",
-  "displayName": "Annual ECE FT/PT",
-  "displayOption": "FitToPage",
-  "height": 720,
-  "width": 1280
-}
