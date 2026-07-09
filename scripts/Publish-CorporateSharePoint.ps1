@@ -30,7 +30,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$sourceRoot = 'C:\Users\michael.louie\OneDrive - ESDC EDSC\Documents\Github\Power-BI'
+$sourceRoot = 'C:\GitHub\Power BI'
 $destinationRoot = 'C:\Users\michael.louie\ESDC EDSC\Federal Secretariat on Early Learning and Child Care - Quants\PBI'
 $publishScript = Join-Path $PSScriptRoot 'Publish-PowerBIToSharePoint.ps1'
 
