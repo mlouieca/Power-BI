@@ -1,125 +1,121 @@
 table Province
+	lineageTag: 195b456f-85ae-40a3-b520-294551c4953d
 
-	measure 'Province Children 0 to 5' = ```
-			SUM ( Province[Children Aged 0 to 5] )
-			```
+	measure 'Province Children 0 to 5' = SUM ( Province[Children Aged 0 to 5] )
 		formatString: #,##0
 		displayFolder: Core
+		lineageTag: 7f9b80a4-39c2-45df-96a8-86a6598b22f7
 
-	measure 'Province Children 0 to 5 (Excluding Canada)' = ```
-			IF ( SELECTEDVALUE ( Province[Is Canada] ) = "Yes", BLANK (), [Province Children 0 to 5] )
-			```
+	measure 'Province Children 0 to 5 (Excluding Canada)' = IF ( SELECTEDVALUE ( Province[Is Canada] ) = "Yes", BLANK (), [Province Children 0 to 5] )
 		formatString: #,##0
 		displayFolder: Core
+		lineageTag: 8f69539d-3b02-4ed5-b53f-7da00989a360
 
-	measure 'Canada Children 0 to 5' = ```
-			CALCULATE ( [Province Children 0 to 5], Province[Province Name] = "Canada" )
-			```
+	measure 'Canada Children 0 to 5' = CALCULATE ( [Province Children 0 to 5], Province[Province Name] = "Canada" )
 		formatString: #,##0
 		displayFolder: Canada
+		lineageTag: c21a89f7-6643-4cf7-b445-e536aa5861ee
 
-	measure 'Canada Census Family Population' = ```
-			CALCULATE ( SUM ( Province[Population in Census Families] ), Province[Province Name] = "Canada" )
-			```
+	measure 'Canada Census Family Population' = CALCULATE ( SUM ( Province[Population in Census Families] ), Province[Province Name] = "Canada" )
 		formatString: #,##0
 		displayFolder: Canada
+		lineageTag: 9dec9388-dc3a-444b-ae0e-e5b13053e597
 
-	measure 'Province Indicator Children' = ```
-			SUM ( 'Province Indicators'[Children Count] )
-			```
+	measure 'Province Indicator Children' = SUM ( 'Province Indicators'[Children Count] )
 		formatString: #,##0
 		displayFolder: Indicators
+		lineageTag: 18909671-7d2f-40ac-9d06-b3c936fc0d51
 
-	measure 'Province Indicator Rate' = ```
-			DIVIDE ( [Province Indicator Children], [Province Children 0 to 5] )
-			```
+	measure 'Province Indicator Rate' = DIVIDE ( [Province Indicator Children], [Province Children 0 to 5] )
 		formatString: 0.0%
 		displayFolder: Indicators
+		lineageTag: 9017218e-dc5f-4a8c-a43b-171c1a8bfe3c
 
-	measure 'Province Indicator Rate (Excluding Canada)' = ```
-			IF ( SELECTEDVALUE ( Province[Is Canada] ) = "Yes", BLANK (), [Province Indicator Rate] )
-			```
+	measure 'Province Indicator Rate (Excluding Canada)' = IF ( SELECTEDVALUE ( Province[Is Canada] ) = "Yes", BLANK (), [Province Indicator Rate] )
 		formatString: 0.0%
 		displayFolder: Indicators
+		lineageTag: 3d980323-ba64-4d75-bb3b-93f5f955b328
 
-	measure 'Canada Indicator Children' = ```
-			CALCULATE ( [Province Indicator Children], Province[Province Name] = "Canada" )
-			```
+	measure 'Canada Indicator Children' = CALCULATE ( [Province Indicator Children], Province[Province Name] = "Canada" )
 		formatString: #,##0
 		displayFolder: Canada
+		lineageTag: d8ab677f-5c82-4a65-a261-fa201cabd31e
 
-	measure 'Canada Indicator Rate' = ```
-			CALCULATE ( [Province Indicator Rate], Province[Province Name] = "Canada" )
-			```
+	measure 'Canada Indicator Rate' = CALCULATE ( [Province Indicator Rate], Province[Province Name] = "Canada" )
 		formatString: 0.0%
 		displayFolder: Canada
+		lineageTag: 171e3aab-8431-4385-a401-bfa111fc6f84
 
-	measure 'Canada Low Income Rate' = ```
-			CALCULATE ( [Canada Indicator Rate], Indicator[Indicator] = "Below LIM" )
-			```
+	measure 'Canada Low Income Rate' = CALCULATE ( [Canada Indicator Rate], Indicator[Indicator] = "Below LIM" )
 		formatString: 0.0%
 		displayFolder: Canada
+		lineageTag: 06832d25-ac02-4f30-bc9a-ce4e7556035a
 
-	measure 'Canada Indigenous Identity Rate' = ```
-			CALCULATE ( [Canada Indicator Rate], Indicator[Indicator] = "Indigenous Identity" )
-			```
+	measure 'Canada Indigenous Identity Rate' = CALCULATE ( [Canada Indicator Rate], Indicator[Indicator] = "Indigenous Identity" )
 		formatString: 0.0%
 		displayFolder: Canada
+		lineageTag: cd55aa54-b4ff-4253-b71c-aa528e705d5d
 
-	measure 'Canada Lone Parent Rate' = ```
-			CALCULATE ( [Canada Indicator Rate], Indicator[Indicator] = "Lone Parent" )
-			```
+	measure 'Canada Lone Parent Rate' = CALCULATE ( [Canada Indicator Rate], Indicator[Indicator] = "Lone Parent" )
 		formatString: 0.0%
 		displayFolder: Canada
+		lineageTag: ffa76268-7609-43df-830d-e8b1106494d7
 
 	column 'Province Code'
 		dataType: int64
 		isHidden
+		lineageTag: f82fa650-4886-489a-8491-eaa1bb28f938
 		summarizeBy: none
 		sourceColumn: Province Code
 
 	column 'Province Name'
 		dataType: string
+		lineageTag: 7d45fd34-25a7-4ac1-a435-b5b4fe57f1c3
 		summarizeBy: none
 		sourceColumn: Province Name
 
 	column 'Is Canada'
 		dataType: string
+		lineageTag: 1e824e30-dfc2-4a7f-9a36-8e0934eb6b6e
 		summarizeBy: none
 		sourceColumn: Is Canada
 
 	column 'Population in Census Families'
 		dataType: int64
-		formatString: #,##0
 		isHidden
+		formatString: #,##0
+		lineageTag: a6a0d454-e8c5-4aee-935c-d0af8b2bc55f
 		summarizeBy: sum
 		sourceColumn: Population in Census Families
 
 	column 'Children Aged 0 to 5'
 		dataType: int64
-		formatString: #,##0
 		isHidden
+		formatString: #,##0
+		lineageTag: e54d54c1-7a2b-431a-8035-ef688ddf74a3
 		summarizeBy: sum
 		sourceColumn: Children Aged 0 to 5
 
 	column 'Population Status'
 		dataType: string
+		lineageTag: 1be51338-7600-48c8-9931-0cfe73451da6
 		summarizeBy: none
 		sourceColumn: Population Status
 
 	column 'Children Status'
 		dataType: string
+		lineageTag: c0b31bf4-c5ac-425f-8d22-43f9fcdb2fd0
 		summarizeBy: none
 		sourceColumn: Children Status
-
 
 	partition Province = m
 		mode: import
 		source =
-			let
-			    Source = Csv.Document(File.Contents(#"DataFolder" & "province.csv"), [Delimiter=",", Columns=7, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
-			    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
-			    #"Blank Values As Null" = Table.ReplaceValue(#"Promoted Headers", "", null, Replacer.ReplaceValue, Table.ColumnNames(#"Promoted Headers")),
-			    #"Changed Type" = Table.TransformColumnTypes(#"Blank Values As Null", {{"Province Code", Int64.Type}, {"Province Name", type text}, {"Is Canada", type text}, {"Population in Census Families", Int64.Type}, {"Children Aged 0 to 5", Int64.Type}, {"Population Status", type text}, {"Children Status", type text}}, "en-CA")
-			in
-			    #"Changed Type"
+				let
+				    Source = Csv.Document(File.Contents(#"DataFolder" & "province.csv"), [Delimiter=",", Columns=7, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Blank Values As Null" = Table.ReplaceValue(#"Promoted Headers", "", null, Replacer.ReplaceValue, Table.ColumnNames(#"Promoted Headers")),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Blank Values As Null", {{"Province Code", Int64.Type}, {"Province Name", type text}, {"Is Canada", type text}, {"Population in Census Families", Int64.Type}, {"Children Aged 0 to 5", Int64.Type}, {"Population Status", type text}, {"Children Status", type text}}, "en-CA")
+				in
+				    #"Changed Type"
+

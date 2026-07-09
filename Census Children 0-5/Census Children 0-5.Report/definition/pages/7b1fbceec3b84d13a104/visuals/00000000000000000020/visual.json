@@ -1,0 +1,238 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "00000000000000000020",
+  "position": {
+    "x": 646,
+    "y": 448,
+    "z": 1032,
+    "height": 202,
+    "width": 610,
+    "tabOrder": 1032
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MIZ Summary"
+                    }
+                  },
+                  "Property": "MIZ Analysis Label"
+                }
+              },
+              "queryRef": "MIZ Summary.MIZ Analysis Label",
+              "nativeQueryRef": "MIZ Analysis Label"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MIZ Summary"
+                    }
+                  },
+                  "Property": "Geography Type"
+                }
+              },
+              "queryRef": "MIZ Summary.Geography Type",
+              "nativeQueryRef": "Geography Type"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MIZ Summary"
+                    }
+                  },
+                  "Property": "Indicator Short Name"
+                }
+              },
+              "queryRef": "MIZ Summary.Indicator Short Name",
+              "nativeQueryRef": "Indicator Short Name"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MIZ Summary"
+                    }
+                  },
+                  "Property": "MIZ Children 0 to 5"
+                }
+              },
+              "queryRef": "MIZ Summary.MIZ Children 0 to 5",
+              "nativeQueryRef": "MIZ Children 0 to 5"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MIZ Summary"
+                    }
+                  },
+                  "Property": "MIZ Indicator Children"
+                }
+              },
+              "queryRef": "MIZ Summary.MIZ Indicator Children",
+              "nativeQueryRef": "MIZ Indicator Children"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MIZ Summary"
+                    }
+                  },
+                  "Property": "MIZ Indicator Rate"
+                }
+              },
+              "queryRef": "MIZ Summary.MIZ Indicator Rate",
+              "nativeQueryRef": "MIZ Indicator Rate"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "stylePreset": [
+        {
+          "properties": {
+            "name": {
+              "expr": {
+                "Literal": {
+                  "Value": "'None'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#D9E2EC'"
+                    }
+                  }
+                }
+              }
+            },
+            "radius": {
+              "expr": {
+                "Literal": {
+                  "Value": "6D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "padding": [
+        {
+          "properties": {
+            "top": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
+                }
+              }
+            },
+            "bottom": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
+                }
+              }
+            },
+            "left": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
+                }
+              }
+            },
+            "right": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'MIZ summary table'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

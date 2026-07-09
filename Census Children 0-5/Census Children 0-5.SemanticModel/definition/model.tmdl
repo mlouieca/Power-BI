@@ -6,14 +6,17 @@ model Model
 		legacyRedirects
 		returnErrorValuesAsNull
 
-annotation PBI_QueryOrder = ["Province","CSD","Indicator","Province Indicators","CSD Indicators","Notes"]
-annotation PBI_ProTooling = ["DevMode"]
+annotation PBI_QueryOrder = ["Province","CSD","Indicator","Province Indicators","CSD Indicators","MIZ Summary","Notes"]
+
+annotation PBI_ProTooling = ["DevMode","MCP-PBIModeling"]
 
 ref table Province
 ref table CSD
 ref table Indicator
 ref table 'Province Indicators'
 ref table 'CSD Indicators'
+ref table 'MIZ Summary'
 ref table Notes
 
 ref cultureInfo en-CA
+

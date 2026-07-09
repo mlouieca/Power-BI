@@ -22,7 +22,7 @@
                     "value": "Census 2021: Children Aged 0 to 5",
                     "textStyle": {
                       "fontFamily": "Segoe UI Semibold",
-                      "fontSize": "24px",
+                      "fontSize": "24pt",
                       "color": "#1F2933"
                     }
                   }
