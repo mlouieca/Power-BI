@@ -161,6 +161,19 @@
             "width": 234
           },
           "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2370.9999542236328,
+            "y": 359
+          },
+          "nodeIndex": "ECE Monthly",
+          "nodeLineageTag": "e5371164-20e6-48d2-aec2-6864f760e998",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
         }
       ],
       "name": "All tables",

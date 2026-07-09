@@ -1,0 +1,115 @@
+table CSD
+
+	measure 'CSD Children 0 to 5' = ```
+			SUM ( CSD[Children Aged 0 to 5] )
+			```
+		formatString: #,##0
+		displayFolder: Core
+
+	measure 'Number of CSDs' = ```
+			DISTINCTCOUNT ( CSD[CSD Number] )
+			```
+		formatString: #,##0
+		displayFolder: Core
+
+	measure 'CSD Indicator Children' = ```
+			SUM ( 'CSD Indicators'[Children Count] )
+			```
+		formatString: #,##0
+		displayFolder: Indicators
+
+	measure 'CSD Indicator Rate' = ```
+			DIVIDE ( [CSD Indicator Children], [CSD Children 0 to 5] )
+			```
+		formatString: 0.0%
+		displayFolder: Indicators
+
+	measure 'Reportable CSD Indicator Rows' = ```
+			CALCULATE ( COUNTROWS ( 'CSD Indicators' ), 'CSD Indicators'[Value Status] = "Reportable" )
+			```
+		formatString: #,##0
+		displayFolder: Quality
+
+	measure 'Suppressed CSD Indicator Rows' = ```
+			CALCULATE ( COUNTROWS ( 'CSD Indicators' ), 'CSD Indicators'[Value Status] = "Suppressed" )
+			```
+		formatString: #,##0
+		displayFolder: Quality
+
+	column 'CSD Number'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: CSD Number
+
+	column 'CSD Name'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: CSD Name
+
+	column 'Province Code'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: Province Code
+
+	column 'Province Name'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Province Name
+
+	column 'MIZ Identifier'
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: MIZ Identifier
+
+	column 'MIZ Label'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: MIZ Label
+
+	column 'Population in Census Families'
+		dataType: int64
+		formatString: #,##0
+		isHidden
+		summarizeBy: sum
+		sourceColumn: Population in Census Families
+
+	column 'Children Aged 0 to 5'
+		dataType: int64
+		formatString: #,##0
+		isHidden
+		summarizeBy: sum
+		sourceColumn: Children Aged 0 to 5
+
+	column 'Population Status'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Population Status
+
+	column 'Children Status'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Children Status
+
+	column 'MIZ Status'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: MIZ Status
+
+	column 'Province Status'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Province Status
+
+
+	partition CSD = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(#"DataFolder" & "csd.csv"), [Delimiter=",", Columns=12, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+			    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+			    #"Blank Values As Null" = Table.ReplaceValue(#"Promoted Headers", "", null, Replacer.ReplaceValue, Table.ColumnNames(#"Promoted Headers")),
+			    #"Changed Type" = Table.TransformColumnTypes(#"Blank Values As Null", {{"CSD Number", type text}, {"CSD Name", type text}, {"Province Code", Int64.Type}, {"Province Name", type text}, {"MIZ Identifier", Int64.Type}, {"MIZ Label", type text}, {"Population in Census Families", Int64.Type}, {"Children Aged 0 to 5", Int64.Type}, {"Population Status", type text}, {"Children Status", type text}, {"MIZ Status", type text}, {"Province Status", type text}}, "en-CA")
+			in
+			    #"Changed Type"

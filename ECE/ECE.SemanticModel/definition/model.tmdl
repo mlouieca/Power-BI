@@ -13,7 +13,6 @@ annotation PBI_QueryOrder = ["ECE","ECE Monthly","Unzip","14100287-eng","1410006
 annotation PBI_ProTooling = ["DevMode"]
 
 ref table ECE
-ref table 'ECE Monthly'
 ref table DateTable
 ref table DateTableTemplate_8e705fce-1122-4310-918a-619b6d2ada2e
 ref table LocalDateTable_d9728940-8e1d-488b-9220-13893d8edc4f
@@ -29,6 +28,7 @@ ref table LocalDateTable_13a87db4-2be7-449e-bfbf-68d9916c0e71
 ref table 'Annual LFS Wage'
 ref table 'CPI Annual'
 ref table 'ECE Seasonally Adjusted'
+ref table 'ECE Monthly'
 
 ref cultureInfo en-CA
 

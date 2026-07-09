@@ -7,10 +7,6 @@ relationship 58f82d6c-2dad-1ca3-6a7d-5d207d48193b
 	fromColumn: ECE.Date
 	toColumn: DateTable.Date
 
-relationship 7039858a-b524-41d7-baad-f4fda6299410
-	fromColumn: 'ECE Monthly'.Date
-	toColumn: DateTable.Date
-
 relationship dac92ba1-6800-4d48-a296-b9e6b066c489
 	joinOnDateBehavior: datePartOnly
 	fromColumn: 14100287-eng.REF_DATE
@@ -52,5 +48,9 @@ relationship 9118beaf-f3eb-498f-a7de-f6383a8eb454
 
 relationship b61c8e2d-5b67-4143-a5fd-06436f7f5f19
 	fromColumn: 'ECE Seasonally Adjusted'.Date
+	toColumn: DateTable.Date
+
+relationship 7039858a-b524-41d7-baad-f4fda6299410
+	fromColumn: 'ECE Monthly'.Date
 	toColumn: DateTable.Date
 

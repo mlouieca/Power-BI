@@ -1,0 +1,19 @@
+relationship 'CSD to Province'
+	fromColumn: CSD.'Province Code'
+	toColumn: Province.'Province Code'
+
+relationship 'Province Indicators to Province'
+	fromColumn: 'Province Indicators'.'Province Code'
+	toColumn: Province.'Province Code'
+
+relationship 'Province Indicators to Indicator'
+	fromColumn: 'Province Indicators'.Indicator
+	toColumn: Indicator.Indicator
+
+relationship 'CSD Indicators to CSD'
+	fromColumn: 'CSD Indicators'.'CSD Number'
+	toColumn: CSD.'CSD Number'
+
+relationship 'CSD Indicators to Indicator'
+	fromColumn: 'CSD Indicators'.Indicator
+	toColumn: Indicator.Indicator

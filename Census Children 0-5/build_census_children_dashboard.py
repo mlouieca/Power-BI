@@ -1,0 +1,977 @@
+import csv
+import html
+import json
+import math
+import os
+import re
+import shutil
+import stat
+import struct
+import uuid
+from pathlib import Path
+
+import pandas as pd
+
+
+ROOT = Path(__file__).resolve().parent
+SOURCE_XLSX = Path(r"C:\Users\MLOUI\OneDrive\Work\Census Data DDP\Demographic_Census_2021_Children0_5.xlsx")
+EMAIL_FILES = [
+    Path(r"C:\Users\MLOUI\Downloads\FW_ Census information for children aged 0-5.msg"),
+    Path(r"C:\Users\MLOUI\Downloads\FW_ Demographic information.msg"),
+]
+
+PROJECT_NAME = "Census Children 0-5"
+REPORT_DIR = ROOT / f"{PROJECT_NAME}.Report"
+MODEL_DIR = ROOT / f"{PROJECT_NAME}.SemanticModel"
+DATA_DIR = ROOT / "Data"
+CONTEXT_DIR = ROOT / "Context"
+
+INDICATORS = [
+    ("Below LIM", "Low income", "Children aged 0 to 5 living below LIM", 1),
+    ("Indigenous Identity", "Indigenous identity", "Children aged 0 to 5 with Indigenous identity", 2),
+    ("Parent(s) Less Than High School", "Parent education", "Children aged 0 to 5 living with parent(s) with less than high school education", 3),
+    ("Immigrant Parent(s)", "Immigrant parent(s)", "Children aged 0 to 5 living with immigrant parent(s)", 4),
+    ("Lone Parent", "Lone parent", "Children aged 0 to 5 living with a lone parent", 5),
+]
+
+PROVINCE_CODES = {
+    10: "Newfoundland and Labrador",
+    11: "Prince Edward Island",
+    12: "Nova Scotia",
+    13: "New Brunswick",
+    24: "Quebec",
+    35: "Ontario",
+    46: "Manitoba",
+    47: "Saskatchewan",
+    48: "Alberta",
+    59: "British Columbia",
+    60: "Yukon",
+    61: "Northwest Territories",
+    62: "Nunavut",
+}
+
+MIZ_LABELS = {
+    1: "Inside CMA",
+    2: "Inside tracted CA",
+    3: "Inside non-tracted CA",
+    4: "Strong MIZ",
+    5: "Moderate MIZ",
+    6: "Weak MIZ",
+    7: "No MIZ",
+    8: "Territories",
+}
+
+
+def clean_text(value):
+    if value is None or (isinstance(value, float) and math.isnan(value)):
+        return ""
+    return str(value).strip()
+
+
+def number_value(value, as_int=False):
+    text = clean_text(value)
+    if not text:
+        return None, "Missing"
+    lowered = text.lower()
+    if lowered == "x":
+        return None, "Suppressed"
+    if text == "-":
+        return None, "Not applicable"
+    try:
+        num = float(text.replace(",", ""))
+    except ValueError:
+        return None, "Missing"
+    if as_int:
+        return int(round(num)), "Reportable"
+    return num, "Reportable"
+
+
+def write_csv(path, rows, fieldnames):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", newline="", encoding="utf-8-sig") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        writer.writeheader()
+        for row in rows:
+            writer.writerow(row)
+
+
+def parse_workbook():
+    prov_raw = pd.read_excel(SOURCE_XLSX, sheet_name="Provinces", header=None, dtype=object)
+    csd_raw = pd.read_excel(SOURCE_XLSX, sheet_name="CSD level", header=None, dtype=object)
+    notes_raw = pd.read_excel(SOURCE_XLSX, sheet_name="NOTES", header=None, dtype=object)
+
+    province_rows = []
+    province_indicator_rows = []
+    province_code_by_name = {name: code for code, name in PROVINCE_CODES.items()}
+    province_code_by_name["Canada"] = 0
+
+    prov_cols = {
+        "Below LIM": (4, 5),
+        "Indigenous Identity": (7, 8),
+        "Parent(s) Less Than High School": (10, 11),
+        "Immigrant Parent(s)": (13, 14),
+        "Lone Parent": (16, 17),
+    }
+    for _, row in prov_raw.iloc[4:].iterrows():
+        province_name = clean_text(row[0])
+        if not province_name or province_name.startswith("Source:"):
+            continue
+        population, pop_status = number_value(row[1], as_int=True)
+        children, child_status = number_value(row[2], as_int=True)
+        province_code = province_code_by_name.get(province_name)
+        province_rows.append({
+            "Province Code": province_code,
+            "Province Name": province_name,
+            "Is Canada": "Yes" if province_name == "Canada" else "No",
+            "Population in Census Families": population,
+            "Children Aged 0 to 5": children,
+            "Population Status": pop_status,
+            "Children Status": child_status,
+        })
+        for indicator, _, _, sort_order in INDICATORS:
+            count_col, pct_col = prov_cols[indicator]
+            count, count_status = number_value(row[count_col], as_int=True)
+            pct, pct_status = number_value(row[pct_col], as_int=False)
+            status = count_status if count_status != "Reportable" else pct_status
+            if count_status == "Reportable":
+                status = "Reportable"
+            province_indicator_rows.append({
+                "Province Code": province_code,
+                "Province Name": province_name,
+                "Indicator": indicator,
+                "Indicator Sort": sort_order,
+                "Children Count": count,
+                "Percent": pct,
+                "Value Status": status,
+            })
+
+    csd_rows = []
+    csd_indicator_rows = []
+    csd_cols = {
+        "Below LIM": (6, 7),
+        "Indigenous Identity": (9, 10),
+        "Parent(s) Less Than High School": (12, 13),
+        "Immigrant Parent(s)": (15, 16),
+        "Lone Parent": (18, 19),
+    }
+    for _, row in csd_raw.iloc[4:].iterrows():
+        csd_number = clean_text(row[0])
+        if not csd_number or csd_number.startswith("Source:"):
+            continue
+        csd_name = clean_text(row[1])
+        province_code, province_status = number_value(row[2], as_int=True)
+        miz_id, miz_status = number_value(row[3], as_int=True)
+        population, pop_status = number_value(row[4], as_int=True)
+        children, child_status = number_value(row[5], as_int=True)
+        province_name = PROVINCE_CODES.get(province_code, f"Province {province_code}" if province_code is not None else "")
+        miz_label = MIZ_LABELS.get(miz_id, f"MIZ {miz_id}" if miz_id is not None else "")
+        csd_rows.append({
+            "CSD Number": csd_number,
+            "CSD Name": csd_name,
+            "Province Code": province_code,
+            "Province Name": province_name,
+            "MIZ Identifier": miz_id,
+            "MIZ Label": miz_label,
+            "Population in Census Families": population,
+            "Children Aged 0 to 5": children,
+            "Population Status": pop_status,
+            "Children Status": child_status,
+            "MIZ Status": miz_status,
+            "Province Status": province_status,
+        })
+        for indicator, _, _, sort_order in INDICATORS:
+            count_col, pct_col = csd_cols[indicator]
+            count, count_status = number_value(row[count_col], as_int=True)
+            pct, pct_status = number_value(row[pct_col], as_int=False)
+            status = count_status if count_status != "Reportable" else pct_status
+            if count_status == "Reportable":
+                status = "Reportable"
+            csd_indicator_rows.append({
+                "CSD Number": csd_number,
+                "Province Code": province_code,
+                "Indicator": indicator,
+                "Indicator Sort": sort_order,
+                "Children Count": count,
+                "Percent": pct,
+                "Value Status": status,
+            })
+
+    indicator_rows = [
+        {
+            "Indicator": indicator,
+            "Indicator Short Name": short_name,
+            "Indicator Description": description,
+            "Indicator Sort": sort_order,
+        }
+        for indicator, short_name, description, sort_order in INDICATORS
+    ]
+    notes_rows = []
+    for idx, value in enumerate(notes_raw.iloc[:, 0].tolist(), start=1):
+        note = clean_text(value)
+        if note:
+            notes_rows.append({"Note Number": idx, "Note": note})
+
+    return {
+        "province": province_rows,
+        "province_indicators": province_indicator_rows,
+        "csd": csd_rows,
+        "csd_indicators": csd_indicator_rows,
+        "indicator": indicator_rows,
+        "notes": notes_rows,
+    }
+
+
+class MsgReader:
+    ENDOFCHAIN = 0xFFFFFFFE
+    FREESECT = 0xFFFFFFFF
+
+    def __init__(self, path):
+        self.path = path
+        self.data = path.read_bytes()
+        if self.data[:8] != b"\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1":
+            raise ValueError("Not a compound file")
+        self.sector_size = 1 << struct.unpack_from("<H", self.data, 30)[0]
+        self.mini_sector_size = 1 << struct.unpack_from("<H", self.data, 32)[0]
+        self.num_fat_sectors = struct.unpack_from("<I", self.data, 44)[0]
+        self.dir_start = struct.unpack_from("<I", self.data, 48)[0]
+        self.mini_cutoff = struct.unpack_from("<I", self.data, 56)[0]
+        self.minifat_start = struct.unpack_from("<I", self.data, 60)[0]
+        self.num_minifat_sectors = struct.unpack_from("<I", self.data, 64)[0]
+        self.difat_start = struct.unpack_from("<I", self.data, 68)[0]
+        self.num_difat_sectors = struct.unpack_from("<I", self.data, 72)[0]
+        self.fat = self._load_fat()
+        self.dir_entries = self._load_directory()
+        self.root = next((e for e in self.dir_entries if e["type"] == 5), None)
+        self.minifat = self._load_minifat()
+        self.mini_stream = self._read_regular_stream(self.root["start"], self.root["size"]) if self.root else b""
+
+    def _sector_offset(self, sector):
+        return 512 + sector * self.sector_size
+
+    def _sector(self, sector):
+        start = self._sector_offset(sector)
+        return self.data[start:start + self.sector_size]
+
+    def _chain(self, start, fat=None):
+        if start in (self.FREESECT, self.ENDOFCHAIN):
+            return []
+        table = self.fat if fat is None else fat
+        seen = set()
+        out = []
+        sector = start
+        while sector not in (self.FREESECT, self.ENDOFCHAIN) and sector < len(table) and sector not in seen:
+            seen.add(sector)
+            out.append(sector)
+            sector = table[sector]
+        return out
+
+    def _load_fat(self):
+        difat = list(struct.unpack_from("<109I", self.data, 76))
+        sector = self.difat_start
+        for _ in range(self.num_difat_sectors):
+            block = self._sector(sector)
+            entries = list(struct.unpack("<" + "I" * (self.sector_size // 4), block))
+            difat.extend(entries[:-1])
+            sector = entries[-1]
+            if sector == self.ENDOFCHAIN:
+                break
+        difat = [s for s in difat if s not in (self.FREESECT, self.ENDOFCHAIN)][:self.num_fat_sectors]
+        fat = []
+        for fat_sector in difat:
+            block = self._sector(fat_sector)
+            fat.extend(struct.unpack("<" + "I" * (self.sector_size // 4), block))
+        return fat
+
+    def _read_regular_stream(self, start, size):
+        chunks = [self._sector(s) for s in self._chain(start)]
+        return b"".join(chunks)[:size]
+
+    def _load_minifat(self):
+        chunks = [self._sector(s) for s in self._chain(self.minifat_start)]
+        raw = b"".join(chunks)[: self.num_minifat_sectors * self.sector_size]
+        if not raw:
+            return []
+        return list(struct.unpack("<" + "I" * (len(raw) // 4), raw))
+
+    def _read_mini_stream(self, start, size):
+        out = []
+        for sector in self._chain(start, self.minifat):
+            offset = sector * self.mini_sector_size
+            out.append(self.mini_stream[offset:offset + self.mini_sector_size])
+        return b"".join(out)[:size]
+
+    def _load_directory(self):
+        raw = self._read_regular_stream(self.dir_start, len(self._chain(self.dir_start)) * self.sector_size)
+        entries = []
+        for i in range(0, len(raw), 128):
+            entry = raw[i:i + 128]
+            if len(entry) < 128:
+                continue
+            name_len = struct.unpack_from("<H", entry, 64)[0]
+            if name_len >= 2:
+                name = entry[:name_len - 2].decode("utf-16le", errors="ignore")
+            else:
+                name = ""
+            entries.append({
+                "name": name,
+                "type": entry[66],
+                "left": struct.unpack_from("<I", entry, 68)[0],
+                "right": struct.unpack_from("<I", entry, 72)[0],
+                "child": struct.unpack_from("<I", entry, 76)[0],
+                "start": struct.unpack_from("<I", entry, 116)[0],
+                "size": struct.unpack_from("<Q", entry, 120)[0],
+            })
+        return entries
+
+    def _read_stream_entry(self, entry):
+        if entry["size"] < self.mini_cutoff and self.minifat:
+            return self._read_mini_stream(entry["start"], entry["size"])
+        return self._read_regular_stream(entry["start"], entry["size"])
+
+    def stream_values(self):
+        values = {}
+        for entry in self.dir_entries:
+            name = entry["name"]
+            if entry["type"] != 2 or not name.startswith("__substg1.0_"):
+                continue
+            raw = self._read_stream_entry(entry)
+            prop = name.replace("__substg1.0_", "")
+            if prop.endswith("001F"):
+                text = raw.decode("utf-16le", errors="ignore").rstrip("\x00")
+            elif prop.endswith("001E"):
+                text = raw.decode("cp1252", errors="ignore").rstrip("\x00")
+            else:
+                continue
+            values[prop] = text
+        return values
+
+    def named_stream(self, stream_name):
+        for entry in self.dir_entries:
+            if entry["type"] == 2 and entry["name"] == stream_name:
+                return self._read_stream_entry(entry)
+        return b""
+
+
+def html_to_text(raw):
+    if not raw:
+        return ""
+    head = raw[:1000].decode("ascii", errors="ignore").lower()
+    charset = "utf-8"
+    match = re.search(r"charset=([a-z0-9_-]+)", head)
+    if match:
+        charset = match.group(1)
+    charset_text = raw.decode(charset, errors="ignore")
+    utf8_text = raw.decode("utf-8", errors="ignore")
+    text = utf8_text if utf8_text.count("Ã") < charset_text.count("Ã") else charset_text
+    text = re.sub(r"(?is)<(script|style).*?</\1>", " ", text)
+    text = re.sub(r"(?i)<br\s*/?>", "\n", text)
+    text = re.sub(r"(?i)</p\s*>", "\n", text)
+    text = re.sub(r"(?s)<[^>]+>", " ", text)
+    text = html.unescape(text)
+    text = re.sub(r"[ \t\r\f\v]+", " ", text)
+    text = re.sub(r"\n\s+", "\n", text)
+    text = re.sub(r"\n{3,}", "\n\n", text)
+    return text.strip()
+
+
+def extract_email_context():
+    rows = []
+    for path in EMAIL_FILES:
+        item = {"file": path.name, "subject": "", "sender": "", "to": "", "body": ""}
+        try:
+            reader = MsgReader(path)
+            values = reader.stream_values()
+            item["subject"] = values.get("0037001F") or values.get("0037001E", "")
+            item["sender"] = values.get("0C1A001F") or values.get("0C1A001E", "")
+            item["to"] = values.get("0E04001F") or values.get("0E04001E", "")
+            body = values.get("1000001F") or values.get("1000001E", "")
+            if not body:
+                body = html_to_text(reader.named_stream("__substg1.0_10130102"))
+            item["body"] = "\n".join(line.rstrip() for line in body.splitlines() if line.strip())
+        except Exception as exc:
+            item["body"] = f"Could not extract message body: {exc}"
+        rows.append(item)
+    return rows
+
+
+def qname(name):
+    if any(ch in name for ch in " .'-()/"):
+        return "'" + name.replace("'", "''") + "'"
+    return name
+
+
+def tmdl_column(name, data_type, source=None, hidden=False, fmt=None, summarize="none"):
+    source = source or name
+    lines = [f"\tcolumn {qname(name)}", f"\t\tdataType: {data_type}"]
+    if fmt:
+        lines.append(f"\t\tformatString: {fmt}")
+    if hidden:
+        lines.append("\t\tisHidden")
+    lines.append(f"\t\tsummarizeBy: {summarize}")
+    lines.append(f"\t\tsourceColumn: {source}")
+    return "\n".join(lines)
+
+
+def tmdl_measure(name, expression, fmt="#,##0", folder=None, description=None):
+    lines = []
+    if description:
+        lines.append(f"\t/// {description}")
+    lines.append(f"\tmeasure {qname(name)} = ```")
+    for line in expression.strip().splitlines():
+        lines.append(f"\t\t\t{line}")
+    lines.append("\t\t\t```")
+    lines.append(f"\t\tformatString: {fmt}")
+    if folder:
+        lines.append(f"\t\tdisplayFolder: {folder}")
+    return "\n".join(lines)
+
+
+def m_csv_partition(table_name, file_name, columns, types):
+    type_pairs = ", ".join([f'{{"{col}", {typ}}}' for col, typ in types])
+    return f"""
+\tpartition {qname(table_name)} = m
+\t\tmode: import
+\t\tsource =
+\t\t\tlet
+\t\t\t    Source = Csv.Document(File.Contents(#"DataFolder" & "{file_name}"), [Delimiter=",", Columns={columns}, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+\t\t\t    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+\t\t\t    #"Blank Values As Null" = Table.ReplaceValue(#"Promoted Headers", "", null, Replacer.ReplaceValue, Table.ColumnNames(#"Promoted Headers")),
+\t\t\t    #"Changed Type" = Table.TransformColumnTypes(#"Blank Values As Null", {{{type_pairs}}}, "en-CA")
+\t\t\tin
+\t\t\t    #"Changed Type"
+""".rstrip()
+
+
+def make_semantic_model():
+    definition = MODEL_DIR / "definition"
+    tables_dir = definition / "tables"
+    cultures_dir = definition / "cultures"
+    tables_dir.mkdir(parents=True, exist_ok=True)
+    cultures_dir.mkdir(parents=True, exist_ok=True)
+
+    (MODEL_DIR / ".platform").write_text(json.dumps({
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+        "metadata": {"type": "SemanticModel", "displayName": PROJECT_NAME},
+        "config": {"version": "2.0", "logicalId": str(uuid.uuid4())},
+    }, indent=2), encoding="utf-8")
+    (MODEL_DIR / "definition.pbism").write_text(json.dumps({"version": "4.2", "settings": {"qnaEnabled": True}}, indent=2), encoding="utf-8")
+    (definition / "database.tmdl").write_text("database\n\tcompatibilityLevel: 1600\n", encoding="utf-8")
+    (definition / "model.tmdl").write_text(
+        "\n".join([
+            "model Model",
+            "\tculture: en-CA",
+            "\tdefaultPowerBIDataSourceVersion: powerBI_V3",
+            "\tsourceQueryCulture: en-CA",
+            "\tdataAccessOptions",
+            "\t\tlegacyRedirects",
+            "\t\treturnErrorValuesAsNull",
+            "",
+            "annotation PBI_QueryOrder = [\"Province\",\"CSD\",\"Indicator\",\"Province Indicators\",\"CSD Indicators\",\"Notes\"]",
+            "annotation PBI_ProTooling = [\"DevMode\"]",
+            "",
+            "ref table Province",
+            "ref table CSD",
+            "ref table Indicator",
+            "ref table 'Province Indicators'",
+            "ref table 'CSD Indicators'",
+            "ref table Notes",
+            "",
+            "ref cultureInfo en-CA",
+            "",
+        ]),
+        encoding="utf-8",
+    )
+    data_folder = str(DATA_DIR).replace("\\", "\\\\") + "\\\\"
+    (definition / "expressions.tmdl").write_text(
+        f'expression DataFolder = "{data_folder}" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]\n',
+        encoding="utf-8",
+    )
+    (cultures_dir / "en-CA.tmdl").write_text("cultureInfo en-CA\n", encoding="utf-8")
+
+    province_measures = [
+        tmdl_measure("Province Children 0 to 5", "SUM ( Province[Children Aged 0 to 5] )", "#,##0", "Core"),
+        tmdl_measure("Province Children 0 to 5 (Excluding Canada)", 'IF ( SELECTEDVALUE ( Province[Is Canada] ) = "Yes", BLANK (), [Province Children 0 to 5] )', "#,##0", "Core"),
+        tmdl_measure("Canada Children 0 to 5", 'CALCULATE ( [Province Children 0 to 5], Province[Province Name] = "Canada" )', "#,##0", "Canada"),
+        tmdl_measure("Canada Census Family Population", 'CALCULATE ( SUM ( Province[Population in Census Families] ), Province[Province Name] = "Canada" )', "#,##0", "Canada"),
+        tmdl_measure("Province Indicator Children", "SUM ( 'Province Indicators'[Children Count] )", "#,##0", "Indicators"),
+        tmdl_measure("Province Indicator Rate", "DIVIDE ( [Province Indicator Children], [Province Children 0 to 5] )", "0.0%", "Indicators"),
+        tmdl_measure("Province Indicator Rate (Excluding Canada)", 'IF ( SELECTEDVALUE ( Province[Is Canada] ) = "Yes", BLANK (), [Province Indicator Rate] )', "0.0%", "Indicators"),
+        tmdl_measure("Canada Indicator Children", 'CALCULATE ( [Province Indicator Children], Province[Province Name] = "Canada" )', "#,##0", "Canada"),
+        tmdl_measure("Canada Indicator Rate", 'CALCULATE ( [Province Indicator Rate], Province[Province Name] = "Canada" )', "0.0%", "Canada"),
+        tmdl_measure("Canada Low Income Rate", 'CALCULATE ( [Canada Indicator Rate], Indicator[Indicator] = "Below LIM" )', "0.0%", "Canada"),
+        tmdl_measure("Canada Indigenous Identity Rate", 'CALCULATE ( [Canada Indicator Rate], Indicator[Indicator] = "Indigenous Identity" )', "0.0%", "Canada"),
+        tmdl_measure("Canada Lone Parent Rate", 'CALCULATE ( [Canada Indicator Rate], Indicator[Indicator] = "Lone Parent" )', "0.0%", "Canada"),
+    ]
+    province_cols = [
+        tmdl_column("Province Code", "int64", hidden=True),
+        tmdl_column("Province Name", "string"),
+        tmdl_column("Is Canada", "string"),
+        tmdl_column("Population in Census Families", "int64", hidden=True, fmt="#,##0", summarize="sum"),
+        tmdl_column("Children Aged 0 to 5", "int64", hidden=True, fmt="#,##0", summarize="sum"),
+        tmdl_column("Population Status", "string"),
+        tmdl_column("Children Status", "string"),
+    ]
+    (tables_dir / "Province.tmdl").write_text(
+        "table Province\n\n" + "\n\n".join(province_measures + province_cols) + "\n\n" +
+        m_csv_partition("Province", "province.csv", 7, [
+            ("Province Code", "Int64.Type"),
+            ("Province Name", "type text"),
+            ("Is Canada", "type text"),
+            ("Population in Census Families", "Int64.Type"),
+            ("Children Aged 0 to 5", "Int64.Type"),
+            ("Population Status", "type text"),
+            ("Children Status", "type text"),
+        ]) + "\n",
+        encoding="utf-8",
+    )
+
+    csd_measures = [
+        tmdl_measure("CSD Children 0 to 5", "SUM ( CSD[Children Aged 0 to 5] )", "#,##0", "Core"),
+        tmdl_measure("Number of CSDs", "DISTINCTCOUNT ( CSD[CSD Number] )", "#,##0", "Core"),
+        tmdl_measure("CSD Indicator Children", "SUM ( 'CSD Indicators'[Children Count] )", "#,##0", "Indicators"),
+        tmdl_measure("CSD Indicator Rate", "DIVIDE ( [CSD Indicator Children], [CSD Children 0 to 5] )", "0.0%", "Indicators"),
+        tmdl_measure("Reportable CSD Indicator Rows", 'CALCULATE ( COUNTROWS ( \'CSD Indicators\' ), \'CSD Indicators\'[Value Status] = "Reportable" )', "#,##0", "Quality"),
+        tmdl_measure("Suppressed CSD Indicator Rows", 'CALCULATE ( COUNTROWS ( \'CSD Indicators\' ), \'CSD Indicators\'[Value Status] = "Suppressed" )', "#,##0", "Quality"),
+    ]
+    csd_cols = [
+        tmdl_column("CSD Number", "string"),
+        tmdl_column("CSD Name", "string"),
+        tmdl_column("Province Code", "int64", hidden=True),
+        tmdl_column("Province Name", "string"),
+        tmdl_column("MIZ Identifier", "int64", fmt="0", summarize="none"),
+        tmdl_column("MIZ Label", "string"),
+        tmdl_column("Population in Census Families", "int64", hidden=True, fmt="#,##0", summarize="sum"),
+        tmdl_column("Children Aged 0 to 5", "int64", hidden=True, fmt="#,##0", summarize="sum"),
+        tmdl_column("Population Status", "string"),
+        tmdl_column("Children Status", "string"),
+        tmdl_column("MIZ Status", "string"),
+        tmdl_column("Province Status", "string"),
+    ]
+    (tables_dir / "CSD.tmdl").write_text(
+        "table CSD\n\n" + "\n\n".join(csd_measures + csd_cols) + "\n\n" +
+        m_csv_partition("CSD", "csd.csv", 12, [
+            ("CSD Number", "type text"),
+            ("CSD Name", "type text"),
+            ("Province Code", "Int64.Type"),
+            ("Province Name", "type text"),
+            ("MIZ Identifier", "Int64.Type"),
+            ("MIZ Label", "type text"),
+            ("Population in Census Families", "Int64.Type"),
+            ("Children Aged 0 to 5", "Int64.Type"),
+            ("Population Status", "type text"),
+            ("Children Status", "type text"),
+            ("MIZ Status", "type text"),
+            ("Province Status", "type text"),
+        ]) + "\n",
+        encoding="utf-8",
+    )
+
+    indicator_cols = [
+        tmdl_column("Indicator", "string"),
+        tmdl_column("Indicator Short Name", "string"),
+        tmdl_column("Indicator Description", "string"),
+        tmdl_column("Indicator Sort", "int64", hidden=True, fmt="0", summarize="none"),
+    ]
+    (tables_dir / "Indicator.tmdl").write_text(
+        "table Indicator\n\n" + "\n\n".join(indicator_cols) + "\n\n" +
+        m_csv_partition("Indicator", "indicator.csv", 4, [
+            ("Indicator", "type text"),
+            ("Indicator Short Name", "type text"),
+            ("Indicator Description", "type text"),
+            ("Indicator Sort", "Int64.Type"),
+        ]) + "\n",
+        encoding="utf-8",
+    )
+
+    province_indicator_cols = [
+        tmdl_column("Province Code", "int64", hidden=True),
+        tmdl_column("Province Name", "string"),
+        tmdl_column("Indicator", "string"),
+        tmdl_column("Indicator Sort", "int64", hidden=True, fmt="0", summarize="none"),
+        tmdl_column("Children Count", "int64", hidden=True, fmt="#,##0", summarize="sum"),
+        tmdl_column("Percent", "decimal", hidden=True, fmt="0.0", summarize="none"),
+        tmdl_column("Value Status", "string"),
+    ]
+    (tables_dir / "Province Indicators.tmdl").write_text(
+        "table 'Province Indicators'\n\n" + "\n\n".join(province_indicator_cols) + "\n\n" +
+        m_csv_partition("Province Indicators", "province_indicators.csv", 7, [
+            ("Province Code", "Int64.Type"),
+            ("Province Name", "type text"),
+            ("Indicator", "type text"),
+            ("Indicator Sort", "Int64.Type"),
+            ("Children Count", "Int64.Type"),
+            ("Percent", "type number"),
+            ("Value Status", "type text"),
+        ]) + "\n",
+        encoding="utf-8",
+    )
+
+    csd_indicator_cols = [
+        tmdl_column("CSD Number", "string", hidden=True),
+        tmdl_column("Province Code", "int64", hidden=True),
+        tmdl_column("Indicator", "string"),
+        tmdl_column("Indicator Sort", "int64", hidden=True, fmt="0", summarize="none"),
+        tmdl_column("Children Count", "int64", hidden=True, fmt="#,##0", summarize="sum"),
+        tmdl_column("Percent", "decimal", hidden=True, fmt="0.0", summarize="none"),
+        tmdl_column("Value Status", "string"),
+    ]
+    (tables_dir / "CSD Indicators.tmdl").write_text(
+        "table 'CSD Indicators'\n\n" + "\n\n".join(csd_indicator_cols) + "\n\n" +
+        m_csv_partition("CSD Indicators", "csd_indicators.csv", 7, [
+            ("CSD Number", "type text"),
+            ("Province Code", "Int64.Type"),
+            ("Indicator", "type text"),
+            ("Indicator Sort", "Int64.Type"),
+            ("Children Count", "Int64.Type"),
+            ("Percent", "type number"),
+            ("Value Status", "type text"),
+        ]) + "\n",
+        encoding="utf-8",
+    )
+
+    notes_cols = [tmdl_column("Note Number", "int64", fmt="0", summarize="none"), tmdl_column("Note", "string")]
+    (tables_dir / "Notes.tmdl").write_text(
+        "table Notes\n\n" + "\n\n".join(notes_cols) + "\n\n" +
+        m_csv_partition("Notes", "notes.csv", 2, [("Note Number", "Int64.Type"), ("Note", "type text")]) + "\n",
+        encoding="utf-8",
+    )
+
+    relationships = [
+        ("CSD to Province", "CSD.'Province Code'", "Province.'Province Code'"),
+        ("Province Indicators to Province", "'Province Indicators'.'Province Code'", "Province.'Province Code'"),
+        ("Province Indicators to Indicator", "'Province Indicators'.Indicator", "Indicator.Indicator"),
+        ("CSD Indicators to CSD", "'CSD Indicators'.'CSD Number'", "CSD.'CSD Number'"),
+        ("CSD Indicators to Indicator", "'CSD Indicators'.Indicator", "Indicator.Indicator"),
+    ]
+    rel_lines = []
+    for name, from_col, to_col in relationships:
+        rel_lines.extend([f"relationship {qname(name)}", f"\tfromColumn: {from_col}", f"\ttoColumn: {to_col}", ""])
+    (definition / "relationships.tmdl").write_text("\n".join(rel_lines), encoding="utf-8")
+
+
+def literal(value):
+    return {"expr": {"Literal": {"Value": value}}}
+
+
+def solid(color):
+    return {"solid": {"color": {"expr": {"Literal": {"Value": f"'{color}'"}}}}}
+
+
+def col_field(table, column):
+    return {"Column": {"Expression": {"SourceRef": {"Entity": table}}, "Property": column}}
+
+
+def measure_field(table, measure):
+    return {"Measure": {"Expression": {"SourceRef": {"Entity": table}}, "Property": measure}}
+
+
+def projection(field, query_ref, native_ref, active=None):
+    result = {"field": field, "queryRef": query_ref, "nativeQueryRef": native_ref}
+    if active is not None:
+        result["active"] = active
+    return result
+
+
+def visual_base(name, vtype, x, y, w, h, z):
+    return {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+        "name": name,
+        "position": {"x": x, "y": y, "z": z, "height": h, "width": w, "tabOrder": z},
+        "visual": {"visualType": vtype},
+    }
+
+
+def add_title(v, title):
+    v["visual"].setdefault("visualContainerObjects", {})["title"] = [{
+        "properties": {
+            "text": literal(f"'{title}'"),
+            "fontColor": solid("#243B53"),
+            "background": solid("#F7FAFC"),
+            "alignment": literal("'left'"),
+        }
+    }]
+    return v
+
+
+class Ids:
+    def __init__(self):
+        self.n = 0
+
+    def next(self):
+        self.n += 1
+        return f"{self.n:020x}"[-20:]
+
+
+def textbox(ids, text, x, y, w, h, size="24px", color="#1F2933"):
+    v = visual_base(ids.next(), "textbox", x, y, w, h, 1000 + ids.n)
+    v["visual"]["objects"] = {
+        "general": [{
+            "properties": {
+                "paragraphs": [{
+                    "textRuns": [{
+                        "value": text,
+                        "textStyle": {
+                            "fontFamily": "Segoe UI Semibold",
+                            "fontSize": size,
+                            "color": color,
+                        },
+                    }],
+                    "horizontalTextAlignment": "left",
+                }]
+            }
+        }]
+    }
+    v["visual"]["visualContainerObjects"] = {
+        "background": [{"properties": {"show": literal("false")}}],
+        "border": [{"properties": {"show": literal("false")}}],
+        "padding": [{"properties": {"top": literal("0D"), "bottom": literal("0D"), "left": literal("0D"), "right": literal("0D")}}],
+    }
+    return v
+
+
+def card(ids, measures, x, y, w, h, title=None):
+    v = visual_base(ids.next(), "cardVisual", x, y, w, h, 1000 + ids.n)
+    v["visual"]["query"] = {"queryState": {"Data": {"projections": [
+        projection(measure_field(table, measure), f"{table}.{measure}", measure) for table, measure in measures
+    ]}}}
+    v["visual"]["objects"] = {
+        "outline": [{"properties": {"show": literal("false")}, "selector": {"id": "default"}}],
+        "value": [{"properties": {"fontSize": literal("32D"), "fontColor": solid("#102A43")}, "selector": {"id": "default"}}],
+        "label": [{"properties": {"show": literal("true"), "fontSize": literal("10D"), "fontColor": solid("#52606D")}, "selector": {"id": "default"}}],
+        "cardCalloutArea": [{"properties": {"show": literal("true"), "paddingUniform": literal("8L"), "backgroundFillColor": solid("#FFFFFF"), "backgroundTransparency": literal("0D")}}],
+    }
+    v["visual"]["visualContainerObjects"] = {
+        "background": [{"properties": {"show": literal("true"), "color": solid("#FFFFFF"), "transparency": literal("0D")}}],
+        "border": [{"properties": {"show": literal("true"), "color": solid("#D9E2EC"), "radius": literal("6D")}}],
+        "padding": [{"properties": {"top": literal("6D"), "bottom": literal("6D"), "left": literal("8D"), "right": literal("8D")}}],
+    }
+    if title:
+        add_title(v, title)
+    return v
+
+
+def chart(ids, vtype, category_table, category_col, measure_table, measure, x, y, w, h, title, sort_desc=True, series=None):
+    v = visual_base(ids.next(), vtype, x, y, w, h, 1000 + ids.n)
+    query_state = {
+        "Category": {"projections": [projection(col_field(category_table, category_col), f"{category_table}.{category_col}", category_col, True)]},
+        "Y": {"projections": [projection(measure_field(measure_table, measure), f"{measure_table}.{measure}", measure)]},
+    }
+    if series:
+        table, col = series
+        query_state["Series"] = {"projections": [projection(col_field(table, col), f"{table}.{col}", col)]}
+    v["visual"]["query"] = {
+        "queryState": query_state,
+        "sortDefinition": {
+            "sort": [{"field": measure_field(measure_table, measure), "direction": "Descending" if sort_desc else "Ascending"}],
+            "isDefaultSort": True,
+        },
+    }
+    v["visual"]["objects"] = {
+        "categoryAxis": [{"properties": {"showAxisTitle": literal("false"), "labelColor": solid("#334E68")}}],
+        "valueAxis": [{"properties": {"showAxisTitle": literal("false"), "start": literal("0D"), "labelColor": solid("#334E68")}}],
+        "legend": [{"properties": {"position": literal("'TopCenter'"), "showTitle": literal("false")}}],
+        "dataPoint": [{"properties": {"fill": solid("#2F80ED"), "fillTransparency": literal("0D")}}],
+    }
+    v["visual"]["visualContainerObjects"] = {
+        "background": [{"properties": {"show": literal("true"), "color": solid("#FFFFFF"), "transparency": literal("0D")}}],
+        "border": [{"properties": {"show": literal("true"), "color": solid("#D9E2EC"), "radius": literal("6D")}}],
+        "padding": [{"properties": {"top": literal("8D"), "bottom": literal("8D"), "left": literal("8D"), "right": literal("8D")}}],
+    }
+    return add_title(v, title)
+
+
+def slicer(ids, table, column, label, x, y, w=200):
+    v = visual_base(ids.next(), "slicer", x, y, w, 80, 1000 + ids.n)
+    v["visual"]["query"] = {"queryState": {"Values": {"projections": [
+        projection(col_field(table, column), f"{table}.{column}", column, True)
+    ]}}}
+    v["visual"]["objects"] = {
+        "data": [{"properties": {"mode": literal("'Dropdown'")}}],
+        "header": [{"properties": {"show": literal("true"), "text": literal(f"'{label}'")}}],
+    }
+    v["visual"]["visualContainerObjects"] = {
+        "background": [{"properties": {"show": literal("true"), "color": solid("#FFFFFF"), "transparency": literal("0D")}}],
+        "border": [{"properties": {"show": literal("true"), "color": solid("#D9E2EC"), "radius": literal("6D")}}],
+        "padding": [{"properties": {"top": literal("8D"), "bottom": literal("8D"), "left": literal("8D"), "right": literal("8D")}}],
+    }
+    return v
+
+
+def table_visual(ids, values, x, y, w, h, title):
+    v = visual_base(ids.next(), "tableEx", x, y, w, h, 1000 + ids.n)
+    projections = []
+    for kind, table, name in values:
+        if kind == "column":
+            projections.append(projection(col_field(table, name), f"{table}.{name}", name))
+        else:
+            projections.append(projection(measure_field(table, name), f"{table}.{name}", name))
+    v["visual"]["query"] = {"queryState": {"Values": {"projections": projections}}}
+    v["visual"]["objects"] = {
+        "columnHeaders": [{"properties": {"columnAdjustment": literal("'growToFit'"), "autoSizeColumnWidth": literal("true"), "fontColor": solid("#102A43"), "backColor": solid("#E6F0FF")}}],
+        "values": [{"properties": {"backColorPrimary": solid("#FFFFFF"), "backColorSecondary": solid("#F8FAFC"), "fontColorPrimary": solid("#243B53"), "fontColorSecondary": solid("#243B53")}}],
+    }
+    v["visual"]["visualContainerObjects"] = {
+        "stylePreset": [{"properties": {"name": literal("'None'")}}],
+        "background": [{"properties": {"show": literal("true"), "color": solid("#FFFFFF"), "transparency": literal("0D")}}],
+        "border": [{"properties": {"show": literal("true"), "color": solid("#D9E2EC"), "radius": literal("6D")}}],
+        "padding": [{"properties": {"top": literal("8D"), "bottom": literal("8D"), "left": literal("8D"), "right": literal("8D")}}],
+    }
+    return add_title(v, title)
+
+
+def make_page(page_name, display_name, visuals):
+    page_dir = REPORT_DIR / "definition" / "pages" / page_name
+    (page_dir / "visuals").mkdir(parents=True, exist_ok=True)
+    page_json = {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+        "name": page_name,
+        "displayName": display_name,
+        "displayOption": "FitToPage",
+        "height": 720,
+        "width": 1280,
+    }
+    (page_dir / "page.json").write_text(json.dumps(page_json, indent=2), encoding="utf-8")
+    for visual in visuals:
+        visual_dir = page_dir / "visuals" / visual["name"]
+        visual_dir.mkdir(parents=True, exist_ok=True)
+        (visual_dir / "visual.json").write_text(json.dumps(visual, indent=2), encoding="utf-8")
+
+
+def make_report():
+    definition = REPORT_DIR / "definition"
+    pages_dir = definition / "pages"
+    pages_dir.mkdir(parents=True, exist_ok=True)
+    (ROOT / f"{PROJECT_NAME}.pbip").write_text(json.dumps({
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/pbip/pbipProperties/1.0.0/schema.json",
+        "version": "1.0",
+        "artifacts": [{"report": {"path": f"{PROJECT_NAME}.Report"}}],
+        "settings": {"enableAutoRecovery": True},
+    }, indent=2), encoding="utf-8")
+    (REPORT_DIR / ".platform").write_text(json.dumps({
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+        "metadata": {"type": "Report", "displayName": PROJECT_NAME},
+        "config": {"version": "2.0", "logicalId": str(uuid.uuid4())},
+    }, indent=2), encoding="utf-8")
+    (REPORT_DIR / "definition.pbir").write_text(json.dumps({
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definitionProperties/2.0.0/schema.json",
+        "version": "4.0",
+        "datasetReference": {"byPath": {"path": f"../{PROJECT_NAME}.SemanticModel"}},
+    }, indent=2), encoding="utf-8")
+    (definition / "version.json").write_text(json.dumps({
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/versionMetadata/1.0.0/schema.json",
+        "version": "2.0.0",
+    }, indent=2), encoding="utf-8")
+    (definition / "report.json").write_text(json.dumps({
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/report/3.3.0/schema.json",
+        "objects": {
+            "section": [{"properties": {"verticalAlignment": literal("'Top'")}}],
+            "outspacePane": [{"properties": {"visible": literal("false")}}],
+        },
+        "settings": {
+            "useStylableVisualContainerHeader": True,
+            "exportDataMode": "AllowSummarized",
+            "defaultDrillFilterOtherVisuals": True,
+            "allowChangeFilterTypes": True,
+            "useEnhancedTooltips": True,
+            "useDefaultAggregateDisplayName": True,
+        },
+    }, indent=2), encoding="utf-8")
+
+    overview = "7b1fbceec3b84d13a101"
+    explorer = "7b1fbceec3b84d13a102"
+    notes = "7b1fbceec3b84d13a103"
+    (pages_dir / "pages.json").write_text(json.dumps({
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/pagesMetadata/1.1.0/schema.json",
+        "pageOrder": [overview, explorer, notes],
+        "activePageName": overview,
+    }, indent=2), encoding="utf-8")
+
+    ids = Ids()
+    make_page(overview, "Overview", [
+        textbox(ids, "Census 2021: Children Aged 0 to 5", 24, 18, 680, 44),
+        textbox(ids, "Off-reserve population in census families and selected vulnerability indicators", 24, 56, 840, 28, "13px", "#52606D"),
+        card(ids, [("Province", "Canada Children 0 to 5"), ("Province", "Canada Low Income Rate"), ("Province", "Canada Indigenous Identity Rate"), ("Province", "Canada Lone Parent Rate")], 24, 96, 1232, 112),
+        chart(ids, "columnChart", "Province", "Province Name", "Province", "Province Children 0 to 5 (Excluding Canada)", 24, 232, 590, 430, "Children aged 0 to 5 by province"),
+        chart(ids, "clusteredBarChart", "Indicator", "Indicator Short Name", "Province", "Canada Indicator Rate", 646, 232, 610, 204, "Canada rate by indicator"),
+        chart(ids, "clusteredBarChart", "Province", "Province Name", "Province", "Province Indicator Rate (Excluding Canada)", 646, 458, 610, 204, "Provincial rates by selected indicator", series=("Indicator", "Indicator Short Name")),
+    ])
+
+    make_page(explorer, "CSD Explorer", [
+        textbox(ids, "Explore CSD-Level Indicators", 24, 18, 600, 44),
+        slicer(ids, "Province", "Province Name", "Province", 24, 76, 230),
+        slicer(ids, "CSD", "MIZ Label", "MIZ", 272, 76, 190),
+        slicer(ids, "Indicator", "Indicator Short Name", "Indicator", 480, 76, 230),
+        card(ids, [("CSD", "Number of CSDs"), ("CSD", "CSD Children 0 to 5"), ("CSD", "CSD Indicator Children"), ("CSD", "CSD Indicator Rate")], 728, 76, 528, 112),
+        chart(ids, "clusteredBarChart", "CSD", "CSD Name", "CSD", "CSD Indicator Children", 24, 220, 590, 430, "CSD indicator count"),
+        chart(ids, "clusteredBarChart", "CSD", "CSD Name", "CSD", "CSD Indicator Rate", 646, 220, 610, 190, "CSD indicator rate"),
+        table_visual(ids, [
+            ("column", "CSD", "CSD Name"),
+            ("column", "CSD", "Province Name"),
+            ("column", "CSD", "MIZ Label"),
+            ("measure", "CSD", "CSD Children 0 to 5"),
+            ("measure", "CSD", "CSD Indicator Children"),
+            ("measure", "CSD", "CSD Indicator Rate"),
+            ("column", "CSD Indicators", "Value Status"),
+        ], 646, 432, 610, 218, "CSD detail table"),
+    ])
+
+    make_page(notes, "Notes and Caveats", [
+        textbox(ids, "Notes and Caveats", 24, 18, 600, 44),
+        textbox(ids, "Suppressed cells from the source workbook are kept blank in numeric fields and labelled in status columns.", 24, 58, 920, 36, "13px", "#52606D"),
+        table_visual(ids, [
+            ("column", "Notes", "Note Number"),
+            ("column", "Notes", "Note"),
+        ], 24, 112, 1232, 540, "Source notes from workbook"),
+    ])
+
+
+def clean_output_dirs():
+    def on_remove_error(func, path, exc_info):
+        try:
+            os.chmod(path, stat.S_IWRITE)
+            func(path)
+        except Exception:
+            raise
+
+    for path in [REPORT_DIR, MODEL_DIR, DATA_DIR, CONTEXT_DIR]:
+        if path.exists():
+            shutil.rmtree(path, onerror=on_remove_error)
+    ROOT.mkdir(parents=True, exist_ok=True)
+
+
+def main():
+    clean_output_dirs()
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    CONTEXT_DIR.mkdir(parents=True, exist_ok=True)
+
+    parsed = parse_workbook()
+    write_csv(DATA_DIR / "province.csv", parsed["province"], ["Province Code", "Province Name", "Is Canada", "Population in Census Families", "Children Aged 0 to 5", "Population Status", "Children Status"])
+    write_csv(DATA_DIR / "province_indicators.csv", parsed["province_indicators"], ["Province Code", "Province Name", "Indicator", "Indicator Sort", "Children Count", "Percent", "Value Status"])
+    write_csv(DATA_DIR / "csd.csv", parsed["csd"], ["CSD Number", "CSD Name", "Province Code", "Province Name", "MIZ Identifier", "MIZ Label", "Population in Census Families", "Children Aged 0 to 5", "Population Status", "Children Status", "MIZ Status", "Province Status"])
+    write_csv(DATA_DIR / "csd_indicators.csv", parsed["csd_indicators"], ["CSD Number", "Province Code", "Indicator", "Indicator Sort", "Children Count", "Percent", "Value Status"])
+    write_csv(DATA_DIR / "indicator.csv", parsed["indicator"], ["Indicator", "Indicator Short Name", "Indicator Description", "Indicator Sort"])
+    write_csv(DATA_DIR / "notes.csv", parsed["notes"], ["Note Number", "Note"])
+
+    email_rows = extract_email_context()
+    write_csv(CONTEXT_DIR / "email_context.csv", email_rows, ["file", "subject", "sender", "to", "body"])
+    with (CONTEXT_DIR / "email_context.txt").open("w", encoding="utf-8") as handle:
+        for item in email_rows:
+            handle.write(f"File: {item['file']}\nSubject: {item['subject']}\nSender: {item['sender']}\nTo: {item['to']}\n\n{item['body']}\n\n{'=' * 80}\n\n")
+
+    make_semantic_model()
+    make_report()
+
+    summary = {
+        "province_rows": len(parsed["province"]),
+        "province_indicator_rows": len(parsed["province_indicators"]),
+        "csd_rows": len(parsed["csd"]),
+        "csd_indicator_rows": len(parsed["csd_indicators"]),
+        "note_rows": len(parsed["notes"]),
+        "emails": [{"file": item["file"], "subject": item["subject"]} for item in email_rows],
+    }
+    (CONTEXT_DIR / "build_summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
+    print(json.dumps(summary, indent=2))
+
+
+if __name__ == "__main__":
+    main()

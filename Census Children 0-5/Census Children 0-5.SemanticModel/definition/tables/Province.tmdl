@@ -1,0 +1,125 @@
+table Province
+
+	measure 'Province Children 0 to 5' = ```
+			SUM ( Province[Children Aged 0 to 5] )
+			```
+		formatString: #,##0
+		displayFolder: Core
+
+	measure 'Province Children 0 to 5 (Excluding Canada)' = ```
+			IF ( SELECTEDVALUE ( Province[Is Canada] ) = "Yes", BLANK (), [Province Children 0 to 5] )
+			```
+		formatString: #,##0
+		displayFolder: Core
+
+	measure 'Canada Children 0 to 5' = ```
+			CALCULATE ( [Province Children 0 to 5], Province[Province Name] = "Canada" )
+			```
+		formatString: #,##0
+		displayFolder: Canada
+
+	measure 'Canada Census Family Population' = ```
+			CALCULATE ( SUM ( Province[Population in Census Families] ), Province[Province Name] = "Canada" )
+			```
+		formatString: #,##0
+		displayFolder: Canada
+
+	measure 'Province Indicator Children' = ```
+			SUM ( 'Province Indicators'[Children Count] )
+			```
+		formatString: #,##0
+		displayFolder: Indicators
+
+	measure 'Province Indicator Rate' = ```
+			DIVIDE ( [Province Indicator Children], [Province Children 0 to 5] )
+			```
+		formatString: 0.0%
+		displayFolder: Indicators
+
+	measure 'Province Indicator Rate (Excluding Canada)' = ```
+			IF ( SELECTEDVALUE ( Province[Is Canada] ) = "Yes", BLANK (), [Province Indicator Rate] )
+			```
+		formatString: 0.0%
+		displayFolder: Indicators
+
+	measure 'Canada Indicator Children' = ```
+			CALCULATE ( [Province Indicator Children], Province[Province Name] = "Canada" )
+			```
+		formatString: #,##0
+		displayFolder: Canada
+
+	measure 'Canada Indicator Rate' = ```
+			CALCULATE ( [Province Indicator Rate], Province[Province Name] = "Canada" )
+			```
+		formatString: 0.0%
+		displayFolder: Canada
+
+	measure 'Canada Low Income Rate' = ```
+			CALCULATE ( [Canada Indicator Rate], Indicator[Indicator] = "Below LIM" )
+			```
+		formatString: 0.0%
+		displayFolder: Canada
+
+	measure 'Canada Indigenous Identity Rate' = ```
+			CALCULATE ( [Canada Indicator Rate], Indicator[Indicator] = "Indigenous Identity" )
+			```
+		formatString: 0.0%
+		displayFolder: Canada
+
+	measure 'Canada Lone Parent Rate' = ```
+			CALCULATE ( [Canada Indicator Rate], Indicator[Indicator] = "Lone Parent" )
+			```
+		formatString: 0.0%
+		displayFolder: Canada
+
+	column 'Province Code'
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: Province Code
+
+	column 'Province Name'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Province Name
+
+	column 'Is Canada'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Is Canada
+
+	column 'Population in Census Families'
+		dataType: int64
+		formatString: #,##0
+		isHidden
+		summarizeBy: sum
+		sourceColumn: Population in Census Families
+
+	column 'Children Aged 0 to 5'
+		dataType: int64
+		formatString: #,##0
+		isHidden
+		summarizeBy: sum
+		sourceColumn: Children Aged 0 to 5
+
+	column 'Population Status'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Population Status
+
+	column 'Children Status'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Children Status
+
+
+	partition Province = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(File.Contents(#"DataFolder" & "province.csv"), [Delimiter=",", Columns=7, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+			    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+			    #"Blank Values As Null" = Table.ReplaceValue(#"Promoted Headers", "", null, Replacer.ReplaceValue, Table.ColumnNames(#"Promoted Headers")),
+			    #"Changed Type" = Table.TransformColumnTypes(#"Blank Values As Null", {{"Province Code", Int64.Type}, {"Province Name", type text}, {"Is Canada", type text}, {"Population in Census Families", Int64.Type}, {"Children Aged 0 to 5", Int64.Type}, {"Population Status", type text}, {"Children Status", type text}}, "en-CA")
+			in
+			    #"Changed Type"
