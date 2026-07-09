@@ -47,6 +47,20 @@
               },
               "queryRef": "LFS_Headline_14100287.Selected Headline Value (Monthly)",
               "nativeQueryRef": "Selected Headline Value (Monthly)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "LFS_Headline_14100287"
+                    }
+                  },
+                  "Property": "Selected Headline Value 3MMA (Monthly)"
+                }
+              },
+              "queryRef": "LFS_Headline_14100287.Selected Headline Value 3MMA (Monthly)",
+              "nativeQueryRef": "Selected Headline Value 3MMA (Monthly)"
             }
           ]
         }
