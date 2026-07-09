@@ -7,7 +7,7 @@
 On the corporate device, preview the publish with:
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File "C:\Users\michael.louie\OneDrive - ESDC EDSC\Documents\Github\Power-BI\scripts\Publish-CorporateSharePoint.ps1" -DryRun
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "C:\GitHub\Power BI\scripts\Publish-CorporateSharePoint.ps1" -DryRun
 ```
 
 You can also double-click `scripts\Preview-CorporateSharePointPublish.cmd` from File Explorer.
@@ -15,7 +15,7 @@ You can also double-click `scripts\Preview-CorporateSharePointPublish.cmd` from 
 Then publish without deleting SharePoint-only files:
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File "C:\Users\michael.louie\OneDrive - ESDC EDSC\Documents\Github\Power-BI\scripts\Publish-CorporateSharePoint.ps1"
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "C:\GitHub\Power BI\scripts\Publish-CorporateSharePoint.ps1"
 ```
 
 You can also double-click `scripts\Publish-CorporateSharePoint.cmd` from File Explorer.
@@ -25,7 +25,7 @@ Use `-Mirror` only when you want the SharePoint folder to exactly match the repo
 The corporate wrapper publishes from:
 
 ```text
-C:\Users\michael.louie\OneDrive - ESDC EDSC\Documents\Github\Power-BI
+C:\GitHub\Power BI
 ```
 
 to:
