@@ -17,3 +17,7 @@ Power BI project files for labour market, price index, population, and early chi
 ## Notes
 
 Most projects use PBIP-style source-controlled Power BI assets. After pulling changes, open the relevant project in Power BI Desktop and refresh the model to validate live data-source connections and credentials.
+
+## Publishing
+
+Use `scripts\Publish-PowerBIToSharePoint.ps1` to copy the dashboard folder layout to a locally synced SharePoint publishing folder. See `scripts\README.md` for examples, including dry-run and mirror modes.
