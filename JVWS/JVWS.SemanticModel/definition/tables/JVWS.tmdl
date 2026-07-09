@@ -56,32 +56,37 @@ table JVWS
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	measure 'Job Vacancies (YoY Abs)' = ```
-			
-			VAR PrevYear =
+	measure 'Job Vacancies (YoY Abs)' =
+			VAR _Current = [Job Vacancies]
+			VAR _PrevYear =
 			    CALCULATE(
 			        [Job Vacancies],
 			        DATEADD(DateTable[Date], -12, MONTH)
 			    )
 			RETURN
-			[Job Vacancies] - PrevYear
-			
-			```
+			    IF(
+			        ISBLANK(_Current) || ISBLANK(_PrevYear),
+			        BLANK(),
+			        _Current - _PrevYear
+			    )
 		lineageTag: 578f1bbd-76fb-4ae6-a60d-3058a2d30c27
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	measure 'Job Vacancies (YoY %)' = ```
-			
-			VAR PrevYear =
+	measure 'Job Vacancies (YoY %)' =
+			VAR _Current = [Job Vacancies]
+			VAR _PrevYear =
 			    CALCULATE(
 			        [Job Vacancies],
 			        DATEADD(DateTable[Date], -12, MONTH)
 			    )
 			RETURN
-			DIVIDE([Job Vacancies] - PrevYear, PrevYear)
-			
-			```
+			    IF(
+			        ISBLANK(_Current) || ISBLANK(_PrevYear),
+			        BLANK(),
+			        DIVIDE(_Current - _PrevYear, _PrevYear)
+			    )
+		formatString: 0.00%;-0.00%;0.00%
 		lineageTag: 825f2c72-51a6-4ee3-9fc8-3a4fe8930f8b
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
@@ -116,32 +121,37 @@ table JVWS
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	measure 'Avg Wage (YoY Abs)' = ```
-			
-			VAR PrevYear =
+	measure 'Avg Wage (YoY Abs)' =
+			VAR _Current = [Avg Offered Hourly Wage]
+			VAR _PrevYear =
 			    CALCULATE(
 			        [Avg Offered Hourly Wage],
 			        DATEADD(DateTable[Date], -12, MONTH)
 			    )
 			RETURN
-			[Avg Offered Hourly Wage] - PrevYear
-			
-			```
+			    IF(
+			        ISBLANK(_Current) || ISBLANK(_PrevYear),
+			        BLANK(),
+			        _Current - _PrevYear
+			    )
 		lineageTag: bb6ff7e6-c6d5-4411-802e-cba08a4f5fe0
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	measure 'Avg Wage (YoY %)' = ```
-			
-			VAR PrevYear =
+	measure 'Avg Wage (YoY %)' =
+			VAR _Current = [Avg Offered Hourly Wage]
+			VAR _PrevYear =
 			    CALCULATE(
 			        [Avg Offered Hourly Wage],
 			        DATEADD(DateTable[Date], -12, MONTH)
 			    )
 			RETURN
-			DIVIDE([Avg Offered Hourly Wage] - PrevYear, PrevYear)
-			
-			```
+			    IF(
+			        ISBLANK(_Current) || ISBLANK(_PrevYear),
+			        BLANK(),
+			        DIVIDE(_Current - _PrevYear, _PrevYear)
+			    )
+		formatString: 0.00%;-0.00%;0.00%
 		lineageTag: ddded294-c97a-4053-9a0d-7d9638390df6
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
@@ -336,6 +346,20 @@ table JVWS
 		lineageTag: 44828418-9aed-4c0e-b8c7-1fa143427801
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	/// Returns the YoY percent-change measure selected by the JVWS Statistics slicer. Supports job vacancies and average offered hourly wage.
+	measure 'Selected YoY Change %' =
+			VAR _Statistic = SELECTEDVALUE('JVWS'[Statistics], "Job vacancies")
+			RETURN
+			    SWITCH(
+			        _Statistic,
+			        "Average offered hourly wage", [Avg Wage (YoY %)],
+			        "Job vacancies", [Job Vacancies (YoY %)],
+			        BLANK()
+			    )
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: YoY Analysis
+		lineageTag: f1e45152-a55d-4d51-bf0c-48e3a9406c86
 
 	column Date
 		dataType: dateTime
