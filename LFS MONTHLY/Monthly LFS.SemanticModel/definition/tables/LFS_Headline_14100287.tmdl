@@ -38,6 +38,33 @@ table LFS_Headline_14100287
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
+	measure 'Selected Headline Value 3MMA (Monthly)' = ```
+			
+			VAR CurrentDate =
+			    MAX ( DateTable[Date] )
+			VAR ThreeMonthDates =
+			    DATESBETWEEN ( DateTable[Date], EDATE ( CurrentDate, -2 ), CurrentDate )
+			VAR ThreeMonthCount =
+			    COUNTROWS (
+			        FILTER (
+			            ThreeMonthDates,
+			            NOT ISBLANK ( CALCULATE ( [Selected Headline Value (Monthly)] ) )
+			        )
+			    )
+			RETURN
+			IF (
+			    ISBLANK ( [Selected Headline Value (Monthly)] )
+			        || ThreeMonthCount < 3,
+			    BLANK (),
+			    AVERAGEX ( ThreeMonthDates, CALCULATE ( [Selected Headline Value (Monthly)] ) )
+			)
+			
+			```
+		formatString: 0.0
+		lineageTag: 6b6a0c3b-22d2-4af2-9a8e-10c6a22388b0
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
 	measure 'Selected Headline YoY Change (Monthly)' = ```
 			
 			VAR CurrentValue =
