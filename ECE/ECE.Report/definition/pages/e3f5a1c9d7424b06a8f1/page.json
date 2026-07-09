@@ -1,7 +1,7 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
   "name": "e3f5a1c9d7424b06a8f1",
-  "displayName": "(3MA) Monthly ECE YoY",
+  "displayName": "Monthly and 3MMA ECE YoY",
   "displayOption": "FitToPage",
   "height": 720,
   "width": 1280,

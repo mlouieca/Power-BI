@@ -121,24 +121,6 @@
             }
           ]
         },
-        "Series": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "ECE"
-                    }
-                  },
-                  "Property": "Occupation"
-                }
-              },
-              "queryRef": "ECE.Occupation",
-              "nativeQueryRef": "Occupation"
-            }
-          ]
-        },
         "Y": {
           "projections": [
             {
@@ -149,11 +131,25 @@
                       "Entity": "ECE"
                     }
                   },
-                  "Property": "Estimate Value (YoY)"
+                  "Property": "3MMA Estimate Value (YoY)"
                 }
               },
-              "queryRef": "ECE.Estimate Value (YoY)",
-              "nativeQueryRef": "Estimate Value (YoY)"
+              "queryRef": "ECE.3MMA Estimate Value (YoY)",
+              "nativeQueryRef": "3MMA Estimate Value (YoY)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ECE Monthly"
+                    }
+                  },
+                  "Property": "Monthly Estimate Value (YoY)"
+                }
+              },
+              "queryRef": "ECE Monthly.Monthly Estimate Value (YoY)",
+              "nativeQueryRef": "Monthly Estimate Value (YoY)"
             }
           ]
         }
@@ -194,7 +190,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Monthly ECE YoY Change (3MA)'"
+                  "Value": "'Monthly vs 3MMA ECE YoY Change'"
                 }
               }
             },

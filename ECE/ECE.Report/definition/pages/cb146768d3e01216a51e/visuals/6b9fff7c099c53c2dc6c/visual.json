@@ -95,24 +95,6 @@
             }
           ]
         },
-        "Series": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "ECE"
-                    }
-                  },
-                  "Property": "Occupation"
-                }
-              },
-              "queryRef": "ECE.Occupation",
-              "nativeQueryRef": "Occupation"
-            }
-          ]
-        },
         "Y": {
           "projections": [
             {
@@ -123,11 +105,25 @@
                       "Entity": "ECE"
                     }
                   },
-                  "Property": "Estimate Value"
+                  "Property": "3MMA Estimate Value"
                 }
               },
-              "queryRef": "ECE.Estimate Value",
-              "nativeQueryRef": "Estimate Value"
+              "queryRef": "ECE.3MMA Estimate Value",
+              "nativeQueryRef": "3MMA Estimate Value"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ECE Monthly"
+                    }
+                  },
+                  "Property": "Monthly Estimate Value"
+                }
+              },
+              "queryRef": "ECE Monthly.Monthly Estimate Value",
+              "nativeQueryRef": "Monthly Estimate Value"
             }
           ]
         }
@@ -187,7 +183,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
                 }
               }
             }
@@ -202,7 +198,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Monthly LFS Employment (3MA)'"
+                  "Value": "'Monthly vs 3MMA LFS Employment'"
                 }
               }
             },

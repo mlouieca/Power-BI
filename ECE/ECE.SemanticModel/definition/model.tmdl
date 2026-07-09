@@ -8,11 +8,12 @@ model Model
 
 annotation __PBI_TimeIntelligenceEnabled = 1
 
-annotation PBI_QueryOrder = ["ECE","Unzip","14100287-eng","14100062-eng","Annual ECE","Annual LFS Wage","CPI Annual","ECE Seasonally Adjusted","Unzip (2)"]
+annotation PBI_QueryOrder = ["ECE","ECE Monthly","Unzip","14100287-eng","14100062-eng","Annual ECE","Annual LFS Wage","CPI Annual","ECE Seasonally Adjusted","Unzip (2)"]
 
 annotation PBI_ProTooling = ["DevMode"]
 
 ref table ECE
+ref table 'ECE Monthly'
 ref table DateTable
 ref table DateTableTemplate_8e705fce-1122-4310-918a-619b6d2ada2e
 ref table LocalDateTable_d9728940-8e1d-488b-9220-13893d8edc4f
