@@ -5,6 +5,8 @@
   "csd_indicator_rows": 25805,
   "miz_summary_rows": 40,
   "note_rows": 6,
+  "source_csv": "census_children_0_5.csv",
+  "source_csv_rows": 31101,
   "emails": [
     {
       "file": "FW_ Census information for children aged 0-5.msg",

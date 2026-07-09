@@ -112,10 +112,10 @@ table Province
 		mode: import
 		source =
 				let
-				    Source = Csv.Document(File.Contents(#"DataFolder" & "province.csv"), [Delimiter=",", Columns=7, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
-				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
-				    #"Blank Values As Null" = Table.ReplaceValue(#"Promoted Headers", "", null, Replacer.ReplaceValue, Table.ColumnNames(#"Promoted Headers")),
-				    #"Changed Type" = Table.TransformColumnTypes(#"Blank Values As Null", {{"Province Code", Int64.Type}, {"Province Name", type text}, {"Is Canada", type text}, {"Population in Census Families", Int64.Type}, {"Children Aged 0 to 5", Int64.Type}, {"Population Status", type text}, {"Children Status", type text}}, "en-CA")
+				    Source = CensusChildrenData,
+				    #"Filtered Rows" = Table.SelectRows(Source, each [Record Type] = "Province"),
+				    #"Selected Columns" = Table.SelectColumns(#"Filtered Rows", {"Province Code", "Province Name", "Is Canada", "Population in Census Families", "Children Aged 0 to 5", "Population Status", "Children Status"}),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Selected Columns", {{"Province Code", Int64.Type}, {"Province Name", type text}, {"Is Canada", type text}, {"Population in Census Families", Int64.Type}, {"Children Aged 0 to 5", Int64.Type}, {"Population Status", type text}, {"Children Status", type text}}, "en-CA")
 				in
 				    #"Changed Type"
 
