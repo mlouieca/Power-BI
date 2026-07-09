@@ -1,187 +1,194 @@
-table ECE
-	lineageTag: d4003961-5fcd-4ae6-9531-5c542bbfaeb1
+table 'ECE Monthly'
+	lineageTag: e5371164-20e6-48d2-aec2-6864f760e998
 
-	measure 'Latest Date' = ```
+	measure 'Monthly Latest Date' = ```
 			
-			MAX ( DateTable[Date] )
+			MAX ( 'ECE Monthly'[Date] )
 			
 			```
 		formatString: General Date
-		lineageTag: a350be79-3bce-426d-b24e-379997660354
+		lineageTag: 2c2a7801-1f96-4598-b0f4-c1eb8e80aa82
 
-	measure 'Estimate Value' = ```
-			
-			SUM ( ECE[Estimate] )
-			
-			```
-		lineageTag: e25bcfeb-9d05-448a-9d3d-7161b7f9a0c7
-
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
-
-	measure '3MMA Estimate Value' = ```
-			
-			[Estimate Value]
-			
-			```
-		lineageTag: f275e1bb-9f8e-46c5-9e38-dcb939c7bbd2
-
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
-
-	measure '3MMA Employment' = ```
+	measure 'Monthly Estimate Value' = ```
 			
 			CALCULATE (
-			    [3MMA Estimate Value],
-			    ECE[Variable] = "Employment"
+			    SUM ( 'ECE Monthly'[Estimate] ),
+			    TREATAS ( VALUES ( ECE[Province] ), 'ECE Monthly'[Province] ),
+			    TREATAS ( VALUES ( ECE[Occupation] ), 'ECE Monthly'[Occupation] ),
+			    TREATAS ( VALUES ( ECE[Variable] ), 'ECE Monthly'[Variable] )
 			)
 			
 			```
-		lineageTag: 47cafc6d-c414-4594-ab56-0ba87a10bef3
+		lineageTag: b61e45c5-36d0-47ca-93dc-f92be38d87b4
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	measure 'Estimate Value (Latest)' = ```
+	measure 'Monthly Employment' = ```
 			
-			VAR d = [Latest Date]
+			CALCULATE (
+			    [Monthly Estimate Value],
+			    'ECE Monthly'[Variable] = "Employment"
+			)
+			
+			```
+		lineageTag: 64c42fdc-32ea-4bea-a8cb-d727fc58efdb
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Monthly Estimate Value (Latest)' = ```
+			
+			VAR d = [Monthly Latest Date]
 			RETURN
-			CALCULATE ( [Estimate Value], DateTable[Date] = d )
+			CALCULATE ( [Monthly Estimate Value], DateTable[Date] = d )
 			
 			```
-		lineageTag: 81fed9d5-47ee-4c09-b055-31e30f5143ff
+		lineageTag: d10c97a8-9804-4412-abb9-af691035612b
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	measure 'Estimate Value (YoY)' = ```
+	measure 'Monthly Employment (Latest)' = ```
 			
-			VAR _PreviousYearValue =
-			    CALCULATE (
-			        [Estimate Value],
-			        SAMEPERIODLASTYEAR ( DateTable[Date] )
-			    )
+			VAR d = [Monthly Latest Date]
 			RETURN
-			    IF (
-			        ISBLANK ( _PreviousYearValue ),
-			        BLANK (),
-			        [Estimate Value] - _PreviousYearValue
-			    )
+			CALCULATE ( [Monthly Employment], DateTable[Date] = d )
 			
 			```
-		lineageTag: 28f28ec2-79ee-4f43-82c1-c63ad78a8011
+		lineageTag: 3ff6d289-6f9c-4f5e-804f-48c96c0eb460
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	measure '3MMA Estimate Value (YoY)' = ```
+	measure 'Monthly Estimate Value (MoM)' = ```
 			
-			[Estimate Value (YoY)]
-			
-			```
-		lineageTag: 965738a4-ea75-45cb-851c-ef0507445112
-
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
-
-	measure 'Estimate Value (YoY %)' = ```
-			
-			VAR _PreviousYearValue =
-			    CALCULATE (
-			        [Estimate Value],
-			        SAMEPERIODLASTYEAR ( DateTable[Date] )
-			    )
-			RETURN
-			    IF (
-			        ISBLANK ( _PreviousYearValue ),
-			        BLANK (),
-			        DIVIDE ( [Estimate Value] - _PreviousYearValue, _PreviousYearValue )
-			    )
-			
-			```
-		lineageTag: cfb80744-2c0c-41f5-8de8-f8e0c73bf249
-
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
-
-	measure 'Estimate Value (MoM)' = ```
-			
-			[Estimate Value]
+			[Monthly Estimate Value]
 			    - CALCULATE (
-			        [Estimate Value],
+			        [Monthly Estimate Value],
 			        DATEADD ( DateTable[Date], -1, MONTH )
 			    )
 			
 			```
-		lineageTag: 9adb30c7-86b8-4524-befd-2fd2d353b7a4
+		lineageTag: e2a703c6-05be-42e4-b99e-2d23327ec4b2
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	measure 'Estimate Value (MoM %)' = ```
+	measure 'Monthly Estimate Value (MoM %)' = ```
 			
 			DIVIDE (
-			    [Estimate Value (MoM)],
+			    [Monthly Estimate Value (MoM)],
 			    CALCULATE (
-			        [Estimate Value],
+			        [Monthly Estimate Value],
 			        DATEADD ( DateTable[Date], -1, MONTH )
 			    )
 			)
 			
 			```
 		formatString: 0.00%;-0.00%;0.00%
-		lineageTag: 474ffc8e-4959-4533-874f-b19575e6c13d
+		lineageTag: 87698a68-efe8-4ade-a3f7-7b0e3dd0b76f
 
-	measure 'Estimate Value (Latest MoM)' = ```
+	measure 'Monthly Estimate Value (YoY)' = ```
 			
-			VAR d = [Latest Date]
+			VAR _PreviousYearValue =
+			    CALCULATE (
+			        [Monthly Estimate Value],
+			        SAMEPERIODLASTYEAR ( DateTable[Date] )
+			    )
 			RETURN
-			CALCULATE ( [Estimate Value (MoM)], DateTable[Date] = d )
+			    IF (
+			        ISBLANK ( _PreviousYearValue ),
+			        BLANK (),
+			        [Monthly Estimate Value] - _PreviousYearValue
+			    )
 			
 			```
-		lineageTag: 493ebd48-702d-42b6-8f6c-9f20ab131949
+		lineageTag: fc4c72e4-974a-4eee-afa9-dd729028262a
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	measure 'Estimate Value (Latest MoM %)' = ```
+	measure 'Monthly Estimate Value (YoY %)' = ```
 			
-			VAR d = [Latest Date]
+			VAR _PreviousYearValue =
+			    CALCULATE (
+			        [Monthly Estimate Value],
+			        SAMEPERIODLASTYEAR ( DateTable[Date] )
+			    )
 			RETURN
-			CALCULATE ( [Estimate Value (MoM %)], DateTable[Date] = d )
+			    IF (
+			        ISBLANK ( _PreviousYearValue ),
+			        BLANK (),
+			        DIVIDE ( [Monthly Estimate Value] - _PreviousYearValue, _PreviousYearValue )
+			    )
 			
 			```
 		formatString: 0.00%;-0.00%;0.00%
-		lineageTag: 3e66f9ec-c38d-4119-84cd-54678c2bfa2a
+		lineageTag: 7b3b3a3a-cf9c-4be5-accd-42af1d99926c
 
-	measure 'Estimate Value (Prev Month)' = ```
+	measure 'Monthly Employment (MoM)' = ```
 			
-			CALCULATE (
-			    [Estimate Value],
-			    DATEADD ( DateTable[Date], -1, MONTH )
+			[Monthly Employment]
+			    - CALCULATE (
+			        [Monthly Employment],
+			        DATEADD ( DateTable[Date], -1, MONTH )
+			    )
+			
+			```
+		lineageTag: 378b35a2-db53-4c4a-9bb9-6b7aa613c295
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Monthly Employment (MoM %)' = ```
+			
+			DIVIDE (
+			    [Monthly Employment (MoM)],
+			    CALCULATE (
+			        [Monthly Employment],
+			        DATEADD ( DateTable[Date], -1, MONTH )
+			    )
 			)
 			
 			```
-		lineageTag: 8fe4ae51-0d00-456f-ad38-1ebcc9615b8c
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: ee4b5756-7e2a-4114-a3a3-f02ab1f0ed1e
 
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
-
-	measure 'Estimate Value (Latest YoY)' = ```
+	measure 'Monthly Employment (YoY)' = ```
 			
-			VAR d = [Latest Date]
+			VAR _PreviousYearValue =
+			    CALCULATE (
+			        [Monthly Employment],
+			        SAMEPERIODLASTYEAR ( DateTable[Date] )
+			    )
 			RETURN
-			CALCULATE ( [Estimate Value (YoY)], DateTable[Date] = d )
+			    IF (
+			        ISBLANK ( _PreviousYearValue ),
+			        BLANK (),
+			        [Monthly Employment] - _PreviousYearValue
+			    )
 			
 			```
-		lineageTag: 709b1b39-1cbd-4134-a395-25eff1d30b0a
+		lineageTag: 307553b3-8b0e-4578-9016-4f527f96e45c
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	measure 'Estimate Value (Latest YoY %)' = ```
+	measure 'Monthly Employment (YoY %)' = ```
 			
-			VAR d = [Latest Date]
+			VAR _PreviousYearValue =
+			    CALCULATE (
+			        [Monthly Employment],
+			        SAMEPERIODLASTYEAR ( DateTable[Date] )
+			    )
 			RETURN
-			CALCULATE ( [Estimate Value (YoY %)], DateTable[Date] = d )
+			    IF (
+			        ISBLANK ( _PreviousYearValue ),
+			        BLANK (),
+			        DIVIDE ( [Monthly Employment] - _PreviousYearValue, _PreviousYearValue )
+			    )
 			
 			```
 		formatString: 0.00%;-0.00%;0.00%
-		lineageTag: 788342c9-efe3-436e-93de-f5e03a3c9f94
+		lineageTag: 7d854b6f-e709-407e-89c2-12c3f4cf6484
 
 	column 'Reference Period'
 		dataType: int64
 		formatString: 0
-		lineageTag: ffa70e13-da35-4200-9d8a-86da5c8a1e2d
+		lineageTag: 4751bd36-32df-44c9-b496-6a0d30e1da99
 		summarizeBy: sum
 		sourceColumn: Reference Period
 
@@ -189,7 +196,7 @@ table ECE
 
 	column Province
 		dataType: string
-		lineageTag: 0511a280-b71e-45cb-8f7d-5585782a16ae
+		lineageTag: 4778310b-31c7-4cb6-bd79-ff61b9d1b9f4
 		summarizeBy: none
 		sourceColumn: Province
 
@@ -197,7 +204,7 @@ table ECE
 
 	column Occupation
 		dataType: string
-		lineageTag: 6ba748f3-de76-417e-9ba9-6e3c926474f0
+		lineageTag: 93fe6391-3151-43e4-81bf-a2025e60dba3
 		summarizeBy: none
 		sourceColumn: Occupation
 
@@ -205,7 +212,7 @@ table ECE
 
 	column Variable
 		dataType: string
-		lineageTag: 843c6af2-6cc4-4a79-a200-a6f4803ede16
+		lineageTag: dc585ffd-e330-4ebd-b9fe-fabd8a4e1df6
 		summarizeBy: none
 		sourceColumn: Variable
 
@@ -213,7 +220,7 @@ table ECE
 
 	column Estimate
 		dataType: double
-		lineageTag: 1499da1b-bf2b-4c9d-8fe3-02dba3e999f2
+		lineageTag: 425c0d3a-df02-4e7b-93b2-357007f1e066
 		summarizeBy: sum
 		sourceColumn: Estimate
 
@@ -223,7 +230,7 @@ table ECE
 
 	column 'Coefficient ofvariation (%) ofestimate6'
 		dataType: double
-		lineageTag: ffb2b24f-3ea2-41bd-9833-418c114cf3d2
+		lineageTag: f5c6ae98-5951-4245-ba4c-c8d5c7117381
 		summarizeBy: sum
 		sourceColumn: Coefficient ofvariation (%) ofestimate6
 
@@ -233,7 +240,7 @@ table ECE
 
 	column 'Standard error ofestimate'
 		dataType: double
-		lineageTag: 54aea7a1-d494-43a7-8fbb-b5d07a32360d
+		lineageTag: 7a1c3286-afc9-4ad7-bbe1-71953879ac8a
 		summarizeBy: sum
 		sourceColumn: Standard error ofestimate
 
@@ -243,7 +250,7 @@ table ECE
 
 	column 'Lower bound (95%CI) of estimate'
 		dataType: double
-		lineageTag: dae46d48-07f7-43ec-adf3-8c0d36ffed2b
+		lineageTag: e5d12da0-06c4-4267-9cd9-ff9dce4f25bf
 		summarizeBy: sum
 		sourceColumn: Lower bound (95%CI) of estimate
 
@@ -253,7 +260,7 @@ table ECE
 
 	column 'Upper bound (95%CI) of estimate'
 		dataType: double
-		lineageTag: d66291e7-337c-46c0-ad9e-385ebdc50049
+		lineageTag: 31d796ab-be92-48dd-8e31-ff422cfe70bc
 		summarizeBy: sum
 		sourceColumn: Upper bound (95%CI) of estimate
 
@@ -264,7 +271,7 @@ table ECE
 	column Date
 		dataType: dateTime
 		formatString: Long Date
-		lineageTag: 72860bce-83a3-418a-a890-b46842951143
+		lineageTag: 116adbef-9b47-4fe6-be46-5292063c7f2d
 		summarizeBy: none
 		sourceColumn: Date
 
@@ -275,7 +282,7 @@ table ECE
 	column Year
 		dataType: int64
 		formatString: 0
-		lineageTag: 3c273d89-3ca3-40a4-956d-c4bed8d312ce
+		lineageTag: 403d5a15-a766-405d-8585-bc9faed4d3c2
 		summarizeBy: sum
 		sourceColumn: Year
 
@@ -283,7 +290,7 @@ table ECE
 
 	column 'Month Name'
 		dataType: string
-		lineageTag: 293648f6-9562-482c-ac50-4f3d07161b20
+		lineageTag: ad91ccce-effa-4c93-ba8e-c50f1f28f1bf
 		summarizeBy: none
 		sourceColumn: Month Name
 
@@ -292,7 +299,7 @@ table ECE
 	column Month
 		dataType: int64
 		formatString: 0
-		lineageTag: b1a205fa-8d03-4796-a662-1ea021740c17
+		lineageTag: b543ea45-ed56-47da-8479-99a14dd493ff
 		summarizeBy: sum
 		sourceColumn: Month
 
@@ -300,7 +307,7 @@ table ECE
 
 	column 'Source Sheet'
 		dataType: string
-		lineageTag: 32bedbaf-901f-4660-85c7-940dbf44d9c3
+		lineageTag: ab010b2c-e34d-4836-8293-e8d6803595d4
 		summarizeBy: none
 		sourceColumn: Source Sheet
 
@@ -308,7 +315,7 @@ table ECE
 
 	column 'Source Table'
 		dataType: string
-		lineageTag: 0de7af22-0a63-42e0-a9de-89071f3d1618
+		lineageTag: 3d5693d3-11c8-448b-8c08-8d2ba62b47fc
 		summarizeBy: none
 		sourceColumn: Source Table
 
@@ -316,7 +323,7 @@ table ECE
 
 	column 'Table Title'
 		dataType: string
-		lineageTag: 9696ac29-e017-471b-9aec-3267c2ec407b
+		lineageTag: 7f718095-87ba-4d3a-9130-d575f6af1da1
 		summarizeBy: none
 		sourceColumn: Table Title
 
@@ -324,7 +331,7 @@ table ECE
 
 	column 'Series Type'
 		dataType: string
-		lineageTag: 6e628bec-5c46-4943-b07f-d2bd850d96ed
+		lineageTag: fa3522eb-65a8-489a-a94c-47ed6b4c5e9a
 		summarizeBy: none
 		sourceColumn: Series Type
 
@@ -332,7 +339,7 @@ table ECE
 
 	column Frequency
 		dataType: string
-		lineageTag: da3d94c1-40dc-4963-bbab-616a94d81b7b
+		lineageTag: a5696d73-251a-435a-8c0b-e021b9bb54bf
 		summarizeBy: none
 		sourceColumn: Frequency
 
@@ -340,7 +347,7 @@ table ECE
 
 	column 'NOC Detail'
 		dataType: string
-		lineageTag: ee31fb27-2137-492f-bdf5-32e27a44ae64
+		lineageTag: 8fd25be5-4602-4493-868b-a10ee04d52c2
 		summarizeBy: none
 		sourceColumn: NOC Detail
 
@@ -348,7 +355,7 @@ table ECE
 
 	column 'NOC Code'
 		dataType: string
-		lineageTag: e97dd5b9-d433-4174-a373-3711b0b66cfb
+		lineageTag: 22b47c7e-3996-41f7-b21f-cd16063eaa1a
 		summarizeBy: none
 		sourceColumn: NOC Code
 
@@ -356,7 +363,7 @@ table ECE
 
 	column 'NOC Title'
 		dataType: string
-		lineageTag: ed072565-4b3f-42cf-ba62-6f45fa926cc3
+		lineageTag: 03833a69-a574-4e63-8966-686520346f05
 		summarizeBy: none
 		sourceColumn: NOC Title
 
@@ -364,17 +371,17 @@ table ECE
 
 	column 'Is Suppressed'
 		dataType: boolean
-		lineageTag: dc7b400b-a803-4af7-a623-fac6ff4e1406
+		lineageTag: fba0c2c8-47fb-4062-a3ba-9d4458bf077a
 		summarizeBy: none
 		sourceColumn: Is Suppressed
 
 		annotation SummarizationSetBy = Automatic
 
-	partition ECE = m
+	partition 'ECE Monthly' = m
 		mode: import
 		source =
 				let
-				    Source = Csv.Document(File.Contents("C:\Users\MLOUI\OneDrive\Documents\GitHub\03_Output_PowerBI\historical_ece_table_2_3mma_separate_nocs.csv"),[Delimiter=",", Columns=21, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    Source = Csv.Document(File.Contents("C:\Users\MLOUI\OneDrive\Documents\GitHub\03_Output_PowerBI\historical_ece_table_3_monthly_separate_nocs.csv"),[Delimiter=",", Columns=21, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
 				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
 				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"source_sheet", type text}, {"source_table", type text}, {"table_title", type text}, {"series_type", type text}, {"frequency", type text}, {"noc_detail", type text}, {"reference_period", Int64.Type}, {"reference_date", type date}, {"year", Int64.Type}, {"month", Int64.Type}, {"province", type text}, {"occupation_5digit_noc", type text}, {"noc_code", type text}, {"noc_title", type text}, {"variable", type text}, {"estimate", type number}, {"coefficient_of_variation_percent", type number}, {"standard_error", type number}, {"lower_bound_95_ci", type number}, {"upper_bound_95_ci", type number}, {"is_suppressed", type logical}}),
 				    #"Renamed Columns" = Table.RenameColumns(#"Changed Type",{{"reference_period", "Reference Period"}, {"province", "Province"}, {"occupation_5digit_noc", "Occupation"}, {"variable", "Variable"}, {"estimate", "Estimate"}, {"coefficient_of_variation_percent", "Coefficient ofvariation (%) ofestimate6"}, {"standard_error", "Standard error ofestimate"}, {"lower_bound_95_ci", "Lower bound (95%CI) of estimate"}, {"upper_bound_95_ci", "Upper bound (95%CI) of estimate"}, {"reference_date", "Date"}, {"year", "Year"}, {"month", "Month"}, {"source_sheet", "Source Sheet"}, {"source_table", "Source Table"}, {"table_title", "Table Title"}, {"series_type", "Series Type"}, {"frequency", "Frequency"}, {"noc_detail", "NOC Detail"}, {"noc_code", "NOC Code"}, {"noc_title", "NOC Title"}, {"is_suppressed", "Is Suppressed"}}),
@@ -385,4 +392,3 @@ table ECE
 	annotation PBI_NavigationStepName = Navigation
 
 	annotation PBI_ResultType = Table
-

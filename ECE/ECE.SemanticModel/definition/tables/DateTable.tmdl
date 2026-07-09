@@ -45,8 +45,22 @@ table DateTable
 		mode: import
 		source = ```
 				
-				VAR MinDate = MIN ( ECE[Date] )
-				VAR MaxDate = MAX ( ECE[Date] )
+				VAR MinDate =
+				    MINX (
+				        {
+				            MIN ( ECE[Date] ),
+				            MIN ( 'ECE Monthly'[Date] )
+				        },
+				        [Value]
+				    )
+				VAR MaxDate =
+				    MAXX (
+				        {
+				            MAX ( ECE[Date] ),
+				            MAX ( 'ECE Monthly'[Date] )
+				        },
+				        [Value]
+				    )
 				RETURN
 				CALENDAR ( MinDate, MaxDate )
 				
