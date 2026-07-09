@@ -17,3 +17,8 @@ relationship 'CSD Indicators to CSD'
 relationship 'CSD Indicators to Indicator'
 	fromColumn: 'CSD Indicators'.Indicator
 	toColumn: Indicator.Indicator
+
+relationship 'MIZ Summary to Indicator'
+	fromColumn: 'MIZ Summary'.Indicator
+	toColumn: Indicator.Indicator
+

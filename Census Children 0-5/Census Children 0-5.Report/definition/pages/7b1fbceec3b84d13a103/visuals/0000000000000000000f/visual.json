@@ -2,46 +2,146 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "0000000000000000000f",
   "position": {
-    "x": 24,
-    "y": 18,
+    "x": 676,
+    "y": 422,
     "z": 1015,
-    "height": 44,
-    "width": 600,
+    "height": 228,
+    "width": 580,
     "tabOrder": 1015
   },
   "visual": {
-    "visualType": "textbox",
-    "objects": {
-      "general": [
-        {
-          "properties": {
-            "paragraphs": [
-              {
-                "textRuns": [
-                  {
-                    "value": "Notes and Caveats",
-                    "textStyle": {
-                      "fontFamily": "Segoe UI Semibold",
-                      "fontSize": "24px",
-                      "color": "#1F2933"
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CSD"
                     }
-                  }
-                ],
-                "horizontalTextAlignment": "left"
-              }
-            ]
-          }
+                  },
+                  "Property": "CSD Name"
+                }
+              },
+              "queryRef": "CSD.CSD Name",
+              "nativeQueryRef": "CSD Name"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CSD"
+                    }
+                  },
+                  "Property": "Province Name"
+                }
+              },
+              "queryRef": "CSD.Province Name",
+              "nativeQueryRef": "Province Name"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CSD"
+                    }
+                  },
+                  "Property": "MIZ Analysis Label"
+                }
+              },
+              "queryRef": "CSD.MIZ Analysis Label",
+              "nativeQueryRef": "MIZ Analysis Label"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CSD"
+                    }
+                  },
+                  "Property": "CSD Children 0 to 5"
+                }
+              },
+              "queryRef": "CSD.CSD Children 0 to 5",
+              "nativeQueryRef": "CSD Children 0 to 5"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CSD"
+                    }
+                  },
+                  "Property": "CSD Selected Indicator Children"
+                }
+              },
+              "queryRef": "CSD.CSD Selected Indicator Children",
+              "nativeQueryRef": "CSD Selected Indicator Children"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CSD"
+                    }
+                  },
+                  "Property": "CSD Selected Indicator Rate"
+                }
+              },
+              "queryRef": "CSD.CSD Selected Indicator Rate",
+              "nativeQueryRef": "CSD Selected Indicator Rate"
+            }
+          ]
         }
-      ]
+      }
     },
     "visualContainerObjects": {
+      "stylePreset": [
+        {
+          "properties": {
+            "name": {
+              "expr": {
+                "Literal": {
+                  "Value": "'None'"
+                }
+              }
+            }
+          }
+        }
+      ],
       "background": [
         {
           "properties": {
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
                 }
               }
             }
@@ -54,7 +154,25 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#D9E2EC'"
+                    }
+                  }
+                }
+              }
+            },
+            "radius": {
+              "expr": {
+                "Literal": {
+                  "Value": "6D"
                 }
               }
             }
@@ -67,28 +185,48 @@
             "top": {
               "expr": {
                 "Literal": {
-                  "Value": "0D"
+                  "Value": "8D"
                 }
               }
             },
             "bottom": {
               "expr": {
                 "Literal": {
-                  "Value": "0D"
+                  "Value": "8D"
                 }
               }
             },
             "left": {
               "expr": {
                 "Literal": {
-                  "Value": "0D"
+                  "Value": "8D"
                 }
               }
             },
             "right": {
               "expr": {
                 "Literal": {
-                  "Value": "0D"
+                  "Value": "8D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Community profile list'"
                 }
               }
             }

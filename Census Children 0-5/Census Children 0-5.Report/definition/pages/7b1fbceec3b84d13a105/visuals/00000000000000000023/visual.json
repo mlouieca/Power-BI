@@ -1,0 +1,316 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "00000000000000000023",
+  "position": {
+    "x": 24,
+    "y": 132,
+    "z": 1035,
+    "height": 360,
+    "width": 1232,
+    "tabOrder": 1035
+  },
+  "visual": {
+    "visualType": "lineChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MIZ Summary"
+                    }
+                  },
+                  "Property": "MIZ Analysis Label"
+                }
+              },
+              "queryRef": "MIZ Summary.MIZ Analysis Label",
+              "nativeQueryRef": "MIZ Analysis Label",
+              "active": true
+            }
+          ]
+        },
+        "Series": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MIZ Summary"
+                    }
+                  },
+                  "Property": "Indicator Short Name"
+                }
+              },
+              "queryRef": "MIZ Summary.Indicator Short Name",
+              "nativeQueryRef": "Indicator Short Name"
+            }
+          ]
+        },
+        "Tooltips": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MIZ Summary"
+                    }
+                  },
+                  "Property": "MIZ Indicator Children"
+                }
+              },
+              "queryRef": "MIZ Summary.MIZ Indicator Children",
+              "nativeQueryRef": "MIZ Indicator Children"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MIZ Summary"
+                    }
+                  },
+                  "Property": "MIZ Children 0 to 5"
+                }
+              },
+              "queryRef": "MIZ Summary.MIZ Children 0 to 5",
+              "nativeQueryRef": "MIZ Children 0 to 5"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MIZ Summary"
+                    }
+                  },
+                  "Property": "MIZ Indicator Rate"
+                }
+              },
+              "queryRef": "MIZ Summary.MIZ Indicator Rate",
+              "nativeQueryRef": "MIZ Indicator Rate"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "MIZ Summary"
+                  }
+                },
+                "Property": "MIZ Analysis Label"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "visualContainerObjects": {
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#D9E2EC'"
+                    }
+                  }
+                }
+              }
+            },
+            "radius": {
+              "expr": {
+                "Literal": {
+                  "Value": "6D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "padding": [
+        {
+          "properties": {
+            "top": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
+                }
+              }
+            },
+            "bottom": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
+                }
+              }
+            },
+            "left": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
+                }
+              }
+            },
+            "right": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Children aged 0 to 5 by geography type'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "553e95ff83b834797c92",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "MIZ Summary"
+              }
+            },
+            "Property": "MIZ Analysis Label"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "a1e2f7ebd63759148042",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "MIZ Summary"
+              }
+            },
+            "Property": "MIZ Indicator Rate"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "3a1b8be7c427b008b4d6",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "MIZ Summary"
+              }
+            },
+            "Property": "Indicator Short Name"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "b05c215b84b281adfa8c",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "MIZ Summary"
+              }
+            },
+            "Property": "MIZ Indicator Children"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "ad70344c47c0a60af542",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "MIZ Summary"
+              }
+            },
+            "Property": "MIZ Children 0 to 5"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
+  }
+}

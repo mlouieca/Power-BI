@@ -1,35 +1,40 @@
 table Indicator
+	lineageTag: 3dbe48f9-5f53-4ab8-a3eb-feab877070b8
 
 	column Indicator
 		dataType: string
+		lineageTag: 62e9b08f-75e6-41e5-80ec-e177b55a0184
 		summarizeBy: none
 		sourceColumn: Indicator
 
 	column 'Indicator Short Name'
 		dataType: string
+		lineageTag: 2455727c-102c-408d-ae4e-3f7c04f08cb9
 		summarizeBy: none
 		sourceColumn: Indicator Short Name
 
 	column 'Indicator Description'
 		dataType: string
+		lineageTag: 59b99975-0a12-4cb5-b377-8b24fe7a0eb2
 		summarizeBy: none
 		sourceColumn: Indicator Description
 
 	column 'Indicator Sort'
 		dataType: int64
-		formatString: 0
 		isHidden
+		formatString: 0
+		lineageTag: c110452d-1de4-4a61-856e-c9407ab3003a
 		summarizeBy: none
 		sourceColumn: Indicator Sort
-
 
 	partition Indicator = m
 		mode: import
 		source =
-			let
-			    Source = Csv.Document(File.Contents(#"DataFolder" & "indicator.csv"), [Delimiter=",", Columns=4, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
-			    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
-			    #"Blank Values As Null" = Table.ReplaceValue(#"Promoted Headers", "", null, Replacer.ReplaceValue, Table.ColumnNames(#"Promoted Headers")),
-			    #"Changed Type" = Table.TransformColumnTypes(#"Blank Values As Null", {{"Indicator", type text}, {"Indicator Short Name", type text}, {"Indicator Description", type text}, {"Indicator Sort", Int64.Type}}, "en-CA")
-			in
-			    #"Changed Type"
+				let
+				    Source = Csv.Document(File.Contents(#"DataFolder" & "indicator.csv"), [Delimiter=",", Columns=4, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Blank Values As Null" = Table.ReplaceValue(#"Promoted Headers", "", null, Replacer.ReplaceValue, Table.ColumnNames(#"Promoted Headers")),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Blank Values As Null", {{"Indicator", type text}, {"Indicator Short Name", type text}, {"Indicator Description", type text}, {"Indicator Sort", Int64.Type}}, "en-CA")
+				in
+				    #"Changed Type"
+

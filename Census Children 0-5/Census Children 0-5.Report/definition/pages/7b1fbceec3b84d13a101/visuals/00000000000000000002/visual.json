@@ -22,7 +22,7 @@
                     "value": "Off-reserve population in census families and selected vulnerability indicators",
                     "textStyle": {
                       "fontFamily": "Segoe UI Semibold",
-                      "fontSize": "13px",
+                      "fontSize": "13pt",
                       "color": "#52606D"
                     }
                   }

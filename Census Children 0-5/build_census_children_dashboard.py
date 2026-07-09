@@ -62,6 +62,48 @@ MIZ_LABELS = {
 }
 
 
+def child_population_band(children):
+    if children is None:
+        return "Unknown / suppressed"
+    if children >= 1000:
+        return "1,000+ children"
+    if children >= 250:
+        return "250 to 999 children"
+    if children >= 50:
+        return "50 to 249 children"
+    return "Under 50 children"
+
+
+def child_population_band_sort(children):
+    if children is None:
+        return 5
+    if children >= 1000:
+        return 1
+    if children >= 250:
+        return 2
+    if children >= 50:
+        return 3
+    return 4
+
+
+def miz_analysis_label(miz_id, miz_label):
+    if miz_id == 8:
+        return "Territories outside CA"
+    return miz_label
+
+
+def geography_type(miz_id):
+    if miz_id == 1:
+        return "CMA"
+    if miz_id in (2, 3):
+        return "CA"
+    if miz_id in (4, 5, 6, 7):
+        return "MIZ"
+    if miz_id == 8:
+        return "Territories outside CA"
+    return "Unknown"
+
+
 def clean_text(value):
     if value is None or (isinstance(value, float) and math.isnan(value)):
         return ""
@@ -93,6 +135,15 @@ def write_csv(path, rows, fieldnames):
         writer.writeheader()
         for row in rows:
             writer.writerow(row)
+
+
+def existing_logical_id(path):
+    if path.exists():
+        try:
+            return json.loads(path.read_text(encoding="utf-8")).get("config", {}).get("logicalId") or str(uuid.uuid4())
+        except (OSError, json.JSONDecodeError):
+            return str(uuid.uuid4())
+    return str(uuid.uuid4())
 
 
 def parse_workbook():
@@ -165,6 +216,7 @@ def parse_workbook():
         children, child_status = number_value(row[5], as_int=True)
         province_name = PROVINCE_CODES.get(province_code, f"Province {province_code}" if province_code is not None else "")
         miz_label = MIZ_LABELS.get(miz_id, f"MIZ {miz_id}" if miz_id is not None else "")
+        band = child_population_band(children)
         csd_rows.append({
             "CSD Number": csd_number,
             "CSD Name": csd_name,
@@ -172,8 +224,13 @@ def parse_workbook():
             "Province Name": province_name,
             "MIZ Identifier": miz_id,
             "MIZ Label": miz_label,
+            "MIZ Analysis Label": miz_analysis_label(miz_id, miz_label),
+            "Geography Type": geography_type(miz_id),
             "Population in Census Families": population,
             "Children Aged 0 to 5": children,
+            "Child Population Band": band,
+            "Child Population Band Sort": child_population_band_sort(children),
+            "Public Denominator Flag": "1,000+ children" if children is not None and children >= 1000 else "Under 1,000 children",
             "Population Status": pop_status,
             "Children Status": child_status,
             "MIZ Status": miz_status,
@@ -211,11 +268,57 @@ def parse_workbook():
         if note:
             notes_rows.append({"Note Number": idx, "Note": note})
 
+    csd_children_by_miz = {}
+    for row in csd_rows:
+        key = (
+            row["MIZ Identifier"],
+            row["MIZ Analysis Label"],
+            row["MIZ Label"],
+            row["Geography Type"],
+        )
+        csd_children_by_miz[key] = csd_children_by_miz.get(key, 0) + (row["Children Aged 0 to 5"] or 0)
+
+    csd_lookup = {row["CSD Number"]: row for row in csd_rows}
+    miz_indicator_counts = {}
+    for row in csd_indicator_rows:
+        csd = csd_lookup.get(row["CSD Number"])
+        if not csd:
+            continue
+        key = (
+            csd["MIZ Identifier"],
+            csd["MIZ Analysis Label"],
+            csd["MIZ Label"],
+            csd["Geography Type"],
+            row["Indicator"],
+            row["Indicator Sort"],
+        )
+        miz_indicator_counts[key] = miz_indicator_counts.get(key, 0) + (row["Children Count"] or 0)
+
+    miz_summary_rows = []
+    for key, children in csd_children_by_miz.items():
+        miz_id, analysis_label, base_label, geo_type = key
+        for indicator, short_name, _, sort_order in INDICATORS:
+            count_key = key + (indicator, sort_order)
+            count = miz_indicator_counts.get(count_key, 0)
+            miz_summary_rows.append({
+                "MIZ Identifier": miz_id,
+                "MIZ Analysis Label": analysis_label,
+                "MIZ Label": base_label,
+                "Geography Type": geo_type,
+                "Indicator": indicator,
+                "Indicator Short Name": short_name,
+                "Indicator Sort": sort_order,
+                "Children Aged 0 to 5": children,
+                "Children Count": count,
+                "Percent": count / children if children else None,
+            })
+
     return {
         "province": province_rows,
         "province_indicators": province_indicator_rows,
         "csd": csd_rows,
         "csd_indicators": csd_indicator_rows,
+        "miz_summary": miz_summary_rows,
         "indicator": indicator_rows,
         "notes": notes_rows,
     }
@@ -400,13 +503,15 @@ def qname(name):
     return name
 
 
-def tmdl_column(name, data_type, source=None, hidden=False, fmt=None, summarize="none"):
+def tmdl_column(name, data_type, source=None, hidden=False, fmt=None, summarize="none", sort_by=None):
     source = source or name
     lines = [f"\tcolumn {qname(name)}", f"\t\tdataType: {data_type}"]
     if fmt:
         lines.append(f"\t\tformatString: {fmt}")
     if hidden:
         lines.append("\t\tisHidden")
+    if sort_by:
+        lines.append(f"\t\tsortByColumn: {qname(sort_by)}")
     lines.append(f"\t\tsummarizeBy: {summarize}")
     lines.append(f"\t\tsourceColumn: {source}")
     return "\n".join(lines)
@@ -449,10 +554,11 @@ def make_semantic_model():
     tables_dir.mkdir(parents=True, exist_ok=True)
     cultures_dir.mkdir(parents=True, exist_ok=True)
 
-    (MODEL_DIR / ".platform").write_text(json.dumps({
+    model_platform = MODEL_DIR / ".platform"
+    model_platform.write_text(json.dumps({
         "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
         "metadata": {"type": "SemanticModel", "displayName": PROJECT_NAME},
-        "config": {"version": "2.0", "logicalId": str(uuid.uuid4())},
+        "config": {"version": "2.0", "logicalId": existing_logical_id(model_platform)},
     }, indent=2), encoding="utf-8")
     (MODEL_DIR / "definition.pbism").write_text(json.dumps({"version": "4.2", "settings": {"qnaEnabled": True}}, indent=2), encoding="utf-8")
     (definition / "database.tmdl").write_text("database\n\tcompatibilityLevel: 1600\n", encoding="utf-8")
@@ -466,7 +572,7 @@ def make_semantic_model():
             "\t\tlegacyRedirects",
             "\t\treturnErrorValuesAsNull",
             "",
-            "annotation PBI_QueryOrder = [\"Province\",\"CSD\",\"Indicator\",\"Province Indicators\",\"CSD Indicators\",\"Notes\"]",
+            "annotation PBI_QueryOrder = [\"Province\",\"CSD\",\"Indicator\",\"Province Indicators\",\"CSD Indicators\",\"MIZ Summary\",\"Notes\"]",
             "annotation PBI_ProTooling = [\"DevMode\"]",
             "",
             "ref table Province",
@@ -474,6 +580,7 @@ def make_semantic_model():
             "ref table Indicator",
             "ref table 'Province Indicators'",
             "ref table 'CSD Indicators'",
+            "ref table 'MIZ Summary'",
             "ref table Notes",
             "",
             "ref cultureInfo en-CA",
@@ -530,6 +637,14 @@ def make_semantic_model():
         tmdl_measure("Number of CSDs", "DISTINCTCOUNT ( CSD[CSD Number] )", "#,##0", "Core"),
         tmdl_measure("CSD Indicator Children", "SUM ( 'CSD Indicators'[Children Count] )", "#,##0", "Indicators"),
         tmdl_measure("CSD Indicator Rate", "DIVIDE ( [CSD Indicator Children], [CSD Children 0 to 5] )", "0.0%", "Indicators"),
+        tmdl_measure("CSD Selected Indicator Children", """
+VAR SelectedIndicator = SELECTEDVALUE ( Indicator[Indicator], "Below LIM" )
+RETURN
+    CALCULATE ( [CSD Indicator Children], Indicator[Indicator] = SelectedIndicator )
+""", "#,##0", "Indicators"),
+        tmdl_measure("CSD Selected Indicator Rate", "DIVIDE ( [CSD Selected Indicator Children], [CSD Children 0 to 5] )", "0.0%", "Indicators"),
+        tmdl_measure("CSD Selected Indicator Rate (1,000+ Children)", 'IF ( SELECTEDVALUE ( CSD[Public Denominator Flag] ) = "Under 1,000 children", BLANK (), [CSD Selected Indicator Rate] )', "0.0%", "Indicators"),
+        tmdl_measure("CSD Indicator Rate (1,000+ Children)", 'IF ( SELECTEDVALUE ( CSD[Public Denominator Flag] ) = "Under 1,000 children", BLANK (), [CSD Indicator Rate] )', "0.0%", "Indicators"),
         tmdl_measure("Reportable CSD Indicator Rows", 'CALCULATE ( COUNTROWS ( \'CSD Indicators\' ), \'CSD Indicators\'[Value Status] = "Reportable" )', "#,##0", "Quality"),
         tmdl_measure("Suppressed CSD Indicator Rows", 'CALCULATE ( COUNTROWS ( \'CSD Indicators\' ), \'CSD Indicators\'[Value Status] = "Suppressed" )', "#,##0", "Quality"),
     ]
@@ -540,8 +655,13 @@ def make_semantic_model():
         tmdl_column("Province Name", "string"),
         tmdl_column("MIZ Identifier", "int64", fmt="0", summarize="none"),
         tmdl_column("MIZ Label", "string"),
+        tmdl_column("MIZ Analysis Label", "string", sort_by="MIZ Identifier"),
+        tmdl_column("Geography Type", "string"),
         tmdl_column("Population in Census Families", "int64", hidden=True, fmt="#,##0", summarize="sum"),
         tmdl_column("Children Aged 0 to 5", "int64", hidden=True, fmt="#,##0", summarize="sum"),
+        tmdl_column("Child Population Band", "string"),
+        tmdl_column("Child Population Band Sort", "int64", hidden=True, fmt="0", summarize="none"),
+        tmdl_column("Public Denominator Flag", "string"),
         tmdl_column("Population Status", "string"),
         tmdl_column("Children Status", "string"),
         tmdl_column("MIZ Status", "string"),
@@ -549,15 +669,20 @@ def make_semantic_model():
     ]
     (tables_dir / "CSD.tmdl").write_text(
         "table CSD\n\n" + "\n\n".join(csd_measures + csd_cols) + "\n\n" +
-        m_csv_partition("CSD", "csd.csv", 12, [
+        m_csv_partition("CSD", "csd.csv", 17, [
             ("CSD Number", "type text"),
             ("CSD Name", "type text"),
             ("Province Code", "Int64.Type"),
             ("Province Name", "type text"),
             ("MIZ Identifier", "Int64.Type"),
             ("MIZ Label", "type text"),
+            ("MIZ Analysis Label", "type text"),
+            ("Geography Type", "type text"),
             ("Population in Census Families", "Int64.Type"),
             ("Children Aged 0 to 5", "Int64.Type"),
+            ("Child Population Band", "type text"),
+            ("Child Population Band Sort", "Int64.Type"),
+            ("Public Denominator Flag", "type text"),
             ("Population Status", "type text"),
             ("Children Status", "type text"),
             ("MIZ Status", "type text"),
@@ -629,6 +754,49 @@ def make_semantic_model():
         encoding="utf-8",
     )
 
+    miz_summary_measures = [
+        tmdl_measure("MIZ Children 0 to 5", """
+SUMX (
+    SUMMARIZE (
+        'MIZ Summary',
+        'MIZ Summary'[MIZ Analysis Label],
+        "Children", MAX ( 'MIZ Summary'[Children Aged 0 to 5] )
+    ),
+    [Children]
+)
+""", "#,##0", "MIZ"),
+        tmdl_measure("MIZ Indicator Children", "SUM ( 'MIZ Summary'[Children Count] )", "#,##0", "MIZ"),
+        tmdl_measure("MIZ Indicator Rate", "DIVIDE ( [MIZ Indicator Children], [MIZ Children 0 to 5] )", "0.0%", "MIZ"),
+    ]
+    miz_summary_cols = [
+        tmdl_column("MIZ Identifier", "int64", hidden=True, fmt="0", summarize="none"),
+        tmdl_column("MIZ Analysis Label", "string", sort_by="MIZ Identifier"),
+        tmdl_column("MIZ Label", "string"),
+        tmdl_column("Geography Type", "string"),
+        tmdl_column("Indicator", "string"),
+        tmdl_column("Indicator Short Name", "string", sort_by="Indicator Sort"),
+        tmdl_column("Indicator Sort", "int64", hidden=True, fmt="0", summarize="none"),
+        tmdl_column("Children Aged 0 to 5", "int64", hidden=True, fmt="#,##0", summarize="sum"),
+        tmdl_column("Children Count", "int64", hidden=True, fmt="#,##0", summarize="sum"),
+        tmdl_column("Percent", "decimal", hidden=True, fmt="0.0%", summarize="none"),
+    ]
+    (tables_dir / "MIZ Summary.tmdl").write_text(
+        "table 'MIZ Summary'\n\n" + "\n\n".join(miz_summary_measures + miz_summary_cols) + "\n\n" +
+        m_csv_partition("MIZ Summary", "miz_summary.csv", 10, [
+            ("MIZ Identifier", "Int64.Type"),
+            ("MIZ Analysis Label", "type text"),
+            ("MIZ Label", "type text"),
+            ("Geography Type", "type text"),
+            ("Indicator", "type text"),
+            ("Indicator Short Name", "type text"),
+            ("Indicator Sort", "Int64.Type"),
+            ("Children Aged 0 to 5", "Int64.Type"),
+            ("Children Count", "Int64.Type"),
+            ("Percent", "type number"),
+        ]) + "\n",
+        encoding="utf-8",
+    )
+
     notes_cols = [tmdl_column("Note Number", "int64", fmt="0", summarize="none"), tmdl_column("Note", "string")]
     (tables_dir / "Notes.tmdl").write_text(
         "table Notes\n\n" + "\n\n".join(notes_cols) + "\n\n" +
@@ -642,6 +810,7 @@ def make_semantic_model():
         ("Province Indicators to Indicator", "'Province Indicators'.Indicator", "Indicator.Indicator"),
         ("CSD Indicators to CSD", "'CSD Indicators'.'CSD Number'", "CSD.'CSD Number'"),
         ("CSD Indicators to Indicator", "'CSD Indicators'.Indicator", "Indicator.Indicator"),
+        ("MIZ Summary to Indicator", "'MIZ Summary'.Indicator", "Indicator.Indicator"),
     ]
     rel_lines = []
     for name, from_col, to_col in relationships:
@@ -684,10 +853,8 @@ def visual_base(name, vtype, x, y, w, h, z):
 def add_title(v, title):
     v["visual"].setdefault("visualContainerObjects", {})["title"] = [{
         "properties": {
+            "show": literal("true"),
             "text": literal(f"'{title}'"),
-            "fontColor": solid("#243B53"),
-            "background": solid("#F7FAFC"),
-            "alignment": literal("'left'"),
         }
     }]
     return v
@@ -702,7 +869,7 @@ class Ids:
         return f"{self.n:020x}"[-20:]
 
 
-def textbox(ids, text, x, y, w, h, size="24px", color="#1F2933"):
+def textbox(ids, text, x, y, w, h, size="24pt", color="#1F2933"):
     v = visual_base(ids.next(), "textbox", x, y, w, h, 1000 + ids.n)
     v["visual"]["objects"] = {
         "general": [{
@@ -734,12 +901,6 @@ def card(ids, measures, x, y, w, h, title=None):
     v["visual"]["query"] = {"queryState": {"Data": {"projections": [
         projection(measure_field(table, measure), f"{table}.{measure}", measure) for table, measure in measures
     ]}}}
-    v["visual"]["objects"] = {
-        "outline": [{"properties": {"show": literal("false")}, "selector": {"id": "default"}}],
-        "value": [{"properties": {"fontSize": literal("32D"), "fontColor": solid("#102A43")}, "selector": {"id": "default"}}],
-        "label": [{"properties": {"show": literal("true"), "fontSize": literal("10D"), "fontColor": solid("#52606D")}, "selector": {"id": "default"}}],
-        "cardCalloutArea": [{"properties": {"show": literal("true"), "paddingUniform": literal("8L"), "backgroundFillColor": solid("#FFFFFF"), "backgroundTransparency": literal("0D")}}],
-    }
     v["visual"]["visualContainerObjects"] = {
         "background": [{"properties": {"show": literal("true"), "color": solid("#FFFFFF"), "transparency": literal("0D")}}],
         "border": [{"properties": {"show": literal("true"), "color": solid("#D9E2EC"), "radius": literal("6D")}}],
@@ -759,18 +920,50 @@ def chart(ids, vtype, category_table, category_col, measure_table, measure, x, y
     if series:
         table, col = series
         query_state["Series"] = {"projections": [projection(col_field(table, col), f"{table}.{col}", col)]}
+    v["visual"]["query"] = {"queryState": query_state}
+    v["visual"]["visualContainerObjects"] = {
+        "background": [{"properties": {"show": literal("true"), "color": solid("#FFFFFF"), "transparency": literal("0D")}}],
+        "border": [{"properties": {"show": literal("true"), "color": solid("#D9E2EC"), "radius": literal("6D")}}],
+        "padding": [{"properties": {"top": literal("8D"), "bottom": literal("8D"), "left": literal("8D"), "right": literal("8D")}}],
+    }
+    return add_title(v, title)
+
+
+def scatter_chart(ids, x, y, w, h, title):
+    v = visual_base(ids.next(), "scatterChart", x, y, w, h, 1000 + ids.n)
     v["visual"]["query"] = {
-        "queryState": query_state,
+        "queryState": {
+            "Category": {"projections": [projection(col_field("CSD", "CSD Name"), "CSD.CSD Name", "CSD Name", True)]},
+            "X": {"projections": [projection(measure_field("CSD", "CSD Children 0 to 5"), "CSD.CSD Children 0 to 5", "CSD Children 0 to 5")]},
+            "Y": {"projections": [projection(measure_field("CSD", "CSD Selected Indicator Rate"), "CSD.CSD Selected Indicator Rate", "CSD Selected Indicator Rate")]},
+            "Size": {"projections": [projection(measure_field("CSD", "CSD Selected Indicator Children"), "CSD.CSD Selected Indicator Children", "CSD Selected Indicator Children")]},
+            "Series": {"projections": [projection(col_field("CSD", "MIZ Analysis Label"), "CSD.MIZ Analysis Label", "MIZ Analysis Label")]},
+        }
+    }
+    v["visual"]["visualContainerObjects"] = {
+        "background": [{"properties": {"show": literal("true"), "color": solid("#FFFFFF"), "transparency": literal("0D")}}],
+        "border": [{"properties": {"show": literal("true"), "color": solid("#D9E2EC"), "radius": literal("6D")}}],
+        "padding": [{"properties": {"top": literal("8D"), "bottom": literal("8D"), "left": literal("8D"), "right": literal("8D")}}],
+    }
+    return add_title(v, title)
+
+
+def line_chart(ids, x, y, w, h, title):
+    v = visual_base(ids.next(), "lineChart", x, y, w, h, 1000 + ids.n)
+    v["visual"]["query"] = {
+        "queryState": {
+            "Category": {"projections": [projection(col_field("MIZ Summary", "MIZ Analysis Label"), "MIZ Summary.MIZ Analysis Label", "MIZ Analysis Label", True)]},
+            "Y": {"projections": [projection(measure_field("MIZ Summary", "MIZ Indicator Rate"), "MIZ Summary.MIZ Indicator Rate", "MIZ Indicator Rate")]},
+            "Series": {"projections": [projection(col_field("MIZ Summary", "Indicator Short Name"), "MIZ Summary.Indicator Short Name", "Indicator Short Name")]},
+            "Tooltips": {"projections": [
+                projection(measure_field("MIZ Summary", "MIZ Indicator Children"), "MIZ Summary.MIZ Indicator Children", "MIZ Indicator Children"),
+                projection(measure_field("MIZ Summary", "MIZ Children 0 to 5"), "MIZ Summary.MIZ Children 0 to 5", "MIZ Children 0 to 5"),
+            ]},
+        },
         "sortDefinition": {
-            "sort": [{"field": measure_field(measure_table, measure), "direction": "Descending" if sort_desc else "Ascending"}],
+            "sort": [{"field": col_field("MIZ Summary", "MIZ Analysis Label"), "direction": "Ascending"}],
             "isDefaultSort": True,
         },
-    }
-    v["visual"]["objects"] = {
-        "categoryAxis": [{"properties": {"showAxisTitle": literal("false"), "labelColor": solid("#334E68")}}],
-        "valueAxis": [{"properties": {"showAxisTitle": literal("false"), "start": literal("0D"), "labelColor": solid("#334E68")}}],
-        "legend": [{"properties": {"position": literal("'TopCenter'"), "showTitle": literal("false")}}],
-        "dataPoint": [{"properties": {"fill": solid("#2F80ED"), "fillTransparency": literal("0D")}}],
     }
     v["visual"]["visualContainerObjects"] = {
         "background": [{"properties": {"show": literal("true"), "color": solid("#FFFFFF"), "transparency": literal("0D")}}],
@@ -806,10 +999,6 @@ def table_visual(ids, values, x, y, w, h, title):
         else:
             projections.append(projection(measure_field(table, name), f"{table}.{name}", name))
     v["visual"]["query"] = {"queryState": {"Values": {"projections": projections}}}
-    v["visual"]["objects"] = {
-        "columnHeaders": [{"properties": {"columnAdjustment": literal("'growToFit'"), "autoSizeColumnWidth": literal("true"), "fontColor": solid("#102A43"), "backColor": solid("#E6F0FF")}}],
-        "values": [{"properties": {"backColorPrimary": solid("#FFFFFF"), "backColorSecondary": solid("#F8FAFC"), "fontColorPrimary": solid("#243B53"), "fontColorSecondary": solid("#243B53")}}],
-    }
     v["visual"]["visualContainerObjects"] = {
         "stylePreset": [{"properties": {"name": literal("'None'")}}],
         "background": [{"properties": {"show": literal("true"), "color": solid("#FFFFFF"), "transparency": literal("0D")}}],
@@ -847,10 +1036,11 @@ def make_report():
         "artifacts": [{"report": {"path": f"{PROJECT_NAME}.Report"}}],
         "settings": {"enableAutoRecovery": True},
     }, indent=2), encoding="utf-8")
-    (REPORT_DIR / ".platform").write_text(json.dumps({
+    report_platform = REPORT_DIR / ".platform"
+    report_platform.write_text(json.dumps({
         "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
         "metadata": {"type": "Report", "displayName": PROJECT_NAME},
-        "config": {"version": "2.0", "logicalId": str(uuid.uuid4())},
+        "config": {"version": "2.0", "logicalId": existing_logical_id(report_platform)},
     }, indent=2), encoding="utf-8")
     (REPORT_DIR / "definition.pbir").write_text(json.dumps({
         "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definitionProperties/2.0.0/schema.json",
@@ -863,10 +1053,30 @@ def make_report():
     }, indent=2), encoding="utf-8")
     (definition / "report.json").write_text(json.dumps({
         "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/report/3.3.0/schema.json",
+        "themeCollection": {
+            "baseTheme": {
+                "name": "CY26SU04",
+                "reportVersionAtImport": {
+                    "visual": "2.8.0",
+                    "report": "3.2.0",
+                    "page": "2.3.1",
+                },
+                "type": "SharedResources",
+            }
+        },
         "objects": {
             "section": [{"properties": {"verticalAlignment": literal("'Top'")}}],
             "outspacePane": [{"properties": {"visible": literal("false")}}],
         },
+        "resourcePackages": [{
+            "name": "SharedResources",
+            "type": "SharedResources",
+            "items": [{
+                "name": "CY26SU04",
+                "path": "BaseThemes/CY26SU04.json",
+                "type": "BaseTheme",
+            }],
+        }],
         "settings": {
             "useStylableVisualContainerHeader": True,
             "exportDataMode": "AllowSummarized",
@@ -879,45 +1089,95 @@ def make_report():
 
     overview = "7b1fbceec3b84d13a101"
     explorer = "7b1fbceec3b84d13a102"
-    notes = "7b1fbceec3b84d13a103"
+    scale = "7b1fbceec3b84d13a103"
+    rural = "7b1fbceec3b84d13a104"
+    gradient = "7b1fbceec3b84d13a105"
+    notes = "7b1fbceec3b84d13a106"
     (pages_dir / "pages.json").write_text(json.dumps({
         "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/pagesMetadata/1.1.0/schema.json",
-        "pageOrder": [overview, explorer, notes],
+        "pageOrder": [overview, scale, explorer, gradient, rural, notes],
         "activePageName": overview,
     }, indent=2), encoding="utf-8")
 
     ids = Ids()
     make_page(overview, "Overview", [
         textbox(ids, "Census 2021: Children Aged 0 to 5", 24, 18, 680, 44),
-        textbox(ids, "Off-reserve population in census families and selected vulnerability indicators", 24, 56, 840, 28, "13px", "#52606D"),
+        textbox(ids, "Off-reserve population in census families and selected vulnerability indicators", 24, 56, 840, 28, "13pt", "#52606D"),
         card(ids, [("Province", "Canada Children 0 to 5"), ("Province", "Canada Low Income Rate"), ("Province", "Canada Indigenous Identity Rate"), ("Province", "Canada Lone Parent Rate")], 24, 96, 1232, 112),
         chart(ids, "columnChart", "Province", "Province Name", "Province", "Province Children 0 to 5 (Excluding Canada)", 24, 232, 590, 430, "Children aged 0 to 5 by province"),
         chart(ids, "clusteredBarChart", "Indicator", "Indicator Short Name", "Province", "Canada Indicator Rate", 646, 232, 610, 204, "Canada rate by indicator"),
         chart(ids, "clusteredBarChart", "Province", "Province Name", "Province", "Province Indicator Rate (Excluding Canada)", 646, 458, 610, 204, "Provincial rates by selected indicator", series=("Indicator", "Indicator Short Name")),
     ])
 
-    make_page(explorer, "CSD Explorer", [
-        textbox(ids, "Explore CSD-Level Indicators", 24, 18, 600, 44),
-        slicer(ids, "Province", "Province Name", "Province", 24, 76, 230),
-        slicer(ids, "CSD", "MIZ Label", "MIZ", 272, 76, 190),
-        slicer(ids, "Indicator", "Indicator Short Name", "Indicator", 480, 76, 230),
-        card(ids, [("CSD", "Number of CSDs"), ("CSD", "CSD Children 0 to 5"), ("CSD", "CSD Indicator Children"), ("CSD", "CSD Indicator Rate")], 728, 76, 528, 112),
-        chart(ids, "clusteredBarChart", "CSD", "CSD Name", "CSD", "CSD Indicator Children", 24, 220, 590, 430, "CSD indicator count"),
-        chart(ids, "clusteredBarChart", "CSD", "CSD Name", "CSD", "CSD Indicator Rate", 646, 220, 610, 190, "CSD indicator rate"),
+    make_page(scale, "Scale vs Intensity", [
+        textbox(ids, "Scale vs Intensity", 24, 18, 480, 44),
+        textbox(ids, "Compare child population size with selected indicator intensity; use denominator filters before interpreting small places.", 24, 56, 980, 28, "13pt", "#52606D"),
+        slicer(ids, "Province", "Province Name", "Province", 24, 96, 220),
+        slicer(ids, "CSD", "MIZ Analysis Label", "MIZ / CMA / CA", 262, 96, 230),
+        slicer(ids, "Indicator", "Indicator Short Name", "Indicator", 510, 96, 230),
+        slicer(ids, "CSD", "Public Denominator Flag", "Denominator", 758, 96, 230),
+        scatter_chart(ids, 24, 196, 620, 454, "CSD scale vs selected indicator rate"),
+        chart(ids, "clusteredBarChart", "CSD", "CSD Name", "CSD", "CSD Selected Indicator Rate (1,000+ Children)", 676, 196, 580, 204, "Highest selected rates among CSDs with 1,000+ children"),
         table_visual(ids, [
             ("column", "CSD", "CSD Name"),
             ("column", "CSD", "Province Name"),
-            ("column", "CSD", "MIZ Label"),
+            ("column", "CSD", "MIZ Analysis Label"),
             ("measure", "CSD", "CSD Children 0 to 5"),
-            ("measure", "CSD", "CSD Indicator Children"),
-            ("measure", "CSD", "CSD Indicator Rate"),
+            ("measure", "CSD", "CSD Selected Indicator Children"),
+            ("measure", "CSD", "CSD Selected Indicator Rate"),
+        ], 676, 422, 580, 228, "Community profile list"),
+    ])
+
+    make_page(explorer, "CSD Explorer", [
+        textbox(ids, "Explore CSD-Level Indicators", 24, 18, 600, 44),
+        slicer(ids, "Province", "Province Name", "Province", 24, 76, 210),
+        slicer(ids, "CSD", "MIZ Analysis Label", "MIZ / CMA / CA", 252, 76, 210),
+        slicer(ids, "Indicator", "Indicator Short Name", "Indicator", 480, 76, 210),
+        slicer(ids, "CSD", "Public Denominator Flag", "Denominator", 708, 76, 210),
+        card(ids, [("CSD", "Number of CSDs"), ("CSD", "CSD Children 0 to 5"), ("CSD", "CSD Selected Indicator Children"), ("CSD", "CSD Selected Indicator Rate")], 936, 76, 320, 112),
+        chart(ids, "clusteredBarChart", "CSD", "CSD Name", "CSD", "CSD Selected Indicator Children", 24, 220, 590, 430, "CSD selected indicator count"),
+        chart(ids, "clusteredBarChart", "CSD", "CSD Name", "CSD", "CSD Selected Indicator Rate", 646, 220, 610, 190, "CSD selected indicator rate"),
+        table_visual(ids, [
+            ("column", "CSD", "CSD Name"),
+            ("column", "CSD", "Province Name"),
+            ("column", "CSD", "MIZ Analysis Label"),
+            ("column", "CSD", "Public Denominator Flag"),
+            ("measure", "CSD", "CSD Children 0 to 5"),
+            ("measure", "CSD", "CSD Selected Indicator Children"),
+            ("measure", "CSD", "CSD Selected Indicator Rate"),
             ("column", "CSD Indicators", "Value Status"),
         ], 646, 432, 610, 218, "CSD detail table"),
     ])
 
+    make_page(rural, "Rural / Urban Lens", [
+        textbox(ids, "Rural / Urban Lens", 24, 18, 520, 44),
+        textbox(ids, "MIZ separates metropolitan, agglomeration, rural influence, and territorial outside-CA geographies.", 24, 56, 980, 28, "13pt", "#52606D"),
+        slicer(ids, "Indicator", "Indicator Short Name", "Indicator", 24, 96, 230),
+        slicer(ids, "MIZ Summary", "Geography Type", "Geography type", 272, 96, 230),
+        card(ids, [("CSD", "CSD Children 0 to 5"), ("CSD", "Number of CSDs"), ("CSD", "Reportable CSD Indicator Rows"), ("CSD", "Suppressed CSD Indicator Rows")], 728, 96, 528, 112),
+        chart(ids, "columnChart", "MIZ Summary", "MIZ Analysis Label", "MIZ Summary", "MIZ Children 0 to 5", 24, 236, 590, 414, "Children aged 0 to 5 by MIZ / CMA / CA category"),
+        chart(ids, "clusteredBarChart", "MIZ Summary", "MIZ Analysis Label", "MIZ Summary", "MIZ Indicator Rate", 646, 236, 610, 190, "Selected rate by MIZ / CMA / CA category", series=("MIZ Summary", "Indicator Short Name")),
+        table_visual(ids, [
+            ("column", "MIZ Summary", "MIZ Analysis Label"),
+            ("column", "MIZ Summary", "Geography Type"),
+            ("column", "MIZ Summary", "Indicator Short Name"),
+            ("measure", "MIZ Summary", "MIZ Children 0 to 5"),
+            ("measure", "MIZ Summary", "MIZ Indicator Children"),
+            ("measure", "MIZ Summary", "MIZ Indicator Rate"),
+        ], 646, 448, 610, 202, "MIZ summary table"),
+    ])
+
+    make_page(gradient, "Rurality Gradient", [
+        textbox(ids, "The Rurality Story", 24, 18, 520, 44),
+        textbox(ids, "Selected rates by MIZ / CMA / CA category from the CSD-level table. The x-axis moves from metropolitan to more remote geographies.", 24, 58, 1060, 58, "13pt", "#52606D"),
+        line_chart(ids, 24, 132, 1232, 360, "Children aged 0 to 5 by geography type"),
+        textbox(ids, "Percentages are calculated from non-suppressed CSD rows; small geographies may be affected by suppression and rounding.", 24, 512, 1080, 44, "12pt", "#6B7280"),
+        textbox(ids, "Rural is not one thing: strong MIZ communities near metro areas look different from weak/no MIZ or territorial outside-CA communities.", 24, 572, 1120, 72, "14pt", "#1F2933"),
+    ])
+
     make_page(notes, "Notes and Caveats", [
         textbox(ids, "Notes and Caveats", 24, 18, 600, 44),
-        textbox(ids, "Suppressed cells from the source workbook are kept blank in numeric fields and labelled in status columns.", 24, 58, 920, 36, "13px", "#52606D"),
+        textbox(ids, "Suppressed cells from the source workbook are kept blank in numeric fields and labelled in status columns.", 24, 58, 920, 36, "13pt", "#52606D"),
         table_visual(ids, [
             ("column", "Notes", "Note Number"),
             ("column", "Notes", "Note"),
@@ -947,8 +1207,9 @@ def main():
     parsed = parse_workbook()
     write_csv(DATA_DIR / "province.csv", parsed["province"], ["Province Code", "Province Name", "Is Canada", "Population in Census Families", "Children Aged 0 to 5", "Population Status", "Children Status"])
     write_csv(DATA_DIR / "province_indicators.csv", parsed["province_indicators"], ["Province Code", "Province Name", "Indicator", "Indicator Sort", "Children Count", "Percent", "Value Status"])
-    write_csv(DATA_DIR / "csd.csv", parsed["csd"], ["CSD Number", "CSD Name", "Province Code", "Province Name", "MIZ Identifier", "MIZ Label", "Population in Census Families", "Children Aged 0 to 5", "Population Status", "Children Status", "MIZ Status", "Province Status"])
+    write_csv(DATA_DIR / "csd.csv", parsed["csd"], ["CSD Number", "CSD Name", "Province Code", "Province Name", "MIZ Identifier", "MIZ Label", "MIZ Analysis Label", "Geography Type", "Population in Census Families", "Children Aged 0 to 5", "Child Population Band", "Child Population Band Sort", "Public Denominator Flag", "Population Status", "Children Status", "MIZ Status", "Province Status"])
     write_csv(DATA_DIR / "csd_indicators.csv", parsed["csd_indicators"], ["CSD Number", "Province Code", "Indicator", "Indicator Sort", "Children Count", "Percent", "Value Status"])
+    write_csv(DATA_DIR / "miz_summary.csv", parsed["miz_summary"], ["MIZ Identifier", "MIZ Analysis Label", "MIZ Label", "Geography Type", "Indicator", "Indicator Short Name", "Indicator Sort", "Children Aged 0 to 5", "Children Count", "Percent"])
     write_csv(DATA_DIR / "indicator.csv", parsed["indicator"], ["Indicator", "Indicator Short Name", "Indicator Description", "Indicator Sort"])
     write_csv(DATA_DIR / "notes.csv", parsed["notes"], ["Note Number", "Note"])
 
@@ -966,6 +1227,7 @@ def main():
         "province_indicator_rows": len(parsed["province_indicators"]),
         "csd_rows": len(parsed["csd"]),
         "csd_indicator_rows": len(parsed["csd_indicators"]),
+        "miz_summary_rows": len(parsed["miz_summary"]),
         "note_rows": len(parsed["notes"]),
         "emails": [{"file": item["file"], "subject": item["subject"]} for item in email_rows],
     }

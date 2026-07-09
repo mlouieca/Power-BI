@@ -1,115 +1,178 @@
 table CSD
+	lineageTag: 3eef784e-1af2-4f7e-9f21-23c44d99fb02
 
-	measure 'CSD Children 0 to 5' = ```
-			SUM ( CSD[Children Aged 0 to 5] )
-			```
+	measure 'CSD Children 0 to 5' = SUM ( CSD[Children Aged 0 to 5] )
 		formatString: #,##0
 		displayFolder: Core
+		lineageTag: a8dd6e08-be6b-4f28-a61b-30c2a819e9ab
 
-	measure 'Number of CSDs' = ```
-			DISTINCTCOUNT ( CSD[CSD Number] )
-			```
+	measure 'Number of CSDs' = DISTINCTCOUNT ( CSD[CSD Number] )
 		formatString: #,##0
 		displayFolder: Core
+		lineageTag: c4489fc1-a85d-49b5-9877-e77e3cd020fc
 
-	measure 'CSD Indicator Children' = ```
-			SUM ( 'CSD Indicators'[Children Count] )
-			```
+	measure 'CSD Indicator Children' = SUM ( 'CSD Indicators'[Children Count] )
 		formatString: #,##0
 		displayFolder: Indicators
+		lineageTag: afba4cf9-09b8-4b92-bd25-b2194763e509
 
-	measure 'CSD Indicator Rate' = ```
-			DIVIDE ( [CSD Indicator Children], [CSD Children 0 to 5] )
-			```
+	measure 'CSD Indicator Rate' = DIVIDE ( [CSD Indicator Children], [CSD Children 0 to 5] )
 		formatString: 0.0%
 		displayFolder: Indicators
+		lineageTag: f6de5403-a2ac-4663-8269-073235e80737
 
-	measure 'Reportable CSD Indicator Rows' = ```
-			CALCULATE ( COUNTROWS ( 'CSD Indicators' ), 'CSD Indicators'[Value Status] = "Reportable" )
-			```
+	measure 'CSD Selected Indicator Children' =
+			VAR SelectedIndicator = SELECTEDVALUE ( Indicator[Indicator], "Below LIM" )
+			RETURN
+			    CALCULATE ( [CSD Indicator Children], Indicator[Indicator] = SelectedIndicator )
+		formatString: #,##0
+		displayFolder: Indicators
+		lineageTag: 3e90fa05-fcb1-4b9c-9e86-fe288394f77e
+
+	measure 'CSD Selected Indicator Rate' = DIVIDE ( [CSD Selected Indicator Children], [CSD Children 0 to 5] )
+		formatString: 0.0%
+		displayFolder: Indicators
+		lineageTag: def45d59-3b12-49ee-8524-d5a13e1ab36c
+
+	measure 'CSD Selected Indicator Rate (1,000+ Children)' = IF ( SELECTEDVALUE ( CSD[Public Denominator Flag] ) = "Under 1,000 children", BLANK (), [CSD Selected Indicator Rate] )
+		formatString: 0.0%
+		displayFolder: Indicators
+		lineageTag: 6b877139-e672-46d2-bd05-6c0f3e4f7505
+
+	measure 'CSD Indicator Rate (1,000+ Children)' = IF ( SELECTEDVALUE ( CSD[Public Denominator Flag] ) = "Under 1,000 children", BLANK (), [CSD Indicator Rate] )
+		formatString: 0.0%
+		displayFolder: Indicators
+		lineageTag: 59a8e09b-07f1-4c2e-b0af-0d61eeed0ef6
+
+	measure 'Reportable CSD Indicator Rows' = CALCULATE ( COUNTROWS ( 'CSD Indicators' ), 'CSD Indicators'[Value Status] = "Reportable" )
 		formatString: #,##0
 		displayFolder: Quality
+		lineageTag: 37bc027b-4ce4-4185-a30b-174312bf9be7
 
-	measure 'Suppressed CSD Indicator Rows' = ```
-			CALCULATE ( COUNTROWS ( 'CSD Indicators' ), 'CSD Indicators'[Value Status] = "Suppressed" )
-			```
+	measure 'Suppressed CSD Indicator Rows' = CALCULATE ( COUNTROWS ( 'CSD Indicators' ), 'CSD Indicators'[Value Status] = "Suppressed" )
 		formatString: #,##0
 		displayFolder: Quality
+		lineageTag: c427d1f4-b1b7-4f90-aee5-b31b993a87f5
 
 	column 'CSD Number'
 		dataType: string
+		lineageTag: df4cee2b-48b9-4859-acdb-e95ab6c80ce7
 		summarizeBy: none
 		sourceColumn: CSD Number
 
 	column 'CSD Name'
 		dataType: string
+		lineageTag: 30fee1e8-d2e8-42fd-b853-fbc173a5ad1c
 		summarizeBy: none
 		sourceColumn: CSD Name
 
 	column 'Province Code'
 		dataType: int64
 		isHidden
+		lineageTag: 8871791b-4ab3-442b-9278-ff6ceb07b1b9
 		summarizeBy: none
 		sourceColumn: Province Code
 
 	column 'Province Name'
 		dataType: string
+		lineageTag: cdf5cadb-ceaa-4f8f-b7ed-e2b92ea04a7e
 		summarizeBy: none
 		sourceColumn: Province Name
 
 	column 'MIZ Identifier'
 		dataType: int64
 		formatString: 0
+		lineageTag: 7596b92f-f96e-458c-bb2f-c71bcb15cb82
 		summarizeBy: none
 		sourceColumn: MIZ Identifier
 
 	column 'MIZ Label'
 		dataType: string
+		lineageTag: f79b3d37-4579-40c7-b97c-f820ba1ed84f
 		summarizeBy: none
 		sourceColumn: MIZ Label
 
+	column 'MIZ Analysis Label'
+		dataType: string
+		lineageTag: 60c1d651-2a8d-4140-8b5f-134cce5854cd
+		summarizeBy: none
+		sourceColumn: MIZ Analysis Label
+		sortByColumn: 'MIZ Identifier'
+
+	column 'Geography Type'
+		dataType: string
+		lineageTag: f97c7485-c8ba-4fb2-937a-00b97574a61d
+		summarizeBy: none
+		sourceColumn: Geography Type
+
 	column 'Population in Census Families'
 		dataType: int64
-		formatString: #,##0
 		isHidden
+		formatString: #,##0
+		lineageTag: eb6a9207-8bb1-451a-9ca8-34fdcdf84a1d
 		summarizeBy: sum
 		sourceColumn: Population in Census Families
 
 	column 'Children Aged 0 to 5'
 		dataType: int64
-		formatString: #,##0
 		isHidden
+		formatString: #,##0
+		lineageTag: 60330d85-cf80-446a-9dd1-a8b9755baeb6
 		summarizeBy: sum
 		sourceColumn: Children Aged 0 to 5
 
+	column 'Child Population Band'
+		dataType: string
+		lineageTag: 607c01f8-7b9c-4df7-9714-bb5605e59629
+		summarizeBy: none
+		sourceColumn: Child Population Band
+
+	column 'Child Population Band Sort'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: fb849d76-c2d0-49e5-a4f0-02b173d8f1c3
+		summarizeBy: none
+		sourceColumn: Child Population Band Sort
+
+	column 'Public Denominator Flag'
+		dataType: string
+		lineageTag: ed2b8ea9-027f-4309-9508-9b802a728b06
+		summarizeBy: none
+		sourceColumn: Public Denominator Flag
+
 	column 'Population Status'
 		dataType: string
+		lineageTag: 8d464211-250e-4cf3-8fd8-412ce0bdf8d1
 		summarizeBy: none
 		sourceColumn: Population Status
 
 	column 'Children Status'
 		dataType: string
+		lineageTag: b1cf3393-9096-4ee1-9288-17ea20ec4e25
 		summarizeBy: none
 		sourceColumn: Children Status
 
 	column 'MIZ Status'
 		dataType: string
+		lineageTag: b661fba1-62a0-4190-87c8-99908c6cc0b2
 		summarizeBy: none
 		sourceColumn: MIZ Status
 
 	column 'Province Status'
 		dataType: string
+		lineageTag: a69f4d4d-50ae-4e1d-989b-5582e02746d9
 		summarizeBy: none
 		sourceColumn: Province Status
-
 
 	partition CSD = m
 		mode: import
 		source =
-			let
-			    Source = Csv.Document(File.Contents(#"DataFolder" & "csd.csv"), [Delimiter=",", Columns=12, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
-			    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
-			    #"Blank Values As Null" = Table.ReplaceValue(#"Promoted Headers", "", null, Replacer.ReplaceValue, Table.ColumnNames(#"Promoted Headers")),
-			    #"Changed Type" = Table.TransformColumnTypes(#"Blank Values As Null", {{"CSD Number", type text}, {"CSD Name", type text}, {"Province Code", Int64.Type}, {"Province Name", type text}, {"MIZ Identifier", Int64.Type}, {"MIZ Label", type text}, {"Population in Census Families", Int64.Type}, {"Children Aged 0 to 5", Int64.Type}, {"Population Status", type text}, {"Children Status", type text}, {"MIZ Status", type text}, {"Province Status", type text}}, "en-CA")
-			in
-			    #"Changed Type"
+				let
+				    Source = Csv.Document(File.Contents(#"DataFolder" & "csd.csv"), [Delimiter=",", Columns=17, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Blank Values As Null" = Table.ReplaceValue(#"Promoted Headers", "", null, Replacer.ReplaceValue, Table.ColumnNames(#"Promoted Headers")),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Blank Values As Null", {{"CSD Number", type text}, {"CSD Name", type text}, {"Province Code", Int64.Type}, {"Province Name", type text}, {"MIZ Identifier", Int64.Type}, {"MIZ Label", type text}, {"MIZ Analysis Label", type text}, {"Geography Type", type text}, {"Population in Census Families", Int64.Type}, {"Children Aged 0 to 5", Int64.Type}, {"Child Population Band", type text}, {"Child Population Band Sort", Int64.Type}, {"Public Denominator Flag", type text}, {"Population Status", type text}, {"Children Status", type text}, {"MIZ Status", type text}, {"Province Status", type text}}, "en-CA")
+				in
+				    #"Changed Type"
+
