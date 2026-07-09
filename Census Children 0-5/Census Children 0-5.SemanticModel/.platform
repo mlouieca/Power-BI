@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "Census Children 0-5"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "4f6f7802-e418-440b-911b-2d342cc8e9d4"
+  }
+}

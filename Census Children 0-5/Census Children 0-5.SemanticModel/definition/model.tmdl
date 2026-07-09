@@ -1,0 +1,19 @@
+model Model
+	culture: en-CA
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-CA
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["Province","CSD","Indicator","Province Indicators","CSD Indicators","Notes"]
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table Province
+ref table CSD
+ref table Indicator
+ref table 'Province Indicators'
+ref table 'CSD Indicators'
+ref table Notes
+
+ref cultureInfo en-CA

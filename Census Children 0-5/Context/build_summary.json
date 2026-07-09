@@ -1,0 +1,17 @@
+{
+  "province_rows": 14,
+  "province_indicator_rows": 70,
+  "csd_rows": 5161,
+  "csd_indicator_rows": 25805,
+  "note_rows": 6,
+  "emails": [
+    {
+      "file": "FW_ Census information for children aged 0-5.msg",
+      "subject": "FW: Census information for children aged 0-5"
+    },
+    {
+      "file": "FW_ Demographic information.msg",
+      "subject": "FW: Demographic information"
+    }
+  ]
+}

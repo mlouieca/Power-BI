@@ -18,27 +18,6 @@ table ECE
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	measure '3MMA Estimate Value' = ```
-			
-			[Estimate Value]
-			
-			```
-		lineageTag: f275e1bb-9f8e-46c5-9e38-dcb939c7bbd2
-
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
-
-	measure '3MMA Employment' = ```
-			
-			CALCULATE (
-			    [3MMA Estimate Value],
-			    ECE[Variable] = "Employment"
-			)
-			
-			```
-		lineageTag: 47cafc6d-c414-4594-ab56-0ba87a10bef3
-
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
-
 	measure 'Estimate Value (Latest)' = ```
 			
 			VAR d = [Latest Date]
@@ -66,15 +45,6 @@ table ECE
 			
 			```
 		lineageTag: 28f28ec2-79ee-4f43-82c1-c63ad78a8011
-
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
-
-	measure '3MMA Estimate Value (YoY)' = ```
-			
-			[Estimate Value (YoY)]
-			
-			```
-		lineageTag: 965738a4-ea75-45cb-851c-ef0507445112
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
@@ -177,6 +147,36 @@ table ECE
 			```
 		formatString: 0.00%;-0.00%;0.00%
 		lineageTag: 788342c9-efe3-436e-93de-f5e03a3c9f94
+
+	measure '3MMA Estimate Value' = ```
+			
+			[Estimate Value]
+			
+			```
+		lineageTag: f275e1bb-9f8e-46c5-9e38-dcb939c7bbd2
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure '3MMA Employment' = ```
+			
+			CALCULATE (
+			    [3MMA Estimate Value],
+			    ECE[Variable] = "Employment"
+			)
+			
+			```
+		lineageTag: 47cafc6d-c414-4594-ab56-0ba87a10bef3
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure '3MMA Estimate Value (YoY)' = ```
+			
+			[Estimate Value (YoY)]
+			
+			```
+		lineageTag: 965738a4-ea75-45cb-851c-ef0507445112
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 	column 'Reference Period'
 		dataType: int64
