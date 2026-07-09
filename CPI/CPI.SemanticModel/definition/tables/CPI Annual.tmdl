@@ -25,6 +25,90 @@ table 'CPI Annual'
 		formatString: 0.00%;-0.00%;0.00%
 		lineageTag: e3d66310-8547-43e7-b787-e09e558936d1
 
+	measure 'CPI Annual YoY % Avg 5 Years' = ```
+
+			VAR LatestDateWithYoY =
+			    MAXX (
+			        FILTER (
+			            ALLSELECTED ( 'Annual Dates'[Date] ),
+			            NOT ISBLANK ( [CPI Annual YoY %] )
+			        ),
+			        'Annual Dates'[Date]
+			    )
+			VAR LastFiveAnnualDates =
+			    TOPN (
+			        5,
+			        FILTER (
+			            ALLSELECTED ( 'Annual Dates'[Date] ),
+			            'Annual Dates'[Date] <= LatestDateWithYoY
+			                && NOT ISBLANK ( [CPI Annual YoY %] )
+			        ),
+			        'Annual Dates'[Date],
+			        DESC
+			    )
+			RETURN
+			AVERAGEX ( LastFiveAnnualDates, [CPI Annual YoY %] )
+
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 9b7f0677-4f8a-42fd-87e9-a7221caf2f78
+
+	measure 'CPI Annual YoY % Avg 10 Years' = ```
+
+			VAR LatestDateWithYoY =
+			    MAXX (
+			        FILTER (
+			            ALLSELECTED ( 'Annual Dates'[Date] ),
+			            NOT ISBLANK ( [CPI Annual YoY %] )
+			        ),
+			        'Annual Dates'[Date]
+			    )
+			VAR LastTenAnnualDates =
+			    TOPN (
+			        10,
+			        FILTER (
+			            ALLSELECTED ( 'Annual Dates'[Date] ),
+			            'Annual Dates'[Date] <= LatestDateWithYoY
+			                && NOT ISBLANK ( [CPI Annual YoY %] )
+			        ),
+			        'Annual Dates'[Date],
+			        DESC
+			    )
+			RETURN
+			AVERAGEX ( LastTenAnnualDates, [CPI Annual YoY %] )
+
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 8a46c71e-73b8-402f-82df-c2553b24be0e
+
+	measure 'CPI Annual YoY % Avg 20 Years' = ```
+
+			VAR LatestDateWithYoY =
+			    MAXX (
+			        FILTER (
+			            ALLSELECTED ( 'Annual Dates'[Date] ),
+			            NOT ISBLANK ( [CPI Annual YoY %] )
+			        ),
+			        'Annual Dates'[Date]
+			    )
+			VAR LastTwentyAnnualDates =
+			    TOPN (
+			        20,
+			        FILTER (
+			            ALLSELECTED ( 'Annual Dates'[Date] ),
+			            'Annual Dates'[Date] <= LatestDateWithYoY
+			                && NOT ISBLANK ( [CPI Annual YoY %] )
+			        ),
+			        'Annual Dates'[Date],
+			        DESC
+			    )
+			RETURN
+			AVERAGEX ( LastTwentyAnnualDates, [CPI Annual YoY %] )
+
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: d0ff78d0-58c9-4c9a-9ce2-d3654a577f07
+
 	measure 'CPI Annual YoY Abs' = ```
 			
 			VAR CurrYear = [CPI Annual Index]
@@ -79,6 +163,10 @@ table 'CPI Annual'
 			```
 		formatString: 0.0%;-0.0%;0.0%
 		lineageTag: f3b71f95-f210-4bfb-966f-a8691593c884
+
+	measure 'CPI Annual YoY % Current' = [CPI Annual YoY % (Latest)]
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: e1ec0089-f89b-4a97-8c6c-95bb60f9480e
 
 	measure 'CPI Annual YoY Abs (Latest)' = ```
 			
