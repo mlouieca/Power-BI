@@ -25,6 +25,38 @@ REPORT_DIR = ROOT / f"{PROJECT_NAME}.Report"
 MODEL_DIR = ROOT / f"{PROJECT_NAME}.SemanticModel"
 DATA_DIR = ROOT / "Data"
 CONTEXT_DIR = ROOT / "Context"
+SOURCE_CSV = "census_children_0_5.csv"
+
+SOURCE_COLUMNS = [
+    "Record Type",
+    "Province Code",
+    "Province Name",
+    "Is Canada",
+    "Population in Census Families",
+    "Children Aged 0 to 5",
+    "Population Status",
+    "Children Status",
+    "CSD Number",
+    "CSD Name",
+    "MIZ Identifier",
+    "MIZ Label",
+    "MIZ Analysis Label",
+    "Geography Type",
+    "Child Population Band",
+    "Child Population Band Sort",
+    "Public Denominator Flag",
+    "MIZ Status",
+    "Province Status",
+    "Indicator",
+    "Indicator Short Name",
+    "Indicator Description",
+    "Indicator Sort",
+    "Children Count",
+    "Percent",
+    "Value Status",
+    "Note Number",
+    "Note",
+]
 
 INDICATORS = [
     ("Below LIM", "Low income", "Children aged 0 to 5 living below LIM", 1),
@@ -135,6 +167,25 @@ def write_csv(path, rows, fieldnames):
         writer.writeheader()
         for row in rows:
             writer.writerow(row)
+
+
+def combined_source_rows(parsed):
+    rows = []
+    for record_type, source_rows in [
+        ("Province", parsed["province"]),
+        ("Province Indicators", parsed["province_indicators"]),
+        ("CSD", parsed["csd"]),
+        ("CSD Indicators", parsed["csd_indicators"]),
+        ("MIZ Summary", parsed["miz_summary"]),
+        ("Indicator", parsed["indicator"]),
+        ("Notes", parsed["notes"]),
+    ]:
+        for source_row in source_rows:
+            row = {column: "" for column in SOURCE_COLUMNS}
+            row["Record Type"] = record_type
+            row.update(source_row)
+            rows.append(row)
+    return rows
 
 
 def existing_logical_id(path):
@@ -531,17 +582,18 @@ def tmdl_measure(name, expression, fmt="#,##0", folder=None, description=None):
     return "\n".join(lines)
 
 
-def m_csv_partition(table_name, file_name, columns, types):
+def m_csv_partition(table_name, record_type, types):
     type_pairs = ", ".join([f'{{"{col}", {typ}}}' for col, typ in types])
+    selected_columns = ", ".join([f'"{col}"' for col, _ in types])
     return f"""
 \tpartition {qname(table_name)} = m
 \t\tmode: import
 \t\tsource =
 \t\t\tlet
-\t\t\t    Source = Csv.Document(File.Contents(#"DataFolder" & "{file_name}"), [Delimiter=",", Columns={columns}, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
-\t\t\t    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
-\t\t\t    #"Blank Values As Null" = Table.ReplaceValue(#"Promoted Headers", "", null, Replacer.ReplaceValue, Table.ColumnNames(#"Promoted Headers")),
-\t\t\t    #"Changed Type" = Table.TransformColumnTypes(#"Blank Values As Null", {{{type_pairs}}}, "en-CA")
+\t\t\t    Source = CensusChildrenData,
+\t\t\t    #"Filtered Rows" = Table.SelectRows(Source, each [Record Type] = "{record_type}"),
+\t\t\t    #"Selected Columns" = Table.SelectColumns(#"Filtered Rows", {{{selected_columns}}}),
+\t\t\t    #"Changed Type" = Table.TransformColumnTypes(#"Selected Columns", {{{type_pairs}}}, "en-CA")
 \t\t\tin
 \t\t\t    #"Changed Type"
 """.rstrip()
@@ -590,7 +642,18 @@ def make_semantic_model():
     )
     data_folder = str(DATA_DIR).replace("\\", "\\\\") + "\\\\"
     (definition / "expressions.tmdl").write_text(
-        f'expression DataFolder = "{data_folder}" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]\n',
+        "\n".join([
+            f'expression DataFolder = "{data_folder}" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]',
+            "",
+            "expression CensusChildrenData =",
+            f"\t\tlet",
+            f'\t\t    Source = Csv.Document(File.Contents(#"DataFolder" & "{SOURCE_CSV}"), [Delimiter=",", Columns={len(SOURCE_COLUMNS)}, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),',
+            "\t\t    #\"Promoted Headers\" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+            "\t\t    #\"Blank Values As Null\" = Table.ReplaceValue(#\"Promoted Headers\", \"\", null, Replacer.ReplaceValue, Table.ColumnNames(#\"Promoted Headers\"))",
+            "\t\tin",
+            "\t\t    #\"Blank Values As Null\"",
+            "",
+        ]),
         encoding="utf-8",
     )
     (cultures_dir / "en-CA.tmdl").write_text("cultureInfo en-CA\n", encoding="utf-8")
@@ -620,7 +683,7 @@ def make_semantic_model():
     ]
     (tables_dir / "Province.tmdl").write_text(
         "table Province\n\n" + "\n\n".join(province_measures + province_cols) + "\n\n" +
-        m_csv_partition("Province", "province.csv", 7, [
+        m_csv_partition("Province", "Province", [
             ("Province Code", "Int64.Type"),
             ("Province Name", "type text"),
             ("Is Canada", "type text"),
@@ -669,7 +732,7 @@ RETURN
     ]
     (tables_dir / "CSD.tmdl").write_text(
         "table CSD\n\n" + "\n\n".join(csd_measures + csd_cols) + "\n\n" +
-        m_csv_partition("CSD", "csd.csv", 17, [
+        m_csv_partition("CSD", "CSD", [
             ("CSD Number", "type text"),
             ("CSD Name", "type text"),
             ("Province Code", "Int64.Type"),
@@ -699,7 +762,7 @@ RETURN
     ]
     (tables_dir / "Indicator.tmdl").write_text(
         "table Indicator\n\n" + "\n\n".join(indicator_cols) + "\n\n" +
-        m_csv_partition("Indicator", "indicator.csv", 4, [
+        m_csv_partition("Indicator", "Indicator", [
             ("Indicator", "type text"),
             ("Indicator Short Name", "type text"),
             ("Indicator Description", "type text"),
@@ -719,7 +782,7 @@ RETURN
     ]
     (tables_dir / "Province Indicators.tmdl").write_text(
         "table 'Province Indicators'\n\n" + "\n\n".join(province_indicator_cols) + "\n\n" +
-        m_csv_partition("Province Indicators", "province_indicators.csv", 7, [
+        m_csv_partition("Province Indicators", "Province Indicators", [
             ("Province Code", "Int64.Type"),
             ("Province Name", "type text"),
             ("Indicator", "type text"),
@@ -742,7 +805,7 @@ RETURN
     ]
     (tables_dir / "CSD Indicators.tmdl").write_text(
         "table 'CSD Indicators'\n\n" + "\n\n".join(csd_indicator_cols) + "\n\n" +
-        m_csv_partition("CSD Indicators", "csd_indicators.csv", 7, [
+        m_csv_partition("CSD Indicators", "CSD Indicators", [
             ("CSD Number", "type text"),
             ("Province Code", "Int64.Type"),
             ("Indicator", "type text"),
@@ -782,7 +845,7 @@ SUMX (
     ]
     (tables_dir / "MIZ Summary.tmdl").write_text(
         "table 'MIZ Summary'\n\n" + "\n\n".join(miz_summary_measures + miz_summary_cols) + "\n\n" +
-        m_csv_partition("MIZ Summary", "miz_summary.csv", 10, [
+        m_csv_partition("MIZ Summary", "MIZ Summary", [
             ("MIZ Identifier", "Int64.Type"),
             ("MIZ Analysis Label", "type text"),
             ("MIZ Label", "type text"),
@@ -800,7 +863,7 @@ SUMX (
     notes_cols = [tmdl_column("Note Number", "int64", fmt="0", summarize="none"), tmdl_column("Note", "string")]
     (tables_dir / "Notes.tmdl").write_text(
         "table Notes\n\n" + "\n\n".join(notes_cols) + "\n\n" +
-        m_csv_partition("Notes", "notes.csv", 2, [("Note Number", "Int64.Type"), ("Note", "type text")]) + "\n",
+        m_csv_partition("Notes", "Notes", [("Note Number", "Int64.Type"), ("Note", "type text")]) + "\n",
         encoding="utf-8",
     )
 
@@ -1205,13 +1268,8 @@ def main():
     CONTEXT_DIR.mkdir(parents=True, exist_ok=True)
 
     parsed = parse_workbook()
-    write_csv(DATA_DIR / "province.csv", parsed["province"], ["Province Code", "Province Name", "Is Canada", "Population in Census Families", "Children Aged 0 to 5", "Population Status", "Children Status"])
-    write_csv(DATA_DIR / "province_indicators.csv", parsed["province_indicators"], ["Province Code", "Province Name", "Indicator", "Indicator Sort", "Children Count", "Percent", "Value Status"])
-    write_csv(DATA_DIR / "csd.csv", parsed["csd"], ["CSD Number", "CSD Name", "Province Code", "Province Name", "MIZ Identifier", "MIZ Label", "MIZ Analysis Label", "Geography Type", "Population in Census Families", "Children Aged 0 to 5", "Child Population Band", "Child Population Band Sort", "Public Denominator Flag", "Population Status", "Children Status", "MIZ Status", "Province Status"])
-    write_csv(DATA_DIR / "csd_indicators.csv", parsed["csd_indicators"], ["CSD Number", "Province Code", "Indicator", "Indicator Sort", "Children Count", "Percent", "Value Status"])
-    write_csv(DATA_DIR / "miz_summary.csv", parsed["miz_summary"], ["MIZ Identifier", "MIZ Analysis Label", "MIZ Label", "Geography Type", "Indicator", "Indicator Short Name", "Indicator Sort", "Children Aged 0 to 5", "Children Count", "Percent"])
-    write_csv(DATA_DIR / "indicator.csv", parsed["indicator"], ["Indicator", "Indicator Short Name", "Indicator Description", "Indicator Sort"])
-    write_csv(DATA_DIR / "notes.csv", parsed["notes"], ["Note Number", "Note"])
+    source_rows = combined_source_rows(parsed)
+    write_csv(DATA_DIR / SOURCE_CSV, source_rows, SOURCE_COLUMNS)
 
     email_rows = extract_email_context()
     write_csv(CONTEXT_DIR / "email_context.csv", email_rows, ["file", "subject", "sender", "to", "body"])
@@ -1229,6 +1287,8 @@ def main():
         "csd_indicator_rows": len(parsed["csd_indicators"]),
         "miz_summary_rows": len(parsed["miz_summary"]),
         "note_rows": len(parsed["notes"]),
+        "source_csv": SOURCE_CSV,
+        "source_csv_rows": len(source_rows),
         "emails": [{"file": item["file"], "subject": item["subject"]} for item in email_rows],
     }
     (CONTEXT_DIR / "build_summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")

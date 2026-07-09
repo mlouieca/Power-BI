@@ -169,10 +169,10 @@ table CSD
 		mode: import
 		source =
 				let
-				    Source = Csv.Document(File.Contents(#"DataFolder" & "csd.csv"), [Delimiter=",", Columns=17, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
-				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
-				    #"Blank Values As Null" = Table.ReplaceValue(#"Promoted Headers", "", null, Replacer.ReplaceValue, Table.ColumnNames(#"Promoted Headers")),
-				    #"Changed Type" = Table.TransformColumnTypes(#"Blank Values As Null", {{"CSD Number", type text}, {"CSD Name", type text}, {"Province Code", Int64.Type}, {"Province Name", type text}, {"MIZ Identifier", Int64.Type}, {"MIZ Label", type text}, {"MIZ Analysis Label", type text}, {"Geography Type", type text}, {"Population in Census Families", Int64.Type}, {"Children Aged 0 to 5", Int64.Type}, {"Child Population Band", type text}, {"Child Population Band Sort", Int64.Type}, {"Public Denominator Flag", type text}, {"Population Status", type text}, {"Children Status", type text}, {"MIZ Status", type text}, {"Province Status", type text}}, "en-CA")
+				    Source = CensusChildrenData,
+				    #"Filtered Rows" = Table.SelectRows(Source, each [Record Type] = "CSD"),
+				    #"Selected Columns" = Table.SelectColumns(#"Filtered Rows", {"CSD Number", "CSD Name", "Province Code", "Province Name", "MIZ Identifier", "MIZ Label", "MIZ Analysis Label", "Geography Type", "Population in Census Families", "Children Aged 0 to 5", "Child Population Band", "Child Population Band Sort", "Public Denominator Flag", "Population Status", "Children Status", "MIZ Status", "Province Status"}),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Selected Columns", {{"CSD Number", type text}, {"CSD Name", type text}, {"Province Code", Int64.Type}, {"Province Name", type text}, {"MIZ Identifier", Int64.Type}, {"MIZ Label", type text}, {"MIZ Analysis Label", type text}, {"Geography Type", type text}, {"Population in Census Families", Int64.Type}, {"Children Aged 0 to 5", Int64.Type}, {"Child Population Band", type text}, {"Child Population Band Sort", Int64.Type}, {"Public Denominator Flag", type text}, {"Population Status", type text}, {"Children Status", type text}, {"MIZ Status", type text}, {"Province Status", type text}}, "en-CA")
 				in
 				    #"Changed Type"
 
