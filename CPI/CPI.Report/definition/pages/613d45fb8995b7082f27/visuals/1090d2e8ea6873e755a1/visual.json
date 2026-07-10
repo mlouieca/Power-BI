@@ -45,17 +45,10 @@
                 }
               }
             },
-            "endDate": {
-              "expr": {
-                "Literal": {
-                  "Value": "datetime'2025-01-01T00:00:00'"
-                }
-              }
-            },
             "mode": {
               "expr": {
                 "Literal": {
-                  "Value": "'Between'"
+                  "Value": "'After'"
                 }
               }
             }
@@ -78,45 +71,21 @@
                 "Where": [
                   {
                     "Condition": {
-                      "And": {
+                      "Comparison": {
+                        "ComparisonKind": 2,
                         "Left": {
-                          "Comparison": {
-                            "ComparisonKind": 2,
-                            "Left": {
-                              "Column": {
-                                "Expression": {
-                                  "SourceRef": {
-                                    "Source": "c"
-                                  }
-                                },
-                                "Property": "REF_DATE"
+                          "Column": {
+                            "Expression": {
+                              "SourceRef": {
+                                "Source": "c"
                               }
                             },
-                            "Right": {
-                              "Literal": {
-                                "Value": "datetime'2005-01-01T00:00:00'"
-                              }
-                            }
+                            "Property": "REF_DATE"
                           }
                         },
                         "Right": {
-                          "Comparison": {
-                            "ComparisonKind": 3,
-                            "Left": {
-                              "Column": {
-                                "Expression": {
-                                  "SourceRef": {
-                                    "Source": "c"
-                                  }
-                                },
-                                "Property": "REF_DATE"
-                              }
-                            },
-                            "Right": {
-                              "Literal": {
-                                "Value": "datetime'2025-01-02T00:00:00'"
-                              }
-                            }
+                          "Literal": {
+                            "Value": "datetime'2005-01-01T00:00:00'"
                           }
                         }
                       }
