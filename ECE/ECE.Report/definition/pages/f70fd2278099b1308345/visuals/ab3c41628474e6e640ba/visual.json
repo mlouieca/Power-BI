@@ -74,6 +74,12 @@
       "categoryAxis": [
         {
           "properties": {
+            "fontFamily": {
+              "expr": { "Literal": { "Value": "'Arial'" } }
+            },
+            "fontSize": {
+              "expr": { "Literal": { "Value": "11D" } }
+            },
             "showAxisTitle": {
               "expr": {
                 "Literal": {
@@ -87,6 +93,12 @@
       "valueAxis": [
         {
           "properties": {
+            "fontFamily": {
+              "expr": { "Literal": { "Value": "'Arial'" } }
+            },
+            "fontSize": {
+              "expr": { "Literal": { "Value": "11D" } }
+            },
             "gridlineShow": {
               "expr": {
                 "Literal": {

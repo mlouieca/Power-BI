@@ -92,6 +92,12 @@
       "categoryAxis": [
         {
           "properties": {
+            "fontFamily": {
+              "expr": { "Literal": { "Value": "'Arial'" } }
+            },
+            "fontSize": {
+              "expr": { "Literal": { "Value": "11D" } }
+            },
             "titleText": {
               "expr": {
                 "Literal": {
@@ -119,6 +125,12 @@
       "legend": [
         {
           "properties": {
+            "fontFamily": {
+              "expr": { "Literal": { "Value": "'Arial'" } }
+            },
+            "fontSize": {
+              "expr": { "Literal": { "Value": "11D" } }
+            },
             "show": {
               "expr": {
                 "Literal": {
@@ -132,6 +144,12 @@
       "valueAxis": [
         {
           "properties": {
+            "fontFamily": {
+              "expr": { "Literal": { "Value": "'Arial'" } }
+            },
+            "fontSize": {
+              "expr": { "Literal": { "Value": "11D" } }
+            },
             "show": {
               "expr": {
                 "Literal": {
