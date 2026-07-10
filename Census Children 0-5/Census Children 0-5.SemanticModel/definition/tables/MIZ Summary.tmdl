@@ -89,12 +89,14 @@ table 'MIZ Summary'
 		sourceColumn: Children Count
 
 	column Percent
-		dataType: decimal
+		dataType: double
 		isHidden
 		formatString: 0.0%
 		lineageTag: 599e7a1a-e7e2-429e-a860-3701f6164322
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: Percent
+
+		annotation SummarizationSetBy = Automatic
 
 	partition 'MIZ Summary' = m
 		mode: import

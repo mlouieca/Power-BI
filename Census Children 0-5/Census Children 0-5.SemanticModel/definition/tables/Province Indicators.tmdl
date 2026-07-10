@@ -37,12 +37,14 @@ table 'Province Indicators'
 		sourceColumn: Children Count
 
 	column Percent
-		dataType: decimal
+		dataType: double
 		isHidden
 		formatString: 0.0
 		lineageTag: aa127c9b-890e-409d-bd19-cef98a739d14
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: Percent
+
+		annotation SummarizationSetBy = Automatic
 
 	column 'Value Status'
 		dataType: string

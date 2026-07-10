@@ -3,8 +3,12 @@ expression DataFolder = "C:\\GitHub\\Power-BI\\Census Children 0-5\\Data\\" meta
 
 expression CensusChildrenData =
 		let
-		    Source = Csv.Document(File.Contents(#"DataFolder" & "census_children_0_5.csv"), [Delimiter=",", Columns=28, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+		    Source = Csv.Document(File.Contents("C:\Users\MLOUI\OneDrive\Work\Census Data DDP\census_children_0_5.csv"),[Delimiter=",", Columns=28, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
 		    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
 		    #"Blank Values As Null" = Table.ReplaceValue(#"Promoted Headers", "", null, Replacer.ReplaceValue, Table.ColumnNames(#"Promoted Headers"))
 		in
 		    #"Blank Values As Null"
+	lineageTag: c6f33701-550f-4a32-8d00-18bf54bb03d7
+
+	annotation PBI_ResultType = Table
+
