@@ -93,10 +93,18 @@
         {
           "properties": {
             "fontFamily": {
-              "expr": { "Literal": { "Value": "'Arial'" } }
+              "expr": {
+                "Literal": {
+                  "Value": "'Arial'"
+                }
+              }
             },
             "fontSize": {
-              "expr": { "Literal": { "Value": "11D" } }
+              "expr": {
+                "Literal": {
+                  "Value": "11D"
+                }
+              }
             },
             "titleText": {
               "expr": {
@@ -126,10 +134,18 @@
         {
           "properties": {
             "fontFamily": {
-              "expr": { "Literal": { "Value": "'Arial'" } }
+              "expr": {
+                "Literal": {
+                  "Value": "'Arial'"
+                }
+              }
             },
             "fontSize": {
-              "expr": { "Literal": { "Value": "11D" } }
+              "expr": {
+                "Literal": {
+                  "Value": "11D"
+                }
+              }
             },
             "show": {
               "expr": {
@@ -152,10 +168,18 @@
         {
           "properties": {
             "fontFamily": {
-              "expr": { "Literal": { "Value": "'Arial'" } }
+              "expr": {
+                "Literal": {
+                  "Value": "'Arial'"
+                }
+              }
             },
             "fontSize": {
-              "expr": { "Literal": { "Value": "11D" } }
+              "expr": {
+                "Literal": {
+                  "Value": "11D"
+                }
+              }
             },
             "show": {
               "expr": {
@@ -258,7 +282,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
                 }
               }
             }
@@ -333,5 +357,51 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "2f4f100b0188a53b3eef",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "CPI Annual"
+              }
+            },
+            "Property": "REF_DATE"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "fd6c7d39bffbcadaf54e",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "CPI Annual"
+              }
+            },
+            "Property": "Products and product groups"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "7ebfdce038a6effdcf6a",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "CPI Annual"
+              }
+            },
+            "Property": "CPI Annual Index"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
   }
 }

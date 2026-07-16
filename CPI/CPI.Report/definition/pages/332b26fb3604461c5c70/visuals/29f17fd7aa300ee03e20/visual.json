@@ -88,10 +88,18 @@
         {
           "properties": {
             "fontFamily": {
-              "expr": { "Literal": { "Value": "'Arial'" } }
+              "expr": {
+                "Literal": {
+                  "Value": "'Arial'"
+                }
+              }
             },
             "fontSize": {
-              "expr": { "Literal": { "Value": "11D" } }
+              "expr": {
+                "Literal": {
+                  "Value": "11D"
+                }
+              }
             },
             "showAxisTitle": {
               "expr": {
@@ -107,10 +115,18 @@
         {
           "properties": {
             "fontFamily": {
-              "expr": { "Literal": { "Value": "'Arial'" } }
+              "expr": {
+                "Literal": {
+                  "Value": "'Arial'"
+                }
+              }
             },
             "fontSize": {
-              "expr": { "Literal": { "Value": "11D" } }
+              "expr": {
+                "Literal": {
+                  "Value": "11D"
+                }
+              }
             },
             "gridlineShow": {
               "expr": {

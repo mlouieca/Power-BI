@@ -93,10 +93,18 @@
         {
           "properties": {
             "fontFamily": {
-              "expr": { "Literal": { "Value": "'Arial'" } }
+              "expr": {
+                "Literal": {
+                  "Value": "'Arial'"
+                }
+              }
             },
             "fontSize": {
-              "expr": { "Literal": { "Value": "11D" } }
+              "expr": {
+                "Literal": {
+                  "Value": "11D"
+                }
+              }
             },
             "titleText": {
               "expr": {
@@ -126,10 +134,18 @@
         {
           "properties": {
             "fontFamily": {
-              "expr": { "Literal": { "Value": "'Arial'" } }
+              "expr": {
+                "Literal": {
+                  "Value": "'Arial'"
+                }
+              }
             },
             "fontSize": {
-              "expr": { "Literal": { "Value": "11D" } }
+              "expr": {
+                "Literal": {
+                  "Value": "11D"
+                }
+              }
             },
             "show": {
               "expr": {
@@ -145,10 +161,18 @@
         {
           "properties": {
             "fontFamily": {
-              "expr": { "Literal": { "Value": "'Arial'" } }
+              "expr": {
+                "Literal": {
+                  "Value": "'Arial'"
+                }
+              }
             },
             "fontSize": {
-              "expr": { "Literal": { "Value": "11D" } }
+              "expr": {
+                "Literal": {
+                  "Value": "11D"
+                }
+              }
             },
             "show": {
               "expr": {

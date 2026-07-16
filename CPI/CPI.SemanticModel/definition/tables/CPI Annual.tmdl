@@ -26,7 +26,7 @@ table 'CPI Annual'
 		lineageTag: e3d66310-8547-43e7-b787-e09e558936d1
 
 	measure 'CPI Annual YoY % Avg 5 Years' = ```
-
+			
 			VAR LatestDateWithYoY =
 			    MAXX (
 			        FILTER (
@@ -48,13 +48,13 @@ table 'CPI Annual'
 			    )
 			RETURN
 			AVERAGEX ( LastFiveAnnualDates, [CPI Annual YoY %] )
-
+			
 			```
 		formatString: 0.0%;-0.0%;0.0%
 		lineageTag: 9b7f0677-4f8a-42fd-87e9-a7221caf2f78
 
 	measure 'CPI Annual YoY % Avg 10 Years' = ```
-
+			
 			VAR LatestDateWithYoY =
 			    MAXX (
 			        FILTER (
@@ -76,13 +76,13 @@ table 'CPI Annual'
 			    )
 			RETURN
 			AVERAGEX ( LastTenAnnualDates, [CPI Annual YoY %] )
-
+			
 			```
 		formatString: 0.0%;-0.0%;0.0%
 		lineageTag: 8a46c71e-73b8-402f-82df-c2553b24be0e
 
 	measure 'CPI Annual YoY % Avg 20 Years' = ```
-
+			
 			VAR LatestDateWithYoY =
 			    MAXX (
 			        FILTER (
@@ -104,7 +104,7 @@ table 'CPI Annual'
 			    )
 			RETURN
 			AVERAGEX ( LastTwentyAnnualDates, [CPI Annual YoY %] )
-
+			
 			```
 		formatString: 0.0%;-0.0%;0.0%
 		lineageTag: d0ff78d0-58c9-4c9a-9ce2-d3654a577f07
