@@ -54,3 +54,11 @@ relationship 7039858a-b524-41d7-baad-f4fda6299410
 	fromColumn: 'ECE Monthly'.Date
 	toColumn: DateTable.Date
 
+relationship 61ced9e0-6de9-4e0b-9de4-d4b81d845e0a
+	fromColumn: 'ECE Job Vacancies'.Date
+	toColumn: DateTable.Date
+
+relationship 9f68342b-a53b-4750-a3a8-650eb6e8471f
+	fromColumn: 'ECE Job Vacancies'.Geography
+	toColumn: DimGeography.Geography
+

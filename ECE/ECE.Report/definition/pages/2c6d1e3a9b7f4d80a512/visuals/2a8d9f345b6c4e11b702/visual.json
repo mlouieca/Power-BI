@@ -20,14 +20,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "JVWS"
+                      "Entity": "DimGeography"
                     }
                   },
-                  "Property": "GEO"
+                  "Property": "Geography"
                 }
               },
-              "queryRef": "JVWS.GEO",
-              "nativeQueryRef": "GEO",
+              "queryRef": "DimGeography.Geography",
+              "nativeQueryRef": "Geography",
               "active": true
             }
           ]
@@ -56,8 +56,8 @@
                 "Version": 2,
                 "From": [
                   {
-                    "Name": "j",
-                    "Entity": "JVWS",
+                    "Name": "d",
+                    "Entity": "DimGeography",
                     "Type": 0
                   }
                 ],
@@ -70,10 +70,10 @@
                             "Column": {
                               "Expression": {
                                 "SourceRef": {
-                                  "Source": "j"
+                                  "Source": "d"
                                 }
                               },
-                              "Property": "GEO"
+                              "Property": "Geography"
                             }
                           }
                         ],

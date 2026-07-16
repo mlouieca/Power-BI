@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
-  "name": "3b7e6d5f4a294c9fa831",
+  "name": "4e1f9a2b7c304d19b645",
   "position": {
-    "x": 0,
+    "x": 640,
     "y": 96,
-    "z": 3000,
+    "z": 4000,
     "height": 360,
     "width": 632,
-    "tabOrder": 3000
+    "tabOrder": 4000
   },
   "visual": {
     "visualType": "lineChart",
@@ -39,14 +39,28 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Annual ECE Employment"
+                      "Entity": "ECE Job Vacancies"
                     }
                   },
-                  "Property": "ECE Job Vacancies as % of Employment"
+                  "Property": "ECE Employment Index (2015 Base 100)"
                 }
               },
-              "queryRef": "Annual ECE Employment.ECE Job Vacancies as % of Employment",
-              "nativeQueryRef": "ECE Job Vacancies as % of Employment"
+              "queryRef": "ECE Job Vacancies.ECE Employment Index (2015 Base 100)",
+              "nativeQueryRef": "ECE Employment Index (2015 Base 100)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ECE Job Vacancies"
+                    }
+                  },
+                  "Property": "ECE Job Vacancies Index (2015 Base 100)"
+                }
+              },
+              "queryRef": "ECE Job Vacancies.ECE Job Vacancies Index (2015 Base 100)",
+              "nativeQueryRef": "ECE Job Vacancies Index (2015 Base 100)"
             }
           ]
         }
@@ -105,7 +119,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'ECE job vacancies as a share of ECE employment'"
+                  "Value": "'Indexed ECE employment and vacancies (2015 = 100)'"
                 }
               }
             }
