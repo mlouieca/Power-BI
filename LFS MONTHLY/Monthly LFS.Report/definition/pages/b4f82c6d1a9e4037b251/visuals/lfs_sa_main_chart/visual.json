@@ -1,0 +1,34 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "lfs_sa_main_chart",
+  "position": {"x": 0, "y": 152, "z": 4000, "height": 336, "width": 976, "tabOrder": 4000},
+  "visual": {
+    "visualType": "lineChart",
+    "query": {
+      "queryState": {
+        "Category": {"projections": [{"field": {"Column": {"Expression": {"SourceRef": {"Entity": "DateTable"}}, "Property": "Date"}}, "queryRef": "DateTable.Date", "nativeQueryRef": "Date", "active": true}]},
+        "Series": {"projections": []},
+        "Y": {"projections": [
+          {"field": {"Measure": {"Expression": {"SourceRef": {"Entity": "LFS Family Seasonally Adjusted"}}, "Property": "Original Rate"}}, "queryRef": "LFS Family Seasonally Adjusted.Original Rate", "nativeQueryRef": "Original Rate"},
+          {"field": {"Measure": {"Expression": {"SourceRef": {"Entity": "LFS Family Seasonally Adjusted"}}, "Property": "Seasonally Adjusted Rate"}}, "queryRef": "LFS Family Seasonally Adjusted.Seasonally Adjusted Rate", "nativeQueryRef": "Seasonally Adjusted Rate"},
+          {"field": {"Measure": {"Expression": {"SourceRef": {"Entity": "LFS Family Seasonally Adjusted"}}, "Property": "Seasonal Trend Rate"}}, "queryRef": "LFS Family Seasonally Adjusted.Seasonal Trend Rate", "nativeQueryRef": "Seasonal Trend Rate"}
+        ]}
+      },
+      "sortDefinition": {"sort": [{"field": {"Column": {"Expression": {"SourceRef": {"Entity": "DateTable"}}, "Property": "Date"}}, "direction": "Ascending"}], "isDefaultSort": true}
+    },
+    "objects": {
+      "valueAxis": [{"properties": {"showAxisTitle": {"expr": {"Literal": {"Value": "false"}}}}}],
+      "categoryAxis": [{"properties": {"showAxisTitle": {"expr": {"Literal": {"Value": "false"}}}}}]
+    },
+    "visualContainerObjects": {
+      "title": [{"properties": {"text": {"expr": {"Literal": {"Value": "'Core-aged women: actual, unofficial seasonally adjusted, and trend'"}}}, "show": {"expr": {"Literal": {"Value": "true"}}}}}],
+      "subTitle": [{"properties": {"text": {"expr": {"Literal": {"Value": "'Additive 2x12, rolling 120 months; Mar 2020-Jun 2021 excluded only from factors'"}}}, "show": {"expr": {"Literal": {"Value": "true"}}}}}]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {"filters": [
+    {"name": "cfbf8332d28742eaae01", "field": {"Measure": {"Expression": {"SourceRef": {"Entity": "LFS Family Seasonally Adjusted"}}, "Property": "Original Rate"}}, "type": "Advanced"},
+    {"name": "1e8bf42bc9714fa795e8", "field": {"Measure": {"Expression": {"SourceRef": {"Entity": "LFS Family Seasonally Adjusted"}}, "Property": "Seasonally Adjusted Rate"}}, "type": "Advanced"},
+    {"name": "cd21309549d0418daafb", "field": {"Measure": {"Expression": {"SourceRef": {"Entity": "LFS Family Seasonally Adjusted"}}, "Property": "Seasonal Trend Rate"}}, "type": "Advanced"}
+  ]}
+}

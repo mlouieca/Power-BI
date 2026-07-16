@@ -11,3 +11,7 @@ relationship c7b2f8e9-7c1e-4e51-bf25-413a042d1a57
 	fromColumn: LFS_Headline_14100287.REF_DATE
 	toColumn: DateTable.Date
 
+relationship 1d451da2-6994-4146-ae99-09ecea21522c
+	fromColumn: 'LFS Family Seasonally Adjusted'.Date
+	toColumn: DateTable.Date
+

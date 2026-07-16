@@ -219,7 +219,9 @@ table 'ECE Seasonally Adjusted'
 		mode: import
 		source =
 				let
-				    Source = ECE,
+				    Source = #"ECE Monthly",
+				    CovidExclusionStart = #date(2020, 3, 1),
+				    CovidExclusionEnd = #date(2021, 6, 1),
 				    #"Filtered Employment" =
 				        Table.SelectRows(
 				            Source,
@@ -290,6 +292,10 @@ table 'ECE Seasonally Adjusted'
 				                                Table.SelectRows(
 				                                    WithResidual,
 				                                    each [Seasonal Residual] <> null
+				                                        and not (
+				                                            [Date] >= CovidExclusionStart
+				                                                and [Date] <= CovidExclusionEnd
+				                                        )
 				                                ),
 				                            MonthlyFactorsRaw =
 				                                Table.Group(
@@ -337,7 +343,7 @@ table 'ECE Seasonally Adjusted'
 				                                Table.AddColumn(
 				                                    WithAdjusted,
 				                                    "Adjustment Method",
-				                                    each "Classical additive decomposition: centered 12-month moving average trend; normalized monthly residual factors",
+				                                    each "Classical additive decomposition: centered 12-month moving average trend; normalized monthly residual factors exclude March 2020 through June 2021",
 				                                    type text
 				                                ),
 				                            WithObservationCount =

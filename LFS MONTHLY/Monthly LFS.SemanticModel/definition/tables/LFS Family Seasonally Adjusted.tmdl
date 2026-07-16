@@ -1,0 +1,419 @@
+table 'LFS Family Seasonally Adjusted'
+	lineageTag: e5dc53a7-8afb-44c4-b988-aa30a58cff45
+
+	measure 'Original Rate' = ```
+			VAR _ContextDate = MAX ( 'LFS Family Seasonally Adjusted'[Date] )
+			RETURN
+			    CALCULATE (
+			        MAX ( 'LFS Family Seasonally Adjusted'[Original Value] ),
+			        'LFS Family Seasonally Adjusted'[Date] = _ContextDate
+			    )
+			```
+		formatString: 0.0
+		lineageTag: 9095120f-dedf-419f-991e-47502b51728c
+
+	measure 'Seasonally Adjusted Rate' = ```
+			VAR _ContextDate = MAX ( 'LFS Family Seasonally Adjusted'[Date] )
+			RETURN
+			    CALCULATE (
+			        MAX ( 'LFS Family Seasonally Adjusted'[Seasonally Adjusted Value] ),
+			        'LFS Family Seasonally Adjusted'[Date] = _ContextDate
+			    )
+			```
+		formatString: 0.0
+		lineageTag: 1d7af8fc-adc4-405e-810a-5d764df18775
+
+	measure 'Seasonal Trend Rate' = ```
+			VAR _ContextDate = MAX ( 'LFS Family Seasonally Adjusted'[Date] )
+			RETURN
+			    CALCULATE (
+			        MAX ( 'LFS Family Seasonally Adjusted'[Trend] ),
+			        'LFS Family Seasonally Adjusted'[Date] = _ContextDate
+			    )
+			```
+		formatString: 0.0
+		lineageTag: 66088bb4-f724-4815-9833-96626a647369
+
+	measure 'Seasonal Factor (pp)' = ```
+			VAR _ContextDate = MAX ( 'LFS Family Seasonally Adjusted'[Date] )
+			RETURN
+			    CALCULATE (
+			        MAX ( 'LFS Family Seasonally Adjusted'[Seasonal Factor Value] ),
+			        'LFS Family Seasonally Adjusted'[Date] = _ContextDate
+			    )
+			```
+		formatString: 0.00;-0.00;0.00
+		lineageTag: 9c4ae90b-b118-4da7-b213-dc41b4c03987
+
+	measure 'Irregular Component (pp)' = ```
+			VAR _ContextDate = MAX ( 'LFS Family Seasonally Adjusted'[Date] )
+			RETURN
+			    CALCULATE (
+			        MAX ( 'LFS Family Seasonally Adjusted'[Irregular Component] ),
+			        'LFS Family Seasonally Adjusted'[Date] = _ContextDate
+			    )
+			```
+		formatString: 0.00;-0.00;0.00
+		lineageTag: c13b40a7-878c-4f92-b4fa-a4c9311fd1a1
+
+	measure 'Selected Adjustment Status' =
+		SELECTEDVALUE ( 'LFS Family Seasonally Adjusted'[Adjustment Status] )
+		lineageTag: ba22a591-d62a-45d0-8c41-645964149f0a
+
+	measure 'Series Observations' =
+		MIN ( 'LFS Family Seasonally Adjusted'[Group Observations] )
+		formatString: 0
+		lineageTag: 16ee0ef0-bb39-4223-a30a-3b3766027fc9
+
+	column GEO
+		dataType: string
+		lineageTag: bc690db7-6b94-4122-ab17-8306d995bf0c
+		summarizeBy: none
+		sourceColumn: GEO
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Labour force characteristics'
+		dataType: string
+		lineageTag: e17726fd-e26a-48fd-a52e-2985410adef6
+		summarizeBy: none
+		sourceColumn: Labour force characteristics
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Family age composition'
+		dataType: string
+		lineageTag: 434dcabb-ed40-4a20-8aad-f0f211b14b6d
+		summarizeBy: none
+		sourceColumn: Family age composition
+
+		annotation SummarizationSetBy = Automatic
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 45f4951b-dc53-48f4-9a85-5f6881300299
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: 12619e1f-c67f-4bd2-9545-099551ce969c
+		summarizeBy: sum
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column Month
+		dataType: int64
+		formatString: 0
+		lineageTag: 376416cc-c4ff-4a1f-a345-ef8a22113e91
+		summarizeBy: sum
+		sourceColumn: Month
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Name'
+		dataType: string
+		lineageTag: ab7f51b0-8cc5-4300-92d4-99002a65d614
+		summarizeBy: none
+		sourceColumn: Month Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Original Value'
+		dataType: double
+		lineageTag: 1c460f74-ff9a-4876-9106-dd619287526a
+		summarizeBy: none
+		sourceColumn: Original Value
+
+		annotation SummarizationSetBy = Automatic
+
+	column Trend
+		dataType: double
+		lineageTag: 855a9000-f299-4229-a7bc-9661aec5af1e
+		summarizeBy: none
+		sourceColumn: Trend
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Seasonal Factor Value'
+		dataType: double
+		lineageTag: 1f7950ac-e395-4f7a-a2f1-e37dc9871837
+		summarizeBy: none
+		sourceColumn: Seasonal Factor
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Seasonally Adjusted Value'
+		dataType: double
+		lineageTag: 12bd6d5e-c34c-453f-9126-a3f0cd63013d
+		summarizeBy: none
+		sourceColumn: Seasonally Adjusted Value
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Irregular Component'
+		dataType: double
+		lineageTag: ab8f6a09-2153-4b89-8bf8-d1917e02c62b
+		summarizeBy: none
+		sourceColumn: Irregular Component
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Adjustment Status'
+		dataType: string
+		lineageTag: 5019109c-afbd-4fdb-873a-18d6bf2f110d
+		summarizeBy: none
+		sourceColumn: Adjustment Status
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Group Observations'
+		dataType: int64
+		formatString: 0
+		lineageTag: 2242d7bf-f38f-4c0e-959b-d4b73b78471e
+		summarizeBy: none
+		sourceColumn: Group Observations
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Analysis Window'
+		dataType: string
+		lineageTag: 21b2e581-4afe-4eed-a46b-cbb67c5166d2
+		summarizeBy: none
+		sourceColumn: Analysis Window
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'LFS Family Seasonally Adjusted' = m
+		mode: import
+		source =
+				let
+				    Source = LFS_FamilyStructure_14100397,
+				    CovidExclusionStart = #date(2020, 3, 1),
+				    CovidExclusionEnd = #date(2021, 6, 1),
+				    #"Scoped Rate Series" =
+				        Table.SelectRows(
+				            Source,
+				            each [Age] = "25 to 54 years"
+				                and [Gender] = "Women+"
+				                and [Family type] = "Total, all reference persons and their spouses"
+				                and List.Contains(
+				                    {"Participation rate", "Employment rate", "Unemployment rate"},
+				                    [Labour force characteristics]
+				                )
+				                and [VALUE] <> null
+				                and [REF_DATE] <> null
+				        ),
+				    MaxSourceDate = List.Max(#"Scoped Rate Series"[REF_DATE]),
+				    AnalysisStart = Date.AddMonths(MaxSourceDate, -119),
+				    #"Recent 120 Months" =
+				        Table.SelectRows(
+				            #"Scoped Rate Series",
+				            each [REF_DATE] >= AnalysisStart and [REF_DATE] <= MaxSourceDate
+				        ),
+				    #"Selected Columns" =
+				        Table.SelectColumns(
+				            #"Recent 120 Months",
+				            {
+				                "GEO",
+				                "Labour force characteristics",
+				                "Family age composition",
+				                "REF_DATE",
+				                "VALUE"
+				            }
+				        ),
+				    #"Renamed Columns" =
+				        Table.RenameColumns(
+				            #"Selected Columns",
+				            {{"REF_DATE", "Date"}, {"VALUE", "Original Value"}}
+				        ),
+				    #"Added Year" = Table.AddColumn(#"Renamed Columns", "Year", each Date.Year([Date]), Int64.Type),
+				    #"Added Month" = Table.AddColumn(#"Added Year", "Month", each Date.Month([Date]), Int64.Type),
+				    #"Added Month Name" = Table.AddColumn(#"Added Month", "Month Name", each Date.ToText([Date], "MMM"), type text),
+				    #"Grouped Series" =
+				        Table.Group(
+				            #"Added Month Name",
+				            {"GEO", "Labour force characteristics", "Family age composition"},
+				            {
+				                {
+				                    "AdjustedData",
+				                    (Series as table) as table =>
+				                        let
+				                            Sorted = Table.Sort(Series, {{"Date", Order.Ascending}}),
+				                            Indexed = Table.AddIndexColumn(Sorted, "Series Index", 0, 1, Int64.Type),
+				                            Values = List.Buffer(Indexed[Original Value]),
+				                            Dates = List.Buffer(Indexed[Date]),
+				                            CountRows = List.Count(Values),
+				                            FirstDate = if CountRows = 0 then null else List.First(Dates),
+				                            LastDate = if CountRows = 0 then null else List.Last(Dates),
+				                            ExpectedRows =
+				                                if FirstDate = null or LastDate = null then
+				                                    0
+				                                else
+				                                    (Date.Year(LastDate) - Date.Year(FirstDate)) * 12
+				                                        + Date.Month(LastDate) - Date.Month(FirstDate) + 1,
+				                            IsComplete = CountRows = ExpectedRows,
+				                            IsEligible = CountRows >= 60 and IsComplete,
+				                            WithTrend =
+				                                Table.AddColumn(
+				                                    Indexed,
+				                                    "Trend",
+				                                    each
+				                                        let
+				                                            i = [Series Index],
+				                                            FirstWindow =
+				                                                if IsEligible and i >= 6 and i <= CountRows - 7 then
+				                                                    List.Average(List.Range(Values, i - 6, 12))
+				                                                else
+				                                                    null,
+				                                            SecondWindow =
+				                                                if IsEligible and i >= 6 and i <= CountRows - 7 then
+				                                                    List.Average(List.Range(Values, i - 5, 12))
+				                                                else
+				                                                    null
+				                                        in
+				                                            if FirstWindow = null or SecondWindow = null then
+				                                                null
+				                                            else
+				                                                (FirstWindow + SecondWindow) / 2,
+				                                    type number
+				                                ),
+				                            WithResidual =
+				                                Table.AddColumn(
+				                                    WithTrend,
+				                                    "Seasonal Residual",
+				                                    each if [Trend] = null then null else [Original Value] - [Trend],
+				                                    type number
+				                                ),
+				                            ResidualRows =
+				                                Table.SelectRows(
+				                                    WithResidual,
+				                                    each [Seasonal Residual] <> null
+				                                        and not (
+				                                            [Date] >= CovidExclusionStart
+				                                                and [Date] <= CovidExclusionEnd
+				                                        )
+				                                ),
+				                            MonthlyFactorsRaw =
+				                                Table.Group(
+				                                    ResidualRows,
+				                                    {"Month"},
+				                                    {{"Raw Seasonal Factor", each List.Average([Seasonal Residual]), type number}}
+				                                ),
+				                            RawFactors = MonthlyFactorsRaw[Raw Seasonal Factor],
+				                            FactorMean = if List.Count(RawFactors) = 12 then List.Average(RawFactors) else null,
+				                            MonthlyFactors =
+				                                Table.AddColumn(
+				                                    MonthlyFactorsRaw,
+				                                    "Seasonal Factor",
+				                                    each if FactorMean = null then null else [Raw Seasonal Factor] - FactorMean,
+				                                    type number
+				                                ),
+				                            MergedFactors =
+				                                Table.NestedJoin(
+				                                    WithResidual,
+				                                    {"Month"},
+				                                    MonthlyFactors,
+				                                    {"Month"},
+				                                    "MonthlyFactor",
+				                                    JoinKind.LeftOuter
+				                                ),
+				                            ExpandedFactors =
+				                                Table.ExpandTableColumn(
+				                                    MergedFactors,
+				                                    "MonthlyFactor",
+				                                    {"Seasonal Factor"},
+				                                    {"Seasonal Factor"}
+				                                ),
+				                            WithAdjusted =
+				                                Table.AddColumn(
+				                                    ExpandedFactors,
+				                                    "Seasonally Adjusted Value",
+				                                    each if [Seasonal Factor] = null then null else [Original Value] - [Seasonal Factor],
+				                                    type number
+				                                ),
+				                            WithIrregular =
+				                                Table.AddColumn(
+				                                    WithAdjusted,
+				                                    "Irregular Component",
+				                                    each
+				                                        if [Seasonally Adjusted Value] = null or [Trend] = null then
+				                                            null
+				                                        else
+				                                            [Seasonally Adjusted Value] - [Trend],
+				                                    type number
+				                                ),
+				                            Status =
+				                                if CountRows < 60 then
+				                                    "Insufficient history"
+				                                else if not IsComplete then
+				                                    "Missing months"
+				                                else if List.Count(RawFactors) <> 12 then
+				                                    "Incomplete seasonal factors"
+				                                else
+				                                    "Adjusted",
+				                            WithStatus = Table.AddColumn(WithIrregular, "Adjustment Status", each Status, type text),
+				                            WithObservationCount = Table.AddColumn(WithStatus, "Group Observations", each CountRows, Int64.Type),
+				                            WithWindow =
+				                                Table.AddColumn(
+				                                    WithObservationCount,
+				                                    "Analysis Window",
+				                                    each "Rolling 120 months; seasonal factors exclude March 2020 through June 2021",
+				                                    type text
+				                                ),
+				                            Clean = Table.RemoveColumns(WithWindow, {"Series Index", "Seasonal Residual"})
+				                        in
+				                            Clean,
+				                    type table
+				                }
+				            }
+				        ),
+				    #"Expanded AdjustedData" =
+				        Table.ExpandTableColumn(
+				            #"Grouped Series",
+				            "AdjustedData",
+				            {
+				                "Date", "Original Value", "Year", "Month", "Month Name", "Trend",
+				                "Seasonal Factor", "Seasonally Adjusted Value", "Irregular Component",
+				                "Adjustment Status", "Group Observations", "Analysis Window"
+				            },
+				            {
+				                "Date", "Original Value", "Year", "Month", "Month Name", "Trend",
+				                "Seasonal Factor", "Seasonally Adjusted Value", "Irregular Component",
+				                "Adjustment Status", "Group Observations", "Analysis Window"
+				            }
+				        ),
+				    #"Changed Type" =
+				        Table.TransformColumnTypes(
+				            #"Expanded AdjustedData",
+				            {
+				                {"GEO", type text},
+				                {"Labour force characteristics", type text},
+				                {"Family age composition", type text},
+				                {"Date", type date},
+				                {"Original Value", type number},
+				                {"Year", Int64.Type},
+				                {"Month", Int64.Type},
+				                {"Month Name", type text},
+				                {"Trend", type number},
+				                {"Seasonal Factor", type number},
+				                {"Seasonally Adjusted Value", type number},
+				                {"Irregular Component", type number},
+				                {"Adjustment Status", type text},
+				                {"Group Observations", Int64.Type},
+				                {"Analysis Window", type text}
+				            }
+				        )
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table

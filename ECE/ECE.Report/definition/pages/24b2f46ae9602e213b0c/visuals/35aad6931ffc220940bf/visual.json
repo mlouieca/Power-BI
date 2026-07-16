@@ -234,7 +234,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Additive seasonal decomposition — trend + seasonal + residual'"
+                  "Value": "'Additive 2x12; Mar 2020-Jun 2021 remains shown but is excluded from seasonal factors'"
                 }
               }
             }

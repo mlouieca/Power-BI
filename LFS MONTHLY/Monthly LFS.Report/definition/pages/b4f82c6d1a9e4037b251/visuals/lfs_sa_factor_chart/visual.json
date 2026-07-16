@@ -1,0 +1,27 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "lfs_sa_factor_chart",
+  "position": {"x": 984, "y": 0, "z": 5000, "height": 360, "width": 296, "tabOrder": 5000},
+  "visual": {
+    "visualType": "columnChart",
+    "query": {
+      "queryState": {
+        "Category": {"projections": [{"field": {"Column": {"Expression": {"SourceRef": {"Entity": "LFS Seasonal Month"}}, "Property": "Month"}}, "queryRef": "LFS Seasonal Month.Month", "nativeQueryRef": "Month", "active": true}]},
+        "Series": {"projections": []},
+        "Y": {"projections": [{"field": {"Measure": {"Expression": {"SourceRef": {"Entity": "LFS Seasonal Month"}}, "Property": "Selected Seasonal Factor (pp)"}}, "queryRef": "LFS Seasonal Month.Selected Seasonal Factor (pp)", "nativeQueryRef": "Selected Seasonal Factor (pp)"}]}
+      },
+      "sortDefinition": {"sort": [{"field": {"Column": {"Expression": {"SourceRef": {"Entity": "LFS Seasonal Month"}}, "Property": "Month"}}, "direction": "Ascending"}], "isDefaultSort": true}
+    },
+    "objects": {
+      "categoryAxis": [{"properties": {"showAxisTitle": {"expr": {"Literal": {"Value": "false"}}}, "gridlineShow": {"expr": {"Literal": {"Value": "false"}}}}}],
+      "valueAxis": [{"properties": {"showAxisTitle": {"expr": {"Literal": {"Value": "false"}}}}}],
+      "legend": [{"properties": {"show": {"expr": {"Literal": {"Value": "false"}}}}}]
+    },
+    "visualContainerObjects": {
+      "title": [{"properties": {"text": {"expr": {"Literal": {"Value": "'Seasonal factors by month'"}}}, "show": {"expr": {"Literal": {"Value": "true"}}}}}],
+      "subTitle": [{"properties": {"text": {"expr": {"Literal": {"Value": "'Percentage points; factors exclude Mar 2020-Jun 2021'"}}}, "show": {"expr": {"Literal": {"Value": "true"}}}}}]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {"filters": [{"name": "fa5e8fd77c0b497398f2", "field": {"Measure": {"Expression": {"SourceRef": {"Entity": "LFS Seasonal Month"}}, "Property": "Selected Seasonal Factor (pp)"}}, "type": "Advanced"}]}
+}
