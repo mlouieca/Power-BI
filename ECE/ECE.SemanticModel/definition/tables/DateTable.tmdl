@@ -49,7 +49,8 @@ table DateTable
 				    MINX (
 				        {
 				            MIN ( ECE[Date] ),
-				            MIN ( 'ECE Monthly'[Date] )
+				            MIN ( 'ECE Monthly'[Date] ),
+				            MIN ( 'ECE Job Vacancies'[Date] )
 				        },
 				        [Value]
 				    )
@@ -57,7 +58,8 @@ table DateTable
 				    MAXX (
 				        {
 				            MAX ( ECE[Date] ),
-				            MAX ( 'ECE Monthly'[Date] )
+				            MAX ( 'ECE Monthly'[Date] ),
+				            MAX ( 'ECE Job Vacancies'[Date] )
 				        },
 				        [Value]
 				    )

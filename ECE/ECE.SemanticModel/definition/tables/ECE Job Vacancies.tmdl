@@ -1,0 +1,179 @@
+table 'ECE Job Vacancies'
+	lineageTag: 4ec7f194-760e-42c2-b7dc-5b3e1df7a685
+
+	measure 'Job Vacancies' = ```
+
+			SUM ( 'ECE Job Vacancies'[Value] )
+
+			```
+		formatString: #,0
+		lineageTag: 3b25208e-6149-4d8c-83c8-698d6f45aad2
+
+	measure 'Latest Month' = ```
+
+			CALCULATE (
+			    MAX ( 'ECE Job Vacancies'[Date] ),
+			    REMOVEFILTERS ( DateTable )
+			)
+
+			```
+		formatString: General Date
+		lineageTag: 45c9b6e8-efcb-4ae7-8419-ec43670cb130
+
+	measure 'ECE Employment (Annual)' = ```
+
+			1000 *
+			CALCULATE (
+			    [Annual Estimate],
+			    DimOccupation[NOC] = "42202",
+			    DimCharacteristic[Characteristic] = "Total, employment",
+			    TREATAS ( VALUES ( DateTable[Year] ), DimYear[Year] )
+			)
+
+			```
+		formatString: #,0
+		lineageTag: f52130f9-f536-4675-8518-3db851ae03d4
+
+	measure 'ECE Job Vacancies as % of Employment' = ```
+
+			DIVIDE (
+			    [Job Vacancies],
+			    [ECE Employment (Annual)]
+			)
+
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 65c180ab-c938-4500-874d-6ab4710c52bb
+
+	measure 'ECE Employment (Latest JVWS Month)' = ```
+
+			VAR _LatestDate = [Latest Month]
+			RETURN
+			    CALCULATE (
+			        [ECE Employment (Annual)],
+			        TREATAS ( { _LatestDate }, DateTable[Date] )
+			    )
+
+			```
+		formatString: #,0
+		lineageTag: c1f701f0-0bd5-431f-956b-cf4883e9f01b
+
+	measure 'ECE Job Vacancies (Latest)' = ```
+
+			VAR _LatestDate = [Latest Month]
+			RETURN
+			    CALCULATE (
+			        [Job Vacancies],
+			        TREATAS ( { _LatestDate }, DateTable[Date] )
+			    )
+
+			```
+		formatString: #,0
+		lineageTag: 33e17b96-238f-49b4-82a8-98f51ceda485
+
+	measure 'ECE Job Vacancies as % of Employment (Latest)' = ```
+
+			DIVIDE (
+			    [ECE Job Vacancies (Latest)],
+			    [ECE Employment (Latest JVWS Month)]
+			)
+
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 185425f8-b409-4d58-82bc-a57d56be74bb
+
+	measure 'Latest Employment Year' = ```
+
+			CALCULATE (
+			    MAX ( 'Annual ECE'[Year] ),
+			    DimOccupation[NOC] = "42202",
+			    DimCharacteristic[Characteristic] = "Total, employment",
+			    'Annual ECE'[Statistics] = "Estimates",
+			    REMOVEFILTERS ( DateTable )
+			)
+
+			```
+		formatString: 0
+		lineageTag: bfaa61ec-a60d-450b-8cc9-8303a1653a94
+
+	/// ECE employment indexed to 2015 = 100 for comparison with job vacancies.
+	measure 'ECE Employment Index (2015 Base 100)' =
+			VAR _Base =
+			    1000 *
+			    CALCULATE (
+			        [Annual Estimate],
+			        REMOVEFILTERS ( DateTable ),
+			        REMOVEFILTERS ( DimYear ),
+			        DimOccupation[NOC] = "42202",
+			        DimCharacteristic[Characteristic] = "Total, employment",
+			        DimYear[Year] = 2015
+			    )
+			RETURN
+			    100 * DIVIDE ( [ECE Employment (Annual)], _Base )
+		formatString: 0.0
+		displayFolder: Vacancy Comparison
+		lineageTag: 9cae0da9-53de-4fdc-ba47-f3afe4e6f6ca
+
+	/// Monthly ECE job vacancies indexed to the 2015 monthly average = 100.
+	measure 'ECE Job Vacancies Index (2015 Base 100)' =
+			VAR _Base =
+			    CALCULATE (
+			        AVERAGE ( 'ECE Job Vacancies'[Value] ),
+			        REMOVEFILTERS ( DateTable ),
+			        DateTable[Year] = 2015
+			    )
+			RETURN
+			    100 * DIVIDE ( [Job Vacancies], _Base )
+		formatString: 0.0
+		displayFolder: Vacancy Comparison
+		lineageTag: 310cbe61-d9ea-4164-982f-6ad59530ad98
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 423d989e-816c-4b20-a86c-6c88954e22b1
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Geography
+		dataType: string
+		lineageTag: d69c417a-a6c9-4e8c-abfb-79b0be040175
+		summarizeBy: none
+		sourceColumn: Geography
+
+		annotation SummarizationSetBy = Automatic
+
+	column Value
+		dataType: double
+		lineageTag: 58ff6ff3-f3bb-40f4-a1c2-88fb7f36687d
+		summarizeBy: sum
+		sourceColumn: Value
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition 'ECE Job Vacancies' = m
+		mode: import
+		source =
+				let
+				    Source = Web.Contents("https://www150.statcan.gc.ca/n1/tbl/csv/14100444-eng.zip"),
+				    ZipContents = Unzip(Source),
+				    Content = ZipContents{0}[Content],
+				    #"Imported CSV" = Csv.Document(Content, [Delimiter = ",", Columns = 16, Encoding = 65001, QuoteStyle = QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Imported CSV", [PromoteAllScalars = true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers", {{"REF_DATE", type date}, {"GEO", type text}, {"National Occupational Classification", type text}, {"Statistics", type text}, {"VALUE", type number}}),
+				    #"Added NOC" = Table.AddColumn(#"Changed Type", "NOC", each Text.BetweenDelimiters([National Occupational Classification], "[", "]"), type text),
+				    #"Filtered ECE Vacancies" = Table.SelectRows(#"Added NOC", each [NOC] = "42202" and [Statistics] = "Job vacancies"),
+				    #"Selected Columns" = Table.SelectColumns(#"Filtered ECE Vacancies", {"REF_DATE", "GEO", "VALUE"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Selected Columns", {{"REF_DATE", "Date"}, {"GEO", "Geography"}, {"VALUE", "Value"}})
+				in
+				    #"Renamed Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table

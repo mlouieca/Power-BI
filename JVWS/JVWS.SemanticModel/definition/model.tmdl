@@ -8,7 +8,7 @@ model Model
 
 annotation __PBI_TimeIntelligenceEnabled = 1
 
-annotation PBI_QueryOrder = ["Unzip","JVWS","JVWS Characteristics","LFS Labour Force Occupation","Annual ECE Employment"]
+annotation PBI_QueryOrder = ["Unzip","JVWS","JVWS Characteristics","LFS Labour Force Occupation"]
 
 annotation PBI_ProTooling = ["DevMode"]
 
@@ -16,7 +16,6 @@ ref table JVWS
 ref table DateTable
 ref table 'JVWS Characteristics'
 ref table 'LFS Labour Force Occupation'
-ref table 'Annual ECE Employment'
 
 ref cultureInfo en-CA
 

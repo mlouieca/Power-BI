@@ -20,13 +20,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "JVWS"
+                      "Entity": "ECE Job Vacancies"
                     }
                   },
                   "Property": "Latest Month"
                 }
               },
-              "queryRef": "JVWS.Latest Month",
+              "queryRef": "ECE Job Vacancies.Latest Month",
               "nativeQueryRef": "Latest Month"
             },
             {
@@ -34,13 +34,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Annual ECE Employment"
+                      "Entity": "ECE Job Vacancies"
                     }
                   },
                   "Property": "ECE Job Vacancies as % of Employment (Latest)"
                 }
               },
-              "queryRef": "Annual ECE Employment.ECE Job Vacancies as % of Employment (Latest)",
+              "queryRef": "ECE Job Vacancies.ECE Job Vacancies as % of Employment (Latest)",
               "nativeQueryRef": "ECE Job Vacancies as % of Employment (Latest)"
             },
             {
@@ -48,13 +48,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Annual ECE Employment"
+                      "Entity": "ECE Job Vacancies"
                     }
                   },
                   "Property": "ECE Job Vacancies (Latest)"
                 }
               },
-              "queryRef": "Annual ECE Employment.ECE Job Vacancies (Latest)",
+              "queryRef": "ECE Job Vacancies.ECE Job Vacancies (Latest)",
               "nativeQueryRef": "ECE Job Vacancies (Latest)"
             },
             {
@@ -62,13 +62,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Annual ECE Employment"
+                      "Entity": "ECE Job Vacancies"
                     }
                   },
                   "Property": "ECE Employment (Latest JVWS Month)"
                 }
               },
-              "queryRef": "Annual ECE Employment.ECE Employment (Latest JVWS Month)",
+              "queryRef": "ECE Job Vacancies.ECE Employment (Latest JVWS Month)",
               "nativeQueryRef": "ECE Employment (Latest JVWS Month)"
             },
             {
@@ -76,13 +76,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Annual ECE Employment"
+                      "Entity": "ECE Job Vacancies"
                     }
                   },
                   "Property": "Latest Employment Year"
                 }
               },
-              "queryRef": "Annual ECE Employment.Latest Employment Year",
+              "queryRef": "ECE Job Vacancies.Latest Employment Year",
               "nativeQueryRef": "Latest Employment Year"
             }
           ]
