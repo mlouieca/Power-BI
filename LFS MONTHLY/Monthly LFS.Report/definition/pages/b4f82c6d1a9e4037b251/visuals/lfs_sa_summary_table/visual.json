@@ -1,0 +1,30 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "lfs_sa_summary_table",
+  "position": {"x": 0, "y": 496, "z": 7000, "height": 224, "width": 976, "tabOrder": 7000},
+  "visual": {
+    "visualType": "pivotTable",
+    "query": {
+      "queryState": {
+        "Rows": {"projections": [{"field": {"Column": {"Expression": {"SourceRef": {"Entity": "LFS Family Seasonally Adjusted"}}, "Property": "Labour force characteristics"}}, "queryRef": "LFS Family Seasonally Adjusted.Labour force characteristics", "nativeQueryRef": "Labour force characteristics", "active": true}]},
+        "Values": {"projections": [
+          {"field": {"Measure": {"Expression": {"SourceRef": {"Entity": "LFS Family Seasonally Adjusted"}}, "Property": "Original Rate"}}, "queryRef": "LFS Family Seasonally Adjusted.Original Rate", "nativeQueryRef": "Original Rate"},
+          {"field": {"Measure": {"Expression": {"SourceRef": {"Entity": "LFS Family Seasonally Adjusted"}}, "Property": "Seasonally Adjusted Rate"}}, "queryRef": "LFS Family Seasonally Adjusted.Seasonally Adjusted Rate", "nativeQueryRef": "Seasonally Adjusted Rate"},
+          {"field": {"Measure": {"Expression": {"SourceRef": {"Entity": "LFS Family Seasonally Adjusted"}}, "Property": "Seasonal Factor (pp)"}}, "queryRef": "LFS Family Seasonally Adjusted.Seasonal Factor (pp)", "nativeQueryRef": "Seasonal Factor (pp)"},
+          {"field": {"Measure": {"Expression": {"SourceRef": {"Entity": "LFS Family Seasonally Adjusted"}}, "Property": "Irregular Component (pp)"}}, "queryRef": "LFS Family Seasonally Adjusted.Irregular Component (pp)", "nativeQueryRef": "Irregular Component (pp)"}
+        ]}
+      },
+      "sortDefinition": {"sort": [{"field": {"Column": {"Expression": {"SourceRef": {"Entity": "LFS Family Seasonally Adjusted"}}, "Property": "Labour force characteristics"}}, "direction": "Ascending"}], "isDefaultSort": true}
+    },
+    "visualContainerObjects": {
+      "title": [{"properties": {"text": {"expr": {"Literal": {"Value": "'Latest selected-period values'"}}}, "show": {"expr": {"Literal": {"Value": "true"}}}}}]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {"filters": [
+    {"name": "c17f0fa47fe947c99394", "field": {"Measure": {"Expression": {"SourceRef": {"Entity": "LFS Family Seasonally Adjusted"}}, "Property": "Original Rate"}}, "type": "Advanced"},
+    {"name": "9f5909c8072e41e2a0a8", "field": {"Measure": {"Expression": {"SourceRef": {"Entity": "LFS Family Seasonally Adjusted"}}, "Property": "Seasonally Adjusted Rate"}}, "type": "Advanced"},
+    {"name": "c859da7dc2d94299bac4", "field": {"Measure": {"Expression": {"SourceRef": {"Entity": "LFS Family Seasonally Adjusted"}}, "Property": "Seasonal Factor (pp)"}}, "type": "Advanced"},
+    {"name": "611c374671a04d7d8132", "field": {"Measure": {"Expression": {"SourceRef": {"Entity": "LFS Family Seasonally Adjusted"}}, "Property": "Irregular Component (pp)"}}, "type": "Advanced"}
+  ]}
+}

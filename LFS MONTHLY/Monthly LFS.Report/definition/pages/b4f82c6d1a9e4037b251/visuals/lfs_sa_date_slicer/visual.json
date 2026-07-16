@@ -1,0 +1,14 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "lfs_sa_date_slicer",
+  "position": {"x": 0, "y": 72, "z": 3000, "height": 72, "width": 896, "tabOrder": 3000},
+  "visual": {
+    "visualType": "slicer",
+    "query": {"queryState": {"Values": {"projections": [{"field": {"Column": {"Expression": {"SourceRef": {"Entity": "LFS Family Seasonally Adjusted"}}, "Property": "Date"}}, "queryRef": "LFS Family Seasonally Adjusted.Date", "nativeQueryRef": "Date", "active": true}]}}},
+    "objects": {
+      "data": [{"properties": {"mode": {"expr": {"Literal": {"Value": "'Between'"}}}}}],
+      "selection": [{"properties": {"selectAllCheckboxEnabled": {"expr": {"Literal": {"Value": "false"}}}}}]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

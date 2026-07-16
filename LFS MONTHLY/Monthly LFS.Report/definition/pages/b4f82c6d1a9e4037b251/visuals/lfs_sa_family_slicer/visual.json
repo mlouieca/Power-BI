@@ -1,0 +1,15 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "lfs_sa_family_slicer",
+  "position": {"x": 320, "y": 0, "z": 1000, "height": 64, "width": 344, "tabOrder": 1000},
+  "visual": {
+    "visualType": "slicer",
+    "query": {"queryState": {"Values": {"projections": [{"field": {"Column": {"Expression": {"SourceRef": {"Entity": "LFS Family Seasonally Adjusted"}}, "Property": "Family age composition"}}, "queryRef": "LFS Family Seasonally Adjusted.Family age composition", "nativeQueryRef": "Family age composition", "active": true}]}}},
+    "objects": {
+      "data": [{"properties": {"mode": {"expr": {"Literal": {"Value": "'Dropdown'"}}}}}],
+      "general": [{"properties": {"filter": {"filter": {"Version": 2, "From": [{"Name": "l", "Entity": "LFS Family Seasonally Adjusted", "Type": 0}], "Where": [{"Condition": {"In": {"Expressions": [{"Column": {"Expression": {"SourceRef": {"Source": "l"}}, "Property": "Family age composition"}}], "Values": [[{"Literal": {"Value": "'Youngest child 0 to 5 years'"}}]]}}}]}}}}],
+      "selection": [{"properties": {"strictSingleSelect": {"expr": {"Literal": {"Value": "true"}}}}}]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

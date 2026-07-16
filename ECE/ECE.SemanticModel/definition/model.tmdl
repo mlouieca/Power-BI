@@ -29,6 +29,7 @@ ref table 'Annual LFS Wage'
 ref table 'CPI Annual'
 ref table 'ECE Seasonally Adjusted'
 ref table 'ECE Monthly'
+ref table 'Seasonal Month'
 
 ref cultureInfo en-CA
 

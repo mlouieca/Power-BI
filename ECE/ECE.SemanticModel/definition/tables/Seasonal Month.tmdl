@@ -1,0 +1,64 @@
+table 'Seasonal Month'
+	lineageTag: 0cb33b61-f52c-49f3-940c-dbf9cd03fe62
+
+	measure 'Selected Seasonal Factor' = ```
+			VAR _MonthNumber =
+			    SELECTEDVALUE ( 'Seasonal Month'[Month Number] )
+			VAR _SeriesFactors =
+			    CALCULATETABLE (
+			        SUMMARIZE (
+			            'ECE Seasonally Adjusted',
+			            'ECE Seasonally Adjusted'[Province],
+			            'ECE Seasonally Adjusted'[Occupation],
+			            'ECE Seasonally Adjusted'[Variable],
+			            "_Factor", MAX ( 'ECE Seasonally Adjusted'[Seasonal Factor Value] )
+			        ),
+			        REMOVEFILTERS ( DateTable ),
+			        TREATAS ( { _MonthNumber }, 'ECE Seasonally Adjusted'[Month] )
+			    )
+			RETURN
+			    IF (
+			        NOT ISBLANK ( _MonthNumber ),
+			        SUMX ( _SeriesFactors, [_Factor] )
+			    )
+			```
+		formatString: #,0;-#,0;0
+		lineageTag: 695abf4f-109e-4275-a62e-37a014bb7860
+
+	column Month
+		lineageTag: ef14bc10-f9a2-45af-ab8d-17ceae18db78
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Month Number'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Number'
+		isHidden
+		formatString: 0
+		lineageTag: 195f56cf-2dab-4a03-af6c-e3de00fe040f
+		summarizeBy: sum
+		sourceColumn: [Value2]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Seasonal Month' = calculated
+		mode: import
+		source = ```
+				{
+				    ("Jan", 1),
+				    ("Feb", 2),
+				    ("Mar", 3),
+				    ("Apr", 4),
+				    ("May", 5),
+				    ("Jun", 6),
+				    ("Jul", 7),
+				    ("Aug", 8),
+				    ("Sep", 9),
+				    ("Oct", 10),
+				    ("Nov", 11),
+				    ("Dec", 12)
+				}
+			```
+
+	annotation PBI_Id = 75d9bce4caeb4fc3a56507dbf5970d20

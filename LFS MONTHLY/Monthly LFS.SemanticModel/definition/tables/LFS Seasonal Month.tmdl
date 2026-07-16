@@ -1,0 +1,44 @@
+table 'LFS Seasonal Month'
+	lineageTag: 72d74552-da48-4571-a7db-a269c65e1fc0
+
+	measure 'Selected Seasonal Factor (pp)' = ```
+			VAR _MonthNumber = SELECTEDVALUE ( 'LFS Seasonal Month'[Month Number] )
+			RETURN
+			    CALCULATE (
+			        MAX ( 'LFS Family Seasonally Adjusted'[Seasonal Factor Value] ),
+			        REMOVEFILTERS ( DateTable ),
+			        REMOVEFILTERS ( 'LFS Family Seasonally Adjusted'[Date] ),
+			        TREATAS ( { _MonthNumber }, 'LFS Family Seasonally Adjusted'[Month] )
+			    )
+			```
+		formatString: 0.00;-0.00;0.00
+		lineageTag: 20852d70-0c4a-4395-bcff-b705a6a7502a
+
+	column Month
+		lineageTag: d928eb26-c1e6-41de-98c9-37ae698aa083
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Month Number'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Number'
+		isHidden
+		formatString: 0
+		lineageTag: 0e582057-6b84-46cd-a0fe-09764f6107f4
+		summarizeBy: sum
+		sourceColumn: [Value2]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'LFS Seasonal Month' = calculated
+		mode: import
+		source = ```
+				{
+				    ("Jan", 1), ("Feb", 2), ("Mar", 3), ("Apr", 4),
+				    ("May", 5), ("Jun", 6), ("Jul", 7), ("Aug", 8),
+				    ("Sep", 9), ("Oct", 10), ("Nov", 11), ("Dec", 12)
+				}
+			```
+
+	annotation PBI_Id = 2d56e563bcf84a39ba1189d47bcaf5b0
